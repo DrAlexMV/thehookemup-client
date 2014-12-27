@@ -1,31 +1,31 @@
-auth.login = {};
+auth.LoginForm = function () {
+	var loginForm = {};
 
-auth.login.vm = (function() {
-	var vm = {};
-	vm.init = function() {
-		vm.email = m.prop('');
-		vm.password = m.prop('')
-
-		//adds a todo to the list, and clears the description field for user convenience
-		vm.loginUser = function() {
-			if (vm.email() && vm.password()) {
-			}
-		};
+	loginForm.vm = {
+		email: m.prop(''),
+		password: m.prop('')
 	};
-	return vm
-}());
 
-//the controller defines what part of the model is relevant for the current page
-//in our case, there's only one view-model that handles everything
-auth.login.controller = function() {
-	auth.vm.init();
+	loginForm.view = function () {
+		return [
+			m('form.ui.form', [
+				m('div.two.fields', [
+					m('div.required.field', [
+						m('div.ui.icon.input', [
+							m('input', { placeholder: 'Email', type: 'text' }),
+							m('i.user.icon')
+						])
+					]),
+					m('div.required.field', [
+						m('div.ui.icon.input', [
+							m('input', { placeholder: 'Password', type: 'password' }),
+							m('i.lock.icon')
+						])
+					])
+				])
+			])
+		];
+	};
+
+	return loginForm;
 };
-
-//here's the view
-auth.login.view = function() {
-	return m("form", [
-	]);
-};
-
-//initialize the application
-m.module(document.getElementById('auth-segment'), { controller: auth.login.controller, view: auth.login.view });

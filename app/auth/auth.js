@@ -1,18 +1,28 @@
 var auth = {};
 
+auth.vm = {
+	init: function () {
+		this.loginForm =  new auth.LoginForm();
+
+		this.login = function () {
+//			m.request();
+		};
+	}
+};
+
 auth.controller = function () {
+	auth.vm.init();
 };
 
 auth.view = function () {
-	return m("html", [
-		m("body", [
-			m('div.ui.page.grid', [
-				m('div.six.wide.column', [
-					m('div.ui.piled.segment#auth-segment', [])
-				])
+	var vm = auth.vm;
+
+	return m('div.ui.page.grid', [
+		m('div.sixteen.wide.column', [
+			m('h1.ui.header', "The Hook'Em Up"),
+			m('div.ui.piled.segment#auth-segment', [
+				vm.loginForm.view({  })
 			])
 		])
 	]);
 };
-
-m.module(document, { controller: auth.controller, view: auth.view });

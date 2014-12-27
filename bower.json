@@ -17,6 +17,7 @@
   ],
   "dependencies": {
     "mithril": "~0.1.27",
-    "semantic-ui": "~1.4.1"
+    "semantic-ui": "~1.4.1",
+    "bacon": "~0.7.41"
   }
 }
