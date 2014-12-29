@@ -8,10 +8,13 @@ var StreamCommon = {
 	 * @param cb
 	 * @returns {*}
 	 */
-	on: function (stream, messageName, cb) {
+	on: function (stream, messageNames, cb) {
 		return stream.filter(function (message) {
-			return message.name === messageName;
-		}).subscribe(cb);
+			if (Array.isArray(messageNames)) {
+				return messageNames.indexOf(message.name) > -1;
+			}
+			return message.name === messageNames;
+		}).onValue(cb);
 	},
 
 	/**

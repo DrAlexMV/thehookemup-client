@@ -1,0 +1,16 @@
+.base {
+  background-color: white;
+}
+.university-title {
+  margin-top: -3px;
+}
+#bevo_icon {
+  float: left;
+  margin-right: 10px;
+}
+#auth-segment {
+  max-width: 650px;
+}
+.socialSignInForm .button {
+  width: 100%;
+}

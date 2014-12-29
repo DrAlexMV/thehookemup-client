@@ -22,14 +22,18 @@ auth.vm = {
 		this.userRegistering = m.prop(false);
 
 		/* Message Passing Stream */
-		this.stream = Bacon.mergeAll(this.loginForm.stream, this.socialSignInForm.stream);
+		this.stream = Bacon.mergeAll(this.loginForm.stream, this.socialSignInForm.stream, this.registrationForm.stream);
 
-		StreamCommon.on(this.stream, 'signIn-user', function () {
+		StreamCommon.on(this.stream, 'LoginForm::SignIn', function () {
 			auth.vm.awaitingResponse(true);
 		});
 
-		StreamCommon.on(this.stream, 'register-user', function () {
-			auth.vm.userRegistering(true);
+		StreamCommon.on(this.stream, ['LoginForm::Register', 'RegistrationForm::Back'], function (event) {
+			auth.vm.userRegistering(event.name === 'LoginForm::Register');
+		});
+
+		StreamCommon.on(this.stream, 'RegistrationForm::Register', function () {
+			auth.vm.awaitingResponse(true);
 		});
 	}
 };

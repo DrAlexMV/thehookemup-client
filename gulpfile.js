@@ -23,21 +23,29 @@ gulp.task('less', function () {
 });
  
 gulp.task('js', function() {
-  gulp.src(paths.app_js)
-    .pipe(browserify({
-      transform: ['mithrilify'],
-      paths: [paths.scripts],
-    }))
-    .pipe(rename(paths.bundle))
-    .pipe(gulp.dest(paths.build))
+	try {
+		gulp.src(paths.app_js)
+			.pipe(browserify({
+				transform: ['mithrilify'],
+				paths: [paths.scripts],
+			}))
+			.pipe(rename(paths.bundle))
+			.pipe(gulp.dest(paths.build))
+	} catch (e) {
+		console.log(e);
+	}
 });
  
 // Rerun tasks whenever a file changes.
 gulp.task('watch', function() {
-  gulp.watch(paths.less_files, ['less']);
-  gulp.watch(paths.js, ['js']);
+	try {
+		gulp.watch(paths.less_files, ['less']);
+		gulp.watch(paths.js, ['js']);
+	} catch(e) {
+		console.log(e);
+	}
 });
- 
+
 // Static server
 gulp.task('browser-sync', function() {
   browserSync({

@@ -12,11 +12,11 @@ var LoginForm = function () {
 	loginForm.stream = new Bacon.Bus();
 
 	function register(event) {
-		loginForm.stream.push(new StreamCommon.Message('register-user', {}));
+		loginForm.stream.push(new StreamCommon.Message('LoginForm::Register', {}));
 	}
 
 	function signIn(event) {
-		loginForm.stream.push(new StreamCommon.Message('signIn-user', { email: vm.email(), password: vm.password() }));
+		loginForm.stream.push(new StreamCommon.Message('LoginForm::SignIn', { email: vm.email(), password: vm.password() }));
 	}
 
 	loginForm.view = function () {
