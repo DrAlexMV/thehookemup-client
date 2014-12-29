@@ -3,6 +3,10 @@
  * @jsx m
  */
 
+var ContactCard = require('profile/contact-card');
+var EntityList = require('profile/entity-list');
+var InfoSegment = require('profile/info-segment');
+
 var profile = {};
 
 profile.vm = {
@@ -77,7 +81,7 @@ profile.vm = {
 			associations: [6, 7],
 		};
 
-		this.connections = new profile.EntityList('Connections', this.edges.connections);
+		this.connections = new EntityList('Connections', this.edges.connections);
 
 
 	}
@@ -89,15 +93,15 @@ profile.controller = function () {
 
 profile.view = function () {
 	var vm = profile.vm;
-	var contact_card = new profile.ContactCard('/img/self-small.jpg', {});
+	var contact_card = new ContactCard('/img/self-small.jpg', {});
 
 	var segments = vm.details.map(function(entry) {
-		return new profile.InfoSegment(entry.title, entry.content).view({});
+		return new InfoSegment(entry.title, entry.content).view({});
 	});
 
 	var associations = null;
 
-	var university_insignia = (vm.basicInfo.unversity === 'University of Texas') ? 
+	var university_insignia = (vm.basicInfo.university === 'University of Texas') ? 
 		<img src="/img/bevo_icon.jpg" id="bevo_icon" />
 		: null;
 
@@ -143,3 +147,5 @@ profile.view = function () {
 		</div>
 	);
 };
+
+module.exports = profile;

@@ -2,7 +2,7 @@
  * @jsx m
  */
 
-profile.ContactCard = function (user_image_url, social_links) {
+var ContactCard = function (user_image_url, social_links) {
 	var card = {};
 	card.view = function () {
 		return (
@@ -35,3 +35,5 @@ profile.ContactCard = function (user_image_url, social_links) {
 
 	return card;
 };
+
+module.exports = ContactCard;

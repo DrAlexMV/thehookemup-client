@@ -1,4 +1,6 @@
 # Created by .gitignore support plugin (hsz.mobi)
+.DS_Store
 app/bower_components
 .idea
 node_modules
+

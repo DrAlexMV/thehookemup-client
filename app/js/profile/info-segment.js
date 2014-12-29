@@ -2,7 +2,7 @@
  * @jsx m
  */
 
-profile.InfoSegment = function (title, content) {
+var InfoSegment = function (title, content) {
 	var segment = {};
 	segment.view = function () {
 		var items = content.map(function(item) {
@@ -45,3 +45,5 @@ profile.InfoSegment = function (title, content) {
 
 	return segment;
 };
+
+module.exports = InfoSegment;

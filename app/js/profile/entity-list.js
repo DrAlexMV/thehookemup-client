@@ -3,7 +3,7 @@
  * @jsx m
  */
 
-profile.EntityList = function (title, entity_ids) {
+var EntityList = function (title, entity_ids) {
 	var entitylist = {};
 	entitylist.view = function () {
 		return (
@@ -60,3 +60,5 @@ profile.EntityList = function (title, entity_ids) {
 
 	return entitylist;
 };
+
+module.exports = EntityList;

@@ -1,49 +1,50 @@
-var gulp = require('gulp');
-var msx = require('msx');
-var through = require('through2');
-var plumber = require('gulp-plumber');
-var gutil = require('gulp-util');
+var browserify = require('gulp-browserify');
 var browserSync = require('browser-sync');
+var gulp = require('gulp');
+var less = require('gulp-less');
+var rename = require('gulp-rename');
 
-var watch_dir = './app/profile/';
+// Define some paths.
+var paths = {
+  app_js: ['./app/js/routes.js'], // 'entry point'
+  js: ['./app/js/**/*.js'],
+  less_files: ['./app/styles/*.less'],
+  build: './app/build/',
+  style: './app/styles/',
+  scripts: './app/js/',
+  bundle: 'bundle.js',
+};
 
-function msxTransform(name) {
-  return through.obj(function (file, enc, cb) {
-    try {
-      file.contents = new Buffer(msx.transform(file.contents.toString()));
-      file.path = gutil.replaceExtension(file.path, '.js');
-    }
-    catch (err) {
-      err.fileName = file.path;
-      this.emit('error', new gutil.PluginError('msx', err))
-    }
-    this.push(file);
-    cb()
-  })
-}
-
-gulp.task('msx', function() {
-  return gulp.src(watch_dir+'*.jsx')
-    .pipe(plumber())
-    .pipe(msxTransform())
-    .on('error', function(e) {
-      console.error(e.message + '\n  in ' + e.fileName);
-    })
-    .pipe(gulp.dest(watch_dir))
+// Our CSS task. It finds all our Less files and compiles them.
+gulp.task('less', function () {
+  gulp.src(paths.less_files)
+    .pipe(less())
+    .pipe(gulp.dest(paths.style));
 });
-
+ 
+gulp.task('js', function() {
+  gulp.src(paths.app_js)
+    .pipe(browserify({
+      transform: ['mithrilify'],
+      paths: [paths.scripts],
+    }))
+    .pipe(rename(paths.bundle))
+    .pipe(gulp.dest(paths.build))
+});
+ 
+// Rerun tasks whenever a file changes.
 gulp.task('watch', function() {
-  gulp.watch([watch_dir+'*.jsx'], ['msx'])
+  gulp.watch(paths.less_files, ['less']);
+  gulp.watch(paths.js, ['js']);
 });
-
+ 
 // Static server
 gulp.task('browser-sync', function() {
-	browserSync({
-		server: {
-			baseDir: "./app"
-		}
-	});
+  browserSync({
+    server: {
+      baseDir: "./app"
+    }
+  });
 });
 
-gulp.task('default', ['watch', 'msx', 'browser-sync']);
-
+gulp.task('default', ['watch', 'js', 'less', 'browser-sync']);

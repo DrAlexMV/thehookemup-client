@@ -1,4 +1,6 @@
-auth.LoginForm = function () {
+var StreamCommon = require('common/stream-common');
+
+var LoginForm = function () {
 	var loginForm = {};
 
 	var vm =
@@ -43,3 +45,5 @@ auth.LoginForm = function () {
 
 	return loginForm;
 };
+
+module.exports = LoginForm;
