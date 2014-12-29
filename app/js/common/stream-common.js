@@ -26,3 +26,5 @@ var StreamCommon = {
 		this.parameters = parameters ? parameters : {};
 	}
 };
+
+module.exports = StreamCommon;

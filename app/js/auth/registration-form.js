@@ -1,4 +1,4 @@
-auth.RegistrationForm = function () {
+var RegistrationForm = function () {
 	var registrationForm = {};
 
 	registrationForm.vm = {
@@ -46,3 +46,6 @@ auth.RegistrationForm = function () {
 
 	return registrationForm;
 };
+
+module.exports = RegistrationForm;
+

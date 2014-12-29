@@ -1,3 +1,8 @@
+var LoginForm = require('auth/login-form');
+var RegistrationForm = require('auth/registration-form');
+var SocialSignInForm = require('auth/social-signIn-form');
+var StreamCommon = require('common/stream-common');
+
 var auth = {};
 
 auth.User = function () {
@@ -8,9 +13,9 @@ auth.User = function () {
 auth.vm = {
 	init: function () {
 		/* Child Components */
-		this.loginForm =  new auth.LoginForm();
-		this.socialSignInForm = new auth.SocialSignInForm();
-		this.registrationForm = new auth.RegistrationForm();
+		this.loginForm =  new LoginForm();
+		this.socialSignInForm = new SocialSignInForm();
+		this.registrationForm = new RegistrationForm();
 
 		/* VM State Variables */
 		this.awaitingResponse = m.prop(false);
@@ -68,3 +73,5 @@ auth.view = function () {
 		]
 	)];
 };
+
+module.exports = auth;

@@ -3,6 +3,10 @@
  * @jsx m
  */
 
+var ContactCard = require('profile/contact-card');
+var EntityList = require('profile/entity-list');
+var InfoSegment = require('profile/info-segment');
+
 var profile = {};
 
 profile.vm = {
@@ -77,7 +81,7 @@ profile.vm = {
 			associations: [6, 7],
 		};
 
-		this.connections = new profile.EntityList('Connections', this.edges.connections);
+		this.connections = new EntityList('Connections', this.edges.connections);
 
 
 	}
@@ -89,57 +93,59 @@ profile.controller = function () {
 
 profile.view = function () {
 	var vm = profile.vm;
-	var contact_card = new profile.ContactCard('/img/self-small.jpg', {});
+	var contact_card = new ContactCard('/img/self-small.jpg', {});
 
 	var segments = vm.details.map(function(entry) {
-		return new profile.InfoSegment(entry.title, entry.content).view({});
+		return new InfoSegment(entry.title, entry.content).view({});
 	});
 
 	var associations = null;
 
-	var university_insignia = (vm.basicInfo.unversity === 'University of Texas') ? 
-		m("img", {src:"/img/bevo_icon.jpg", id:"bevo_icon"} )
+	var university_insignia = (vm.basicInfo.university === 'University of Texas') ? 
+		<img src="/img/bevo_icon.jpg" id="bevo_icon" />
 		: null;
 
 	return (
-		m("div", {className:"base ui padded stackable grid"}, [
-			m("div", {className:"row"}, [
-				m("div", {className:"four wide column"}, [
-					contact_card.view({})
-				]),
-				m("div", {className:"eight wide column"}, [
-					m("h1", {className:"ui header"}, [
-						vm.basicInfo.name,
-						m("div", {className:"blue ui buttons right floated"}, [
-							m("div", {className:"ui button"}, [
-								m("i", {className:"mail icon"}),
-								"Mail"
-							]),
-							m("div", {className:"ui positive button"}, [
-								m("i", {className:"share alternate icon"}),
-								"Connect"
-							])
-						])
-					]),
-					university_insignia,
-					m("h5", {className:"university-title header"}, [
-					m("i", [
-						vm.basicInfo.university, " class of '",
-						vm.basicInfo.graduation_year % 1000,
-						m("br"),
-						vm.basicInfo.major
-					])
-					]),
-					m("div", {className:"description"}, [
-						vm.basicInfo.description
-					]),
-					segments
-				]),
-				m("div", {className:"four wide column"}, [
-					vm.connections.view({}),
-					associations
-				])
-			])
-		])
+		<div className="base ui padded stackable grid">
+			<div className="row">
+				<div className="four wide column">
+					{contact_card.view({})}
+				</div>
+				<div className="eight wide column">
+					<h1 className="ui header">
+						{vm.basicInfo.name}
+						<div className="blue ui buttons right floated">
+							<div className="ui button">
+								<i className="mail icon"></i>
+								Mail
+							</div>
+							<div className="ui positive button">
+								<i className="share alternate icon"></i>
+								Connect
+							</div>
+						</div>
+					</h1>
+					{university_insignia}
+					<h5 className="university-title header">
+					<i>
+						{vm.basicInfo.university} class of &#39;
+						{vm.basicInfo.graduation_year % 1000}
+						<br/>
+						{vm.basicInfo.major}
+					</i>
+					</h5>
+					<div className="description">
+						{vm.basicInfo.description}
+					</div>
+					{segments}
+				</div>
+				<div className="four wide column">
+					{vm.connections.view({})}
+					{associations}
+				</div>
+			</div>
+		</div>
 	);
 };
+
+module.exports = profile;

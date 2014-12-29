@@ -1,4 +1,4 @@
-auth.SocialSignInForm = function () {
+var SocialSignInForm = function () {
 	var socialSignInForm = {};
 
 	socialSignInForm.vm = {
@@ -38,3 +38,5 @@ auth.SocialSignInForm = function () {
 
 	return socialSignInForm;
 };
+
+module.exports = SocialSignInForm;
