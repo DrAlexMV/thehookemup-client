@@ -10,18 +10,11 @@ auth.LoginForm = function () {
 	loginForm.stream = new Bacon.Bus();
 
 	function register(event) {
-		var message =  { name: 'register-user' };
-		loginForm.stream.push(message);
+		loginForm.stream.push(new StreamCommon.Message('register-user', {}));
 	}
 
 	function signIn(event) {
-		var message =  {
-			name: 'signIn-user',
-			parameters: {
-				email: vm.email(), password: vm.password()
-			}
-		};
-		loginForm.stream.push(message);
+		loginForm.stream.push(new StreamCommon.Message('signIn-user', { email: vm.email(), password: vm.password() }));
 	}
 
 	loginForm.view = function () {
