@@ -10,12 +10,23 @@ var API = (function () {
 		xhr.withCredentials = true;
 	};
 
+	api.extractErrors = function(xhr) {
+		if (xhr.status > 200) {
+			return JSON.stringify({
+				error : JSON.parse(xhr.responseText).error,
+				status: xhr.status
+			});
+		}
+		return xhr.responseText;
+	};
+
 	api.get = function(resourceLocation, resourceType) {
 		return m.request({
 			method: 'GET',
 			url: calcAddress(resourceLocation),
 			type: resourceType,
-			config: api.xhrConfig
+			config: api.xhrConfig,
+			extract: api.extractErrors
 		});
 	};
 
@@ -25,7 +36,8 @@ var API = (function () {
 			url: calcAddress(resourceLocation),
 			type: resourceType,
 			data: data,
-			config: api.xhrConfig
+			config: api.xhrConfig,
+			extract: api.extractErrors
 		});
 	};
 

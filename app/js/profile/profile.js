@@ -12,11 +12,18 @@ var profile = {};
 
 profile.vm = {
 	init: function () {
-		// Mock immutable user data. TODO: pull from server.
+		var userid = m.route.param('userid');
 		this.basicInfo = {};
-		User.getMe().then(function(response) {
-			profile.vm.basicInfo = response;
-		});
+		User.getByID(userid).then(
+			function(response) {
+				profile.vm.basicInfo = response;
+			},
+			function(response) {
+				// TODO: Reroute to error page
+				console.log('error', response);
+				m.route('/');
+			}
+		);
 		/* {
 			name: 'Nicholas Sundin',
 			graduation_year: 2016,
@@ -30,6 +37,11 @@ profile.vm = {
 		 * two levels of detail to avoid possible buffer-overflow and
 		 * design-overflow issues.
 		 */
+		/*this.details = [];
+		UserDetails.getMe().then(function(response) {
+			profile.vm.details = response;
+		});*/
+
 		this.details = [
 			{
 				title: 'skills',
