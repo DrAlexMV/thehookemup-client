@@ -5,8 +5,10 @@
 
 var ContactCard = require('profile/contact-card');
 var EntityList = require('profile/entity-list');
+var Error = require('common/error');
 var InfoSegment = require('profile/info-segment');
 var User = require('model/user');
+var UserDetails = require('model/user-details');
 
 var profile = {};
 
@@ -17,13 +19,8 @@ profile.vm = {
 		User.getByID(userid).then(
 			function(response) {
 				profile.vm.basicInfo = response;
-			},
-			function(response) {
-				// TODO: Reroute to error page
-				console.log('error', response);
-				m.route('/');
-			}
-		);
+			}, Error.handle);
+
 		/* {
 			name: 'Nicholas Sundin',
 			graduation_year: 2016,
@@ -37,11 +34,11 @@ profile.vm = {
 		 * two levels of detail to avoid possible buffer-overflow and
 		 * design-overflow issues.
 		 */
-		/*this.details = [];
-		UserDetails.getMe().then(function(response) {
-			profile.vm.details = response;
-		});*/
-
+		this.details = [];
+		UserDetails.getByID(userid).then(
+			function(response) {
+				profile.vm.details = response;
+			}, Error.handle);/*
 		this.details = [
 			{
 				title: 'skills',
@@ -91,7 +88,7 @@ profile.vm = {
 					},
 				],
 			},
-		];
+		];*/
 
 		this.edges = {
 			connections: [2, 3, 4, 5],
