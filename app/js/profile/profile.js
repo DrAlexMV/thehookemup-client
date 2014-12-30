@@ -21,74 +21,11 @@ profile.vm = {
 				profile.vm.basicInfo = response;
 			}, Error.handle);
 
-		/* {
-			name: 'Nicholas Sundin',
-			graduation_year: 2016,
-			major: 'B.S. Computer Science',
-			description: 'Hacker who likes to burn the midnight oil as he discovers and tries out new ideas and technologies.',
-			university: 'University of Texas',
-		};*/
-
-		/*
-		 * Details could be a recursive structure, but explicitly limiting to
-		 * two levels of detail to avoid possible buffer-overflow and
-		 * design-overflow issues.
-		 */
 		this.details = [];
 		UserDetails.getByID(userid).then(
 			function(response) {
 				profile.vm.details = response;
-			}, Error.handle);/*
-		this.details = [
-			{
-				title: 'skills',
-				content: 
-				[
-					{
-						title: 'Programming',
-						description: 'Over a decade of experience',
-						subpoints: [
-							{
-								title: 'Python',
-								description: '10 years of network, threaded, graphic programming',
-							},
-							{
-								title: 'C++',
-								description: '6 years. OpenGL, wxWidgets',
-							},
-						],
-					},
-					{
-						title: 'Eating Food',
-						description: '20 years \'o this'
-					},
-				],
-			},
-			{
-				title: 'interests',
-				content: [
-					{
-						title: 'Repurposing consumer technology',
-						description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-						subpoints: [
-							{
-								title: 'Banana Phone',
-								description: 'Hack made with 2/3rds of an iPhone 8 and an overly-ripe banana',
-							},
-						],
-					},
-				],
-			},
-			{
-				title: 'projects',
-				content: [
-					{
-						title: 'Hook \'em up',
-						description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-					},
-				],
-			},
-		];*/
+			}, Error.handle);
 
 		this.edges = {
 			connections: [2, 3, 4, 5],
@@ -96,8 +33,6 @@ profile.vm = {
 		};
 
 		this.connections = new EntityList('Connections', this.edges.connections);
-
-
 	}
 };
 
@@ -110,7 +45,7 @@ profile.view = function () {
 	var contact_card = new ContactCard('/img/self-small.jpg', {}, vm.basicInfo.role());
 
 	var segments = vm.details.map(function(entry) {
-		return new InfoSegment(entry.title, entry.content).view({});
+		return new InfoSegment(entry.title(), entry.content()).view({});
 	});
 
 	var associations = null;
