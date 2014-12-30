@@ -13,7 +13,9 @@ var profile = {};
 profile.vm = {
 	init: function () {
 		// Mock immutable user data. TODO: pull from server.
-		this.basicInfo = User.getMe(); /* {
+		this.basicInfo = m.prop();
+		User.getMe().then((function(response) { this.basicInfo(response); }).bind(this));
+		/* {
 			name: 'Nicholas Sundin',
 			graduation_year: 2016,
 			major: 'B.S. Computer Science',
@@ -114,7 +116,7 @@ profile.view = function () {
 				</div>
 				<div className="eight wide column">
 					<h1 className="ui header">
-						{vm.basicInfo.name}
+						{vm.basicInfo.first_name + ' ' + vm.basicInfo.last_name}
 						<div className="blue ui buttons right floated">
 							<div className="ui button">
 								<i className="mail icon"></i>

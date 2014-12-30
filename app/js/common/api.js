@@ -10,11 +10,11 @@ var API = (function () {
 		xhr.withCredentials = true;
 	};
 
-	api.get = function(objLocation, objType) {
+	api.get = function(resourceLocation, resourceType) {
 		return m.request({
 			method: 'GET',
-			url: api.URL + api.API_BASE + objLocation,
-			type: objType,
+			url: calcAddress(resourceLocation),
+			type: resourceType,
 			config: api.xhrConfig
 		});
 	};
@@ -24,7 +24,8 @@ var API = (function () {
 			method: 'POST',
 			url: calcAddress(resourceLocation),
 			type: resourceType,
-			data: data
+			data: data,
+			config: api.xhrConfig
 		});
 	};
 

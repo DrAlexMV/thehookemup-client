@@ -19,7 +19,7 @@ var User = function(API) {
 	};
 
 	user.getMe = function() {
-		return this.get('/user/me', users.UserModel);
+		return this.get('/user/me', user.UserModel);
 	};
 	
 	user.register = function (credentials) {
