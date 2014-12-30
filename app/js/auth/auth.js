@@ -9,7 +9,6 @@ auth.User = function () {
 	this.isAuthenticated =  m.prop(false);
 };
 
-
 auth.vm = {
 	init: function () {
 		/* Child Components */
