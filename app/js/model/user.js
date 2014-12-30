@@ -18,8 +18,8 @@ var User = function(API) {
 		return this.get('/user/' + userID, user.UserModel);
 	};
 
-	user.login = function() {
-		//return API.('/login', users.UserModel);
+	user.getMe = function() {
+		return this.get('/user/me', users.UserModel);
 	};
 	
 	user.register = function (credentials) {
