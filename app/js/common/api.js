@@ -1,7 +1,7 @@
 var API = (function () {
 	var api = {};
 
-	api.URL = 'localhost:5000';
+	api.URL = 'http://localhost:5000';
 	api.API_BASE = '/api/v1';
 
 	api.get = function(objLocation, objType) {
@@ -10,6 +10,8 @@ var API = (function () {
 			type: objType
 		});
 	};
+
+	return api;
 })();
 
 module.exports = API;

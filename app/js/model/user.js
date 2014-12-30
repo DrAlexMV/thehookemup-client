@@ -1,6 +1,8 @@
+var API = require('common/api');
+
 var User = function(API) {
 	var users = {};
-	
+
 	users.UserModel = function(data) {
 		this.first_name = m.prop(data.first_name);
 		this.last_name = m.prop(data.last_name);
@@ -17,10 +19,11 @@ var User = function(API) {
 	};
 
 	users.getLogin = function() {
-		return API.get('/login', users.UserModel);
+		//return API.('/login', users.UserModel);
 	};
 
-	return _.mixin(users, API);
+	_.mixin(users, API);
+	return users;
 };
 
-module.exports = User;
+module.exports = User(API);
