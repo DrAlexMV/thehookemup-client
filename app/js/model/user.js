@@ -18,8 +18,8 @@ var User = function(API) {
 		return API.get('/user/' + userID, users.UserModel);
 	};
 
-	users.getLogin = function() {
-		//return API.('/login', users.UserModel);
+	users.getMe = function() {
+		return API.get('/user/me', users.UserModel);
 	};
 
 	_.mixin(users, API);

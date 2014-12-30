@@ -13,7 +13,7 @@ var profile = {};
 profile.vm = {
 	init: function () {
 		// Mock immutable user data. TODO: pull from server.
-		this.basicInfo = User.getLogin(); /* {
+		this.basicInfo = User.getMe(); /* {
 			name: 'Nicholas Sundin',
 			graduation_year: 2016,
 			major: 'B.S. Computer Science',
