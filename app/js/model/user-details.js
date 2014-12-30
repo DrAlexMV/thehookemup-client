@@ -1,3 +1,5 @@
+var API = require('common/api');
+
 var Details = function(API) {
 	var details = {};
 
@@ -7,10 +9,11 @@ var Details = function(API) {
 	};
 
 	details.getByID = function(userID) {
-		return API.get('/user/' + userID + '/details', details.DetailModel);
+		return get('/user/' + userID + '/details', details.DetailModel);
 	};
 
-	return _.mixin(details, API);
+	_.mixin(details, API);
+	return details;
 };
 
-module.exports = Details;
+module.exports = Details(API);

@@ -6,19 +6,20 @@
 var ContactCard = require('profile/contact-card');
 var EntityList = require('profile/entity-list');
 var InfoSegment = require('profile/info-segment');
+var User = require('model/user');
 
 var profile = {};
 
 profile.vm = {
 	init: function () {
 		// Mock immutable user data. TODO: pull from server.
-		this.basicInfo = {
+		this.basicInfo = User.getLogin(); /* {
 			name: 'Nicholas Sundin',
 			graduation_year: 2016,
 			major: 'B.S. Computer Science',
 			description: 'Hacker who likes to burn the midnight oil as he discovers and tries out new ideas and technologies.',
 			university: 'University of Texas',
-		};
+		};*/
 
 		/*
 		 * Details could be a recursive structure, but explicitly limiting to

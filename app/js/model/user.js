@@ -1,8 +1,11 @@
+var API = require('common/api');
+
 var User = function(API) {
 	var users = {};
-	
+
 	users.UserModel = function(data) {
-		this.name = m.prop(data.name);
+		this.first_name = m.prop(data.first_name);
+		this.last_name = m.prop(data.last_name);
 		this.email = m.prop(data.email);
 		this.date_joined = m.prop(data.date_joined);
 		this.graduation_year = m.prop(data.graduation_year);
@@ -16,10 +19,11 @@ var User = function(API) {
 	};
 
 	users.getLogin = function() {
-		return API.get('/login', users.UserModel);
+		//return API.('/login', users.UserModel);
 	};
 
-	return _.mixin(users, API);
+	_.mixin(users, API);
+	return users;
 };
 
-module.exports = User;
+module.exports = User(API);
