@@ -9,6 +9,7 @@ var Error = require('common/error');
 var InfoSegment = require('profile/info-segment');
 var User = require('model/user');
 var UserDetails = require('model/user-details');
+var UserEdges = require('model/user-edges');
 
 var profile = {};
 
@@ -27,12 +28,12 @@ profile.vm = {
 				profile.vm.details = response;
 			}, Error.handle);
 
-		this.edges = {
-			connections: [2, 3, 4, 5],
-			associations: [6, 7],
-		};
 
-		this.connections = new EntityList('Connections', this.edges.connections);
+		this.edges = {};
+		UserEdges.getByID(userid).then(
+			function(response) {
+				profile.vm.edges = response;
+			}, Error.handle);
 	}
 };
 
@@ -68,6 +69,8 @@ profile.view = function () {
 			</div>
 		);
 	}
+	var connections = new EntityList('Connections', '/profile', profile.vm.edges.connections());
+	var associations = new EntityList('Associations', '/', profile.vm.edges.associations());
 
 	return (
 		<div className="base ui padded stackable grid">
@@ -96,8 +99,8 @@ profile.view = function () {
 					{segments}
 				</div>
 				<div className="four wide column">
-					{vm.connections.view({})}
-					{associations}
+					{connections.view({})}
+					{associations.view({})}
 				</div>
 			</div>
 		</div>
