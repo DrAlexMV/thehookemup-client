@@ -2,7 +2,7 @@
  * @jsx m
  */
 
-var ContactCard = function (user_image_url, social_links) {
+var ContactCard = function (user_image_url, social_links, description) {
 	var card = {};
 	card.view = function () {
 		return (
@@ -11,7 +11,7 @@ var ContactCard = function (user_image_url, social_links) {
 					<img src={user_image_url} />
 				</div>
 				<div className="content">
-					<h4 className="ui header">Developer</h4>
+					<h4 className="ui header">{description}</h4>
 					<div className="ui divider"></div>
 					<div className="ui circular linkedin icon button">
 						<i className="linkedin icon"></i>

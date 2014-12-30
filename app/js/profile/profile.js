@@ -13,8 +13,10 @@ var profile = {};
 profile.vm = {
 	init: function () {
 		// Mock immutable user data. TODO: pull from server.
-		this.basicInfo = m.prop();
-		User.getMe().then((function(response) { this.basicInfo(response); }).bind(this));
+		this.basicInfo = {};
+		User.getMe().then(function(response) {
+			profile.vm.basicInfo = response;
+		});
 		/* {
 			name: 'Nicholas Sundin',
 			graduation_year: 2016,
@@ -96,7 +98,7 @@ profile.controller = function () {
 
 profile.view = function () {
 	var vm = profile.vm;
-	var contact_card = new ContactCard('/img/self-small.jpg', {});
+	var contact_card = new ContactCard('/img/self-small.jpg', {}, vm.basicInfo.role());
 
 	var segments = vm.details.map(function(entry) {
 		return new InfoSegment(entry.title, entry.content).view({});
@@ -108,6 +110,21 @@ profile.view = function () {
 		<img src="/img/bevo_icon.jpg" id="bevo_icon" />
 		: null;
 
+	var university_info = null;
+	if (vm.basicInfo.university()) {
+		university_info = (
+			<div>
+				{university_insignia}
+				<h5 className="university-title header"><i>
+					{vm.basicInfo.university()} class of &#39;
+					{vm.basicInfo.graduation_year() % 1000}
+					<br/>
+					{vm.basicInfo.major()}
+				</i></h5>
+			</div>
+		);
+	}
+
 	return (
 		<div className="base ui padded stackable grid">
 			<div className="row">
@@ -116,7 +133,7 @@ profile.view = function () {
 				</div>
 				<div className="eight wide column">
 					<h1 className="ui header">
-						{vm.basicInfo.first_name + ' ' + vm.basicInfo.last_name}
+						{vm.basicInfo.first_name() + ' ' + vm.basicInfo.last_name()}
 						<div className="blue ui buttons right floated">
 							<div className="ui button">
 								<i className="mail icon"></i>
@@ -128,17 +145,9 @@ profile.view = function () {
 							</div>
 						</div>
 					</h1>
-					{university_insignia}
-					<h5 className="university-title header">
-					<i>
-						{vm.basicInfo.university} class of &#39;
-						{vm.basicInfo.graduation_year % 1000}
-						<br/>
-						{vm.basicInfo.major}
-					</i>
-					</h5>
+					{university_info}
 					<div className="description">
-						{vm.basicInfo.description}
+						{vm.basicInfo.description()}
 					</div>
 					{segments}
 				</div>
