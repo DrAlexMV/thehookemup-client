@@ -2,6 +2,7 @@ var LoginForm = require('auth/login-form');
 var RegistrationForm = require('auth/registration-form');
 var SocialSignInForm = require('auth/social-signIn-form');
 var StreamCommon = require('common/stream-common');
+var User = require('model/user');
 
 var auth = {};
 
@@ -21,18 +22,21 @@ auth.vm = {
 		this.userRegistering = m.prop(false);
 
 		/* Message Passing Stream */
-		this.stream = Bacon.mergeAll(this.loginForm.stream, this.socialSignInForm.stream, this.registrationForm.stream);
+		auth.stream = Bacon.mergeAll(this.loginForm.stream, this.socialSignInForm.stream, this.registrationForm.stream);
 
-		StreamCommon.on(this.stream, 'LoginForm::SignIn', function () {
+		StreamCommon.on(auth.stream, 'LoginForm::SignIn', function () {
 			auth.vm.awaitingResponse(true);
 		});
 
-		StreamCommon.on(this.stream, ['LoginForm::Register', 'RegistrationForm::Back'], function (event) {
-			auth.vm.userRegistering(event.name === 'LoginForm::Register');
+		StreamCommon.on(auth.stream, ['LoginForm::Register', 'RegistrationForm::Back'], function (message) {
+			auth.vm.userRegistering(message.name === 'LoginForm::Register');
 		});
 
-		StreamCommon.on(this.stream, 'RegistrationForm::Register', function () {
+		StreamCommon.on(auth.stream, 'RegistrationForm::Register', function (message) {
 			auth.vm.awaitingResponse(true);
+			User.register(message.value).then(function (user) {
+				console.log(user);
+			});
 		});
 	}
 };

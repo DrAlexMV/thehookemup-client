@@ -17,26 +17,32 @@ var RegistrationForm = function () {
 	registrationForm.stream = new Bacon.Bus();
 
 	function back() {
+		m.startComputation();
 		vm.errorMessages([]);
+		m.endComputation();
+
 		registrationForm.stream.push(new StreamCommon.Message('RegistrationForm::Back'));
 	}
 
 	function register() {
-		m.startComputation();
-
 		vm.errorMessages([]);
-		registrationForm.stream.push(new StreamCommon.Message('RegistrationForm::Register'));
+		m.redraw();
 
-		m.endComputation();
+		registrationForm.stream.push(new StreamCommon.Message('RegistrationForm::Register'), {
+			firstName: vm.firstName(),
+			lastName: vm.lastName(),
+			email: vm.email(),
+			password: vm.password(),
+			roles: vm.roles()
+		});
+
 		return false;
 	}
 
 	function formInvalid(e) {
-		m.startComputation();
-
 		vm.errorMessages(e);
+		m.redraw();
 
-		m.endComputation();
 		return false;
 	}
 

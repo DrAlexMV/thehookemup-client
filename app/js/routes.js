@@ -2,8 +2,15 @@
 
 var auth = require('auth/auth');
 var profile = require('profile/profile');
+var Logger = require('common/logger');
 
 m.route(document.getElementById('app'), '/', {
 	'/': auth,
 	'/profile': profile,
 });
+
+(function() {
+	var logger = new Logger(auth.stream);
+})();
+
+

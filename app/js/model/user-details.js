@@ -9,7 +9,7 @@ var Details = function(API) {
 	};
 
 	details.getByID = function(userID) {
-		return get('/user/' + userID + '/details', details.DetailModel);
+		return this.get('/user/' + userID + '/details', details.DetailModel);
 	};
 
 	_.mixin(details, API);
