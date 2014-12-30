@@ -3,3 +3,5 @@
 app/bower_components
 .idea
 node_modules
+app/build/bundle.js
+app/styles/style.css
