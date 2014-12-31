@@ -40,7 +40,7 @@ auth.vm = {
 		});
 
 		StreamCommon.on(auth.stream, 'RegistrationForm::Register', function (message) {
-			auth.vm.awaitisngResponse(true);
+			auth.vm.awaitingResponse(true);
 
 			var regForm = auth.vm.registrationForm;
 
