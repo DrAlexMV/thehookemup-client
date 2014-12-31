@@ -15,22 +15,22 @@ var profile = {};
 
 profile.vm = {
 	init: function () {
-		var userid = m.route.param('userid');
+		this.userid = m.route.param('userid');
 		this.basicInfo = {};
-		User.getByID(userid).then(
+		User.getByID(this.userid).then(
 			function(response) {
 				profile.vm.basicInfo = response;
 			}, Error.handle);
 
 		this.details = [];
-		UserDetails.getByID(userid).then(
+		UserDetails.getByID(this.userid).then(
 			function(response) {
 				profile.vm.details = response;
 			}, Error.handle);
 
 
 		this.edges = {};
-		UserEdges.getByID(userid).then(
+		UserEdges.getByID(this.userid).then(
 			function(response) {
 				profile.vm.edges = response;
 			}, Error.handle);
@@ -43,7 +43,13 @@ profile.controller = function () {
 
 profile.view = function () {
 	var vm = profile.vm;
-	var contact_card = new ContactCard('/img/self-small.jpg', {}, vm.basicInfo.role());
+
+	var contactCard = new ContactCard(
+		vm.basicInfo.picture(),
+		{},
+		vm.basicInfo.role(),
+		vm.userid == 'me'
+	);
 
 	var segments = vm.details.map(function(entry) {
 		return new InfoSegment(entry.title(), entry.content()).view({});
@@ -69,6 +75,7 @@ profile.view = function () {
 			</div>
 		);
 	}
+
 	var connections = new EntityList('Connections', '/profile', profile.vm.edges.connections());
 	var associations = new EntityList('Associations', '/', profile.vm.edges.associations());
 
@@ -76,7 +83,7 @@ profile.view = function () {
 		<div className="base ui padded stackable grid">
 			<div className="row">
 				<div className="four wide column">
-					{contact_card.view({})}
+					{contactCard.view({})}
 				</div>
 				<div className="eight wide column">
 					<h1 className="ui header">

@@ -1,3 +1,7 @@
+var API = require('common/api');
+
+Dropzone.prototype.defaultOptions.withCredentials = true;
+
 var FormBuilder = (function () {
 
 	var formBuilder = {
@@ -50,7 +54,7 @@ var FormBuilder = (function () {
 				};
 
 				return [
-					m('div.dropzone', { id: id, config: config })
+					m('div.dropzone', {id: id, config: config})
 				];
 			}
 		},

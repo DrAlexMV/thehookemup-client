@@ -21,3 +21,21 @@
     width: 100%;
   }
 }
+
+.cssDimmer {
+  .dimmer {
+    opacity: 0.0 !important;
+
+    -webkit-transition: all 0.2s linear !important;
+    -moz-transition: all 0.2s linear !important;
+    -ms-transition: all 0.2s linear !important;
+    -o-transition: all 0.2s linear !important;
+    transition: all 0.2s linear !important;
+  }
+}
+
+.cssDimmer:hover {
+  .dimmer {
+    opacity: 1.0 !important;
+  }
+}
