@@ -6,14 +6,32 @@ var FormBuilder = (function () {
 				return [
 					m('div.required.field', { class: width ? width + ' wide' : '' }, [
 						m('label', name),
-						m('input', parameters)
+						m('input', _.extend({ name: name }, parameters))
 					])
+				];
+			},
+			checkbox: function (name, parameters, label) {
+				return [
+					m('div.ui.checkbox', [
+						m('input', _.extend({ type: 'checkbox' }, parameters)),
+						m('label', label)
+					])
+				];
+			},
+			dropzone: function (id, settings) {
+				var config = function (element, isInitialized) {
+					if (!isInitialized) {
+						new Dropzone(element, settings);
+					}
+				};
+
+				return [
+					m('div.dropzone', { id: id, config: config })
 				];
 			}
 		},
 
 		validate: function (rules, onSuccess, onFailure) {
-
 			var wrap = function (fn) {
 				return function (args) {
 					m.startComputation();

@@ -5,7 +5,7 @@ var profile = require('profile/profile');
 var Logger = require('common/logger');
 
 m.route(document.getElementById('app'), '/', {
-	'/': auth,
+	'/login': auth,
 	'/profile/:userid': profile,
 });
 

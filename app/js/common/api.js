@@ -3,21 +3,28 @@ var API = (function () {
 
 	api.URL = 'http://127.0.0.1:5000';
 	api.API_BASE = '/api/v1';
+	
+	api[401] = function () {
+		m.route('/login');
+	};
 
 	var calcAddress = function(resourceLocation) { return api.URL + api.API_BASE + resourceLocation; };
 
 	api.xhrConfig = function(xhr) {
-		xhr.withCredentials = true;
+		return function () {
+			xhr.withCredentials = true;
+		}
 	};
 
 	api.extractErrors = function(xhr) {
-		if (xhr.status > 200) {
-			return JSON.stringify({
+		return function () {
+			api[xhr.status]();
+
+			return xhr.status > 200 ? JSON.stringify({
 				error : JSON.parse(xhr.responseText).error,
 				status: xhr.status
-			});
-		}
-		return xhr.responseText;
+			}) : xhr.responseText;
+		};
 	};
 
 	api.get = function(resourceLocation, resourceType) {

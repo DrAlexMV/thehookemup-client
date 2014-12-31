@@ -19,6 +19,7 @@
     "mithril": "~0.1.27",
     "semantic-ui": "~1.4.1",
     "bacon": "~0.7.41",
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "dropzone": "~3.12.0"
   }
 }
