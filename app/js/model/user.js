@@ -14,16 +14,20 @@ var User = function(API) {
 		this.university = m.prop(data.university);
 	};
 
-	user.getByID = function(userID) {
+	user.getByID = function (userID) {
 		return this.get('/user/' + userID, user.UserModel);
 	};
 
-	user.getMe = function() {
+	user.getMe = function () {
 		return this.get('/user/me', user.UserModel);
 	};
-	
-	user.register = function (credentials) {
-		return this.post('/signup', credentials);
+
+	user.login = function (credentials) {
+		return this.post('/login', credentials);
+	};
+
+	user.register = function (newUser) {
+		return this.post('/signup', newUser);
 	};
 
 	_.mixin(user, API);

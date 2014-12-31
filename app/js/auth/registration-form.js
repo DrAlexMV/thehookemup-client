@@ -17,65 +17,53 @@ var RegistrationForm = function () {
 	registrationForm.stream = new Bacon.Bus();
 
 	function back() {
-		m.startComputation();
 		vm.errorMessages([]);
-		m.endComputation();
-
 		registrationForm.stream.push(new StreamCommon.Message('RegistrationForm::Back'));
 	}
 
 	function register() {
 		vm.errorMessages([]);
-		m.redraw();
-
-		registrationForm.stream.push(new StreamCommon.Message('RegistrationForm::Register'), {
+		registrationForm.stream.push(new StreamCommon.Message('RegistrationForm::Register', {
 			firstName: vm.firstName(),
 			lastName: vm.lastName(),
 			email: vm.email(),
 			password: vm.password(),
 			roles: vm.roles()
-		});
-
-		return false;
+		}));
 	}
 
 	function formInvalid(e) {
 		vm.errorMessages(e);
-		m.redraw();
-
-		return false;
 	}
 
-	function validate(element, isInitialized) {
-		$(element).form({
-			password: {
-				identifier: 'password',
-				rules: [
-					{ type: 'empty', prompt: 'Please enter a password' },
-					{ type: 'length[8]', prompt: 'Your password must be at least 8 characters' }
-				]
-			},
-			'first-name': {
-				identifier: 'first-name',
-				rules: [
-					{ type: 'empty', prompt: 'Please enter your first name' }
-				]
-			},
-			'last-name': {
-				identifier: 'last-name',
-				rules: [
-					{ type: 'empty', prompt: 'Please enter your last name' }
-				]
-			},
-			'email': {
-				identifier: 'email',
-				rules: [
-					{ type: 'empty', prompt: 'Please enter your email' },
-					{ type: 'email', prompt: 'Please enter a valid email' }
-				]
-			}
-		}, { onSuccess: register, onFailure: formInvalid });
-	}
+	var rules = {
+		password: {
+			identifier: 'password',
+			rules: [
+				{ type: 'empty', prompt: 'Please enter a password' },
+				{ type: 'length[8]', prompt: 'Your password must be at least 8 characters' }
+			]
+		},
+		'first-name': {
+			identifier: 'first-name',
+			rules: [
+				{ type: 'empty', prompt: 'Please enter your first name' }
+			]
+		},
+		'last-name': {
+			identifier: 'last-name',
+			rules: [
+				{ type: 'empty', prompt: 'Please enter your last name' }
+			]
+		},
+		'email': {
+			identifier: 'email',
+			rules: [
+				{ type: 'empty', prompt: 'Please enter your email' },
+				{ type: 'email', prompt: 'Please enter a valid email' }
+			]
+		}
+	};
 
 	registrationForm.view = function () {
 		var nameFields = [
@@ -93,7 +81,8 @@ var RegistrationForm = function () {
 		];
 
 		return [
-			m('form.ui.form', { class: vm.errorMessages().length > 0 ? 'warning' : '', config: validate , action: '' }, [
+			m('form.ui.form', { class: vm.errorMessages().length > 0 ? 'warning' : '',
+													config: FormBuilder.validate(rules, register, formInvalid), action: '' }, [
 				m('div.ui.warning.message', [
 					m('div.header', 'Oops!'),
 					m('ul', [vm.errorMessages().map(function (message) { return m('li', message); })])

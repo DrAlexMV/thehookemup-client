@@ -6,10 +6,6 @@ var User = require('model/user');
 
 var auth = {};
 
-auth.User = function () {
-	this.isAuthenticated =  m.prop(false);
-};
-
 auth.vm = {
 	init: function () {
 		/* Child Components */
@@ -24,8 +20,15 @@ auth.vm = {
 		/* Message Passing Stream */
 		auth.stream = Bacon.mergeAll(this.loginForm.stream, this.socialSignInForm.stream, this.registrationForm.stream);
 
-		StreamCommon.on(auth.stream, 'LoginForm::SignIn', function () {
+		StreamCommon.on(auth.stream, 'LoginForm::SignIn', function (message) {
 			auth.vm.awaitingResponse(true);
+
+			User.login(message.parameters).then(function (res) {
+				console.log(res);
+			}, function (res) {
+				auth.vm.awaitingResponse(false);
+				console.log(res);
+			});
 		});
 
 		StreamCommon.on(auth.stream, ['LoginForm::Register', 'RegistrationForm::Back'], function (message) {
@@ -34,8 +37,15 @@ auth.vm = {
 
 		StreamCommon.on(auth.stream, 'RegistrationForm::Register', function (message) {
 			auth.vm.awaitingResponse(true);
-			User.register(message.value).then(function (user) {
+
+			var regForm = auth.vm.registrationForm;
+
+			User.register(message.parameters).then(function (res) {
+				auth.vm.awaitingResponse(false);
 				console.log(user);
+			}, function (res) {
+				auth.vm.awaitingResponse(false);
+				regForm.vm.errorMessages([res.error])
 			});
 		});
 	}

@@ -9,12 +9,19 @@ var StreamCommon = {
 	 * @returns {*}
 	 */
 	on: function (stream, messageNames, cb) {
+		var wrapRedraw = function (fn) {
+			return function (args) {
+				fn(args);
+				m.redraw();
+			}
+		};
+
 		return stream.filter(function (message) {
 			if (Array.isArray(messageNames)) {
 				return messageNames.indexOf(message.name) > -1;
 			}
 			return message.name === messageNames;
-		}).onValue(cb);
+		}).onValue(wrapRedraw(cb));
 	},
 
 	/**

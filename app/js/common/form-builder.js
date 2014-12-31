@@ -10,6 +10,26 @@ var FormBuilder = (function () {
 					])
 				];
 			}
+		},
+
+		validate: function (rules, onSuccess, onFailure) {
+
+			var wrap = function (fn) {
+				return function (args) {
+					m.startComputation();
+					fn(args);
+					m.endComputation();
+					return false;
+				}
+			};
+
+			return function (element, isInitialized) {
+				var el = $(element);
+
+				if (!isInitialized) {
+					el.form(rules, { onSuccess: wrap(onSuccess), onFailure: wrap(onFailure) });
+				}
+			}
 		}
 	};
 
