@@ -66,6 +66,7 @@ var RegistrationForm = function () {
 	};
 
 	registrationForm.view = function () {
+
 		var nameFields = [
 			{ name: 'First Name',
 				parameters: { name: 'first-name', placeholder: 'First Name', onchange: m.withAttr('value', vm.firstName) } },
@@ -80,6 +81,8 @@ var RegistrationForm = function () {
 				parameters: { name: 'password', placeholder: 'Password', onchange: m.withAttr('value', vm.password), type: 'password' } }
 		];
 
+		var roles = ['Founder', 'Investor', 'Startuper'];
+
 		return [
 			m('form.ui.form', { class: vm.errorMessages().length > 0 ? 'warning' : '',
 													config: FormBuilder.validate(rules, register, formInvalid), action: '' }, [
@@ -91,6 +94,7 @@ var RegistrationForm = function () {
 					nameFields.map(function (field) { return FormBuilder.inputs.formField(field.name, field.parameters, field.width); })
 				]),
 				emailPasswordFields.map(function (field) { return FormBuilder.inputs.formField(field.name, field.parameters) }),
+				m('div.inline.fields', [ roles.map(function (role) { return FormBuilder.inputs.checkbox(role, {}, role); }) ]),
 				m('div.ui.negative.button', { onclick: back }, 'Back'),
 				m('div.ui.right.floated.buttons', [
 					m('div.ui.positive.submit.button', 'Register')

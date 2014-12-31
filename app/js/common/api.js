@@ -21,7 +21,7 @@ var API = (function () {
 			api[xhr.status] && api[xhr.status]();
 
 			if (xhr.responseText.length === 0) { return JSON.stringify({ error: 'Empty server response' }); }
-			return xhr.status > 200 ? JSON.stringify(xhr.responseText) : xhr.responseText
+			return xhr.responseText;
 		};
 	};
 

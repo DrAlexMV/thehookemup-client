@@ -11,12 +11,19 @@ var FormBuilder = (function () {
 				];
 			},
 			checkbox: function (name, parameters, label) {
+				var checkboxConfig = function (element, isInitialized) {
+					if (!isInitialized) { $(element).checkbox(); }
+				};
+
 				return [
-					m('div.ui.checkbox', [
+					m('div.ui.checkbox' , { config: checkboxConfig }, [
 						m('input', _.extend({ type: 'checkbox' }, parameters)),
 						m('label', label)
 					])
 				];
+			},
+			multiCheckbox: function () {
+
 			},
 			dropzone: function (id, settings) {
 				var config = function (element, isInitialized) {

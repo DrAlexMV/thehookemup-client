@@ -3,6 +3,7 @@ var browserSync = require('browser-sync');
 var gulp = require('gulp');
 var less = require('gulp-less');
 var rename = require('gulp-rename');
+var plumber = require('gulp-plumber');
 
 // Define some paths.
 var paths = {
@@ -25,10 +26,12 @@ gulp.task('less', function () {
 gulp.task('js', function() {
 	try {
 		gulp.src(paths.app_js)
+			.pipe(plumber())
 			.pipe(browserify({
 				transform: ['mithrilify'],
 				paths: [paths.scripts],
 			}))
+			.on('error', gutil.log)
 			.pipe(rename(paths.bundle))
 			.pipe(gulp.dest(paths.build))
 	} catch (e) {
