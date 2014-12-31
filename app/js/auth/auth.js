@@ -41,9 +41,9 @@ auth.vm = {
 			var regForm = auth.vm.registrationForm;
 
 			User.register(message.parameters).then(function (res) {
-				console.log(user);
+				console.log(res);
 			}, function (res) {
-				regForm.vm.errorMessages([res.error])
+				regForm.vm.errorMessages([res.error]);
 			}).then(function () { auth.vm.awaitingResponse(false); });
 		});
 	}

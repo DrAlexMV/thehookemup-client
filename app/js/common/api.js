@@ -16,14 +16,12 @@ var API = (function () {
 		}
 	};
 
-	api.extractErrors = function() {
+	api.extract = function() {
 		return function (xhr) {
 			api[xhr.status] && api[xhr.status]();
 
-			return xhr.status > 200 ? JSON.stringify({
-				error : JSON.parse(xhr.responseText).error,
-				status: xhr.status
-			}) : xhr.responseText;
+			if (xhr.responseText.length === 0) { return JSON.stringify({ error: 'Empty server response' }); }
+			return xhr.status > 200 ? JSON.stringify(xhr.responseText) : xhr.responseText
 		};
 	};
 
@@ -33,7 +31,7 @@ var API = (function () {
 			url: calcAddress(resourceLocation),
 			type: resourceType,
 			config: api.xhrConfig(),
-			extract: api.extractErrors()
+			extract: api.extract()
 		});
 	};
 
@@ -44,7 +42,7 @@ var API = (function () {
 			type: resourceType,
 			data: data,
 			config: api.xhrConfig(),
-			extract: api.extractErrors()
+			extract: api.extract()
 		});
 	};
 
