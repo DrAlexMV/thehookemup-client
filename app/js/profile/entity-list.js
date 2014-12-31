@@ -12,7 +12,7 @@ var EntityList = function (title, linkBase, entities) {
 				<a href={linkBase + '/' + entity._id} config={m.route} className="item">
 					<img className="ui top aligned avatar image" src="/img/square-image.png" />
 					<div className="content">
-						<div className="header">{entity.first_name + ' ' + entity.last_name}</div>
+						<div className="header">{entity.firstName + ' ' + entity.lastName}</div>
 						{entity.role}
 					</div>
 				</a>

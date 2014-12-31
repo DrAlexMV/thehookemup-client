@@ -62,7 +62,7 @@ profile.view = function () {
 				{university_insignia}
 				<h5 className="university-title header"><i>
 					{vm.basicInfo.university()} class of &#39;
-					{vm.basicInfo.graduation_year() % 1000}
+					{vm.basicInfo.graduationYear() % 1000}
 					<br/>
 					{vm.basicInfo.major()}
 				</i></h5>
@@ -80,7 +80,7 @@ profile.view = function () {
 				</div>
 				<div className="eight wide column">
 					<h1 className="ui header">
-						{vm.basicInfo.first_name() + ' ' + vm.basicInfo.last_name()}
+						{vm.basicInfo.firstName() + ' ' + vm.basicInfo.lastName()}
 						<div className="blue ui buttons right floated">
 							<div className="ui button">
 								<i className="mail icon"></i>

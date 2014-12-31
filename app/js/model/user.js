@@ -4,11 +4,11 @@ var User = function(API) {
 	var user = {};
 
 	user.UserModel = function(data) {
-		this.first_name = m.prop(data.first_name);
-		this.last_name = m.prop(data.last_name);
+		this.firstName = m.prop(data.firstName);
+		this.lastName = m.prop(data.lastName);
 		this.email = m.prop(data.email);
-		this.date_joined = m.prop(data.date_joined);
-		this.graduation_year = m.prop(data.graduation_year);
+		this.dateJoined = m.prop(data.dateJoined);
+		this.graduationYear = m.prop(data.graduationYear);
 		this.major = m.prop(data.major);
 		this.description = m.prop(data.description);
 		this.university = m.prop(data.university);
