@@ -56,8 +56,7 @@ var LoginForm = function () {
 				m('div.ui.right.floated.buttons', [
 					m('div.ui.button.primary', { onclick: register }, 'Register'),
 					m('.or'),
-					m('div.ui.submit.button.positive', 'Sign In'),
-					FormBuilder.inputs.dropzone('myDropzone', { url: 'yourmom.com' })
+					m('div.ui.submit.button.positive', 'Sign In')
 				])
 			])
 		];

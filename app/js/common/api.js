@@ -10,15 +10,15 @@ var API = (function () {
 
 	var calcAddress = function(resourceLocation) { return api.URL + api.API_BASE + resourceLocation; };
 
-	api.xhrConfig = function(xhr) {
-		return function () {
+	api.xhrConfig = function() {
+		return function (xhr) {
 			xhr.withCredentials = true;
 		}
 	};
 
-	api.extractErrors = function(xhr) {
-		return function () {
-			api[xhr.status]();
+	api.extractErrors = function() {
+		return function (xhr) {
+			api[xhr.status] && api[xhr.status]();
 
 			return xhr.status > 200 ? JSON.stringify({
 				error : JSON.parse(xhr.responseText).error,
@@ -32,8 +32,8 @@ var API = (function () {
 			method: 'GET',
 			url: calcAddress(resourceLocation),
 			type: resourceType,
-			config: api.xhrConfig,
-			extract: api.extractErrors
+			config: api.xhrConfig(),
+			extract: api.extractErrors()
 		});
 	};
 
@@ -43,8 +43,8 @@ var API = (function () {
 			url: calcAddress(resourceLocation),
 			type: resourceType,
 			data: data,
-			config: api.xhrConfig,
-			extract: api.extractErrors
+			config: api.xhrConfig(),
+			extract: api.extractErrors()
 		});
 	};
 
