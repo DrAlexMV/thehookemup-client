@@ -94,7 +94,7 @@ var RegistrationForm = function () {
 					nameFields.map(function (field) { return FormBuilder.inputs.formField(field.name, field.parameters, field.width); })
 				]),
 				emailPasswordFields.map(function (field) { return FormBuilder.inputs.formField(field.name, field.parameters) }),
-				m('div.inline.fields', [ roles.map(function (role) { return FormBuilder.inputs.checkbox(role, {}, role); }) ]),
+				m('div.inline.fields', [ roles.map(function (role) { return FormBuilder.inputs.checkbox(role, {}); }) ]),
 				m('div.ui.negative.button', { onclick: back }, 'Back'),
 				m('div.ui.right.floated.buttons', [
 					m('div.ui.positive.submit.button', 'Register')

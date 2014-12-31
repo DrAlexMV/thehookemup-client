@@ -31,7 +31,6 @@ gulp.task('js', function() {
 				transform: ['mithrilify'],
 				paths: [paths.scripts],
 			}))
-			.on('error', gutil.log)
 			.pipe(rename(paths.bundle))
 			.pipe(gulp.dest(paths.build))
 	} catch (e) {

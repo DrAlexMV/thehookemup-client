@@ -10,20 +10,37 @@ var FormBuilder = (function () {
 					])
 				];
 			},
-			checkbox: function (name, parameters, label) {
+			checkbox: function (label, parameters) {
 				var checkboxConfig = function (element, isInitialized) {
 					if (!isInitialized) { $(element).checkbox(); }
 				};
 
+				parameters.name = parameters.name ?
+					parameters.name : label.toLowerCase() + '-checkbox';
+
 				return [
 					m('div.ui.checkbox' , { config: checkboxConfig }, [
-						m('input', _.extend({ type: 'checkbox' }, parameters)),
+						m('input[type="checkbox"]', parameters),
 						m('label', label)
 					])
 				];
 			},
-			multiCheckbox: function () {
+			multiCheckbox: function (fields, bind) {
+				var multi = {};
 
+				var vm =
+				multi.vm = {
+				};
+
+				multi.view = function () {
+					return [
+						fields.map(function (field) {
+							formBuilder.inputs.checkbox(field, {});
+						})
+					];
+				};
+
+				return multi;
 			},
 			dropzone: function (id, settings) {
 				var config = function (element, isInitialized) {
@@ -37,7 +54,6 @@ var FormBuilder = (function () {
 				];
 			}
 		},
-
 		validate: function (rules, onSuccess, onFailure) {
 			var wrap = function (fn) {
 				return function (args) {
