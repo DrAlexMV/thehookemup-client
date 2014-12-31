@@ -12,6 +12,7 @@ var User = function(API) {
 		this.major = m.prop(data.major);
 		this.description = m.prop(data.description);
 		this.university = m.prop(data.university);
+		this.role = m.prop(data.role);
 	};
 
 	user.getByID = function (userID) {

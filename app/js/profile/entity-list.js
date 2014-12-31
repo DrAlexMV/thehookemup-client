@@ -3,56 +3,26 @@
  * @jsx m
  */
 
-var EntityList = function (title, entity_ids) {
+var EntityList = function (title, linkBase, entities) {
 	var entitylist = {};
+
 	entitylist.view = function () {
+		var list = entities.map(function(entity) {
+			return (
+				<a href={linkBase + '/' + entity._id} config={m.route} className="item">
+					<img className="ui top aligned avatar image" src="/img/square-image.png" />
+					<div className="content">
+						<div className="header">{entity.first_name + ' ' + entity.last_name}</div>
+						{entity.role}
+					</div>
+				</a>
+			);
+		});
 		return (
 			<div>
-				<h4 className="header">Connections</h4>
+				<h4 className="header">{title}</h4>
 				<div className="ui divided very relaxed list">
-					<a className="item">
-						<img className="ui top aligned avatar image" src="/img/square-image.png" />
-						<div className="content">
-							<div className="header">Alexander Ventura</div>
-							Developer
-						</div>
-					</a>
-					<a className="item">
-						<img className="ui top aligned avatar image" src="/img/square-image.png" />
-						<div className="content">
-							<div className="header">Brandon Olivier</div>
-							Developer
-						</div>
-					</a>
-					<a className="item">
-						<img className="ui top aligned avatar image" src="/img/square-image.png" />
-						<div className="content">
-							<div className="header">Austin Stone</div>
-							Developer
-						</div>
-					</a>
-					<a className="item">
-						<img className="ui top aligned avatar image" src="/img/square-image.png" />
-						<div className="content">
-							<div className="header">Santa Claus</div>
-							Investor
-						</div>
-					</a>
-				</div>
-				<h4 className="header">Associations</h4>
-				<div className="ui divided very relaxed list">
-					<a className="item">
-						<img className="ui top aligned avatar image" src="/img/square-image.png" />
-						<div className="content">
-							<div className="header">UT Alum Web App Jobs</div>
-						</div>
-					</a>
-					<a className="item">
-						<img className="ui top aligned avatar image" src="/img/square-image.png" />
-						<div className="content">
-							<div className="header">Computer Science Hackers</div>
-						</div>
-					</a>
+					{list}
 				</div>
 			</div>
 		);
