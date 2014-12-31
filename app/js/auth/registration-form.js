@@ -10,7 +10,8 @@ var RegistrationForm = function () {
 		lastName: m.prop(''),
 		email: m.prop(''),
 		password: m.prop(''),
-		roles: m.prop([]),
+		role: m.prop('Founder'),
+		confirmPassword: m.prop(''),
 		errorMessages: m.prop([])
 	};
 
@@ -28,7 +29,7 @@ var RegistrationForm = function () {
 			lastName: vm.lastName(),
 			email: vm.email(),
 			password: vm.password(),
-			roles: vm.roles()
+			role: vm.role()
 		}));
 	}
 
@@ -42,6 +43,13 @@ var RegistrationForm = function () {
 			rules: [
 				{ type: 'empty', prompt: 'Please enter a password' },
 				{ type: 'length[8]', prompt: 'Your password must be at least 8 characters' }
+			]
+		},
+		confirm: {
+			identifier: 'confirm-password',
+			rules: [
+				{ type: 'empty', prompt: 'Please confirm your password' },
+				{ type: 'match[password]', prompt: 'Your passwords do not match' }
 			]
 		},
 		'first-name': {
@@ -78,7 +86,9 @@ var RegistrationForm = function () {
 			{ name: 'Email',
 				parameters: { name: 'email', placeholder: 'Email', onchange: m.withAttr('value', vm.email) } },
 			{ name: 'Password',
-				parameters: { name: 'password', placeholder: 'Password', onchange: m.withAttr('value', vm.password), type: 'password' } }
+				parameters: { name: 'password', placeholder: 'Password', onchange: m.withAttr('value', vm.password), type: 'password' } },
+			{ name: 'Confirm Password',
+				parameters: { name: 'confirm-password', placeholder: 'Confirm Password', onchange: m.withAttr('value', vm.confirmPassword), type: 'password' } }
 		];
 
 		var roles = ['Founder', 'Investor', 'Startuper'];
@@ -94,7 +104,11 @@ var RegistrationForm = function () {
 					nameFields.map(function (field) { return FormBuilder.inputs.formField(field.name, field.parameters, field.width); })
 				]),
 				emailPasswordFields.map(function (field) { return FormBuilder.inputs.formField(field.name, field.parameters) }),
-				m('div.inline.fields', [ roles.map(function (role) { return FormBuilder.inputs.checkbox(role, {}); }) ]),
+				m('div.grouped.inline.fields', [
+					roles.map(function (role) {
+						return m('div.field', [FormBuilder.inputs.checkbox(role, {})]);
+					})
+				]),
 				m('div.ui.negative.button', { onclick: back }, 'Back'),
 				m('div.ui.right.floated.buttons', [
 					m('div.ui.positive.submit.button', 'Register')

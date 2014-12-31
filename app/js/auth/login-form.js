@@ -7,7 +7,8 @@ var LoginForm = function () {
 	var vm =
 	loginForm.vm = {
 		email: m.prop(''),
-		password: m.prop('')
+		password: m.prop(''),
+		errorMessages: m.prop([])
 	};
 
 	loginForm.stream = new Bacon.Bus();
@@ -39,7 +40,14 @@ var LoginForm = function () {
 
 	loginForm.view = function () {
 		return [
-			m('form.ui.form', { config: FormBuilder.validate(validationRules, signIn, function () {}) } , [
+			m('form.ui.form', { class: vm.errorMessages().length > 0 ? 'warning' : '',
+													config: FormBuilder.validate(validationRules, signIn, function () {}) } , [
+				m('div.ui.warning.message', [
+					m('div.header', 'Oops!'),
+					m('ul', [
+						vm.errorMessages().map(function (message) { return m('li', message); })
+					])
+				]),
 				m('div.required.field', [
 					m('div.ui.icon.input', [
 						m('input', { name: 'email', placeholder: 'Email', type: 'text', onchange: m.withAttr('value', vm.email) }),

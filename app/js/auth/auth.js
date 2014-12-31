@@ -3,6 +3,7 @@ var RegistrationForm = require('auth/registration-form');
 var SocialSignInForm = require('auth/social-signIn-form');
 var StreamCommon = require('common/stream-common');
 var User = require('model/user');
+var Auth = require('common/auth');
 
 var auth = {};
 
@@ -23,12 +24,15 @@ auth.vm = {
 		StreamCommon.on(auth.stream, 'LoginForm::SignIn', function (message) {
 			auth.vm.awaitingResponse(true);
 
-			User.login(message.parameters).then(function (res) {
-				console.log(res);
-			}, function (res) {
-				auth.vm.awaitingResponse(false);
-				console.log(res);
-			});
+			var loginForm = auth.vm.loginForm;
+
+			User.login(message.parameters)
+				.then(function (res) {
+					console.log(res);
+				}, function (res) {
+					loginForm.vm.errorMessages([res.error]);
+				})
+				.then(function () { auth.vm.awaitingResponse(false); });
 		});
 
 		StreamCommon.on(auth.stream, ['LoginForm::Register', 'RegistrationForm::Back'], function (message) {
@@ -36,12 +40,13 @@ auth.vm = {
 		});
 
 		StreamCommon.on(auth.stream, 'RegistrationForm::Register', function (message) {
-			auth.vm.awaitingResponse(true);
+			auth.vm.awaitisngResponse(true);
 
 			var regForm = auth.vm.registrationForm;
 
 			User.register(message.parameters).then(function (res) {
 				console.log(res);
+				m.route('/');
 			}, function (res) {
 				regForm.vm.errorMessages([res.error]);
 			}).then(function () { auth.vm.awaitingResponse(false); });
@@ -58,7 +63,7 @@ auth.view = function () {
 
 	var signInForms = function () {
 		return [
-			m('div.ui.two.column.grid', [
+			m('div.ui.two.column.stackable.grid', [
 				m('div.column', [
 					vm.socialSignInForm.view({})
 				]),
@@ -72,7 +77,7 @@ auth.view = function () {
 	return [
 		m('div.ui.three.column.stackable.page.grid', [
 			m('div.three.wide.column'),
-			m('div.ten.wide.column', { style: { 'padding-top': '200px'} }, [
+			m('div.ten.wide.column', { style: { 'margin-top': '100px'} }, [
 				m('div.ui.piled.segment#auth-segment', [
 					m('div', [
 						vm.awaitingResponse() ? m('div.ui.active.inverted.dimmer', [m('div.ui.text.loader', 'Loading')]) : null,
