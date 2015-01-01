@@ -1,6 +1,5 @@
 var API = require('common/api');
-
-Dropzone.prototype.defaultOptions.withCredentials = true;
+var StreamCommon = require('common/stream-common');
 
 var FormBuilder = (function () {
 
@@ -46,10 +45,25 @@ var FormBuilder = (function () {
 
 				return multi;
 			},
-			dropzone: function (id, settings) {
+			dropzone: function (id, settings, stream) {
 				var config = function (element, isInitialized) {
 					if (!isInitialized) {
 						new Dropzone(element, settings);
+					}
+				};
+
+				Dropzone.options[id] = {
+					init: function() {
+						this.options.withCredentials = true;
+						if (stream) {
+							this.on('success', function(file) {
+								stream.push(
+									new StreamCommon.Message(
+										'Dropzone::Success',
+										JSON.parse(file.xhr.response))
+								);
+							});
+						}
 					}
 				};
 

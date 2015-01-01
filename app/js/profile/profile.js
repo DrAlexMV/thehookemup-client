@@ -15,22 +15,24 @@ var profile = {};
 
 profile.vm = {
 	init: function () {
-		this.userid = m.route.param('userid');
-		this.basicInfo = {};
-		User.getByID(this.userid).then(
+		userid = m.route.param('userid');
+
+		this.basicInfo = new User.UserModel({});
+		this.contactCard = new ContactCard(this.basicInfo, userid == 'me');
+
+		User.getByID(userid).then(
 			function(response) {
 				profile.vm.basicInfo = response;
 			}, Error.handle);
 
 		this.details = [];
-		UserDetails.getByID(this.userid).then(
+		UserDetails.getByID(userid).then(
 			function(response) {
 				profile.vm.details = response;
 			}, Error.handle);
 
-
 		this.edges = {};
-		UserEdges.getByID(this.userid).then(
+		UserEdges.getByID(userid).then(
 			function(response) {
 				profile.vm.edges = response;
 			}, Error.handle);
@@ -43,13 +45,6 @@ profile.controller = function () {
 
 profile.view = function () {
 	var vm = profile.vm;
-
-	var contactCard = new ContactCard(
-		vm.basicInfo.picture(),
-		{},
-		vm.basicInfo.role(),
-		vm.userid == 'me'
-	);
 
 	var segments = vm.details.map(function(entry) {
 		return new InfoSegment(entry.title(), entry.content()).view({});
@@ -83,7 +78,7 @@ profile.view = function () {
 		<div className="base ui padded stackable grid">
 			<div className="row">
 				<div className="four wide column">
-					{contactCard.view({})}
+					{vm.contactCard.view({})}
 				</div>
 				<div className="eight wide column">
 					<h1 className="ui header">
