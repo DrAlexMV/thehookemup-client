@@ -24,6 +24,10 @@ var User = function(API) {
 		return this.get('/user/me', user.UserModel);
 	};
 
+	user.putByID = function (userID, updatedProperties) {
+		return this.put('/user/' + userID, updatedProperties);
+	};
+
 	user.login = function (credentials) {
 		return this.post('/login', credentials);
 	};

@@ -6,7 +6,7 @@ var Dropzone = require('common/form-builder').inputs.dropzone;
 var ImageModel = require('model/image');
 var StreamCommon = require('common/stream-common');
 
-var EditableImage = function (userImageURL, editable) {
+var EditableImage = function (editable) {
 	var editableImage = {};
 	
 	var vm =
@@ -17,21 +17,25 @@ var EditableImage = function (userImageURL, editable) {
 	editableImage.stream = new Bacon.Bus();
 
 	StreamCommon.on(editableImage.stream, 'Dropzone::Success', function (message) {
-		console.log(message, message.parameters.imageID);
-		userImageURL(message.parameters.imageID);
+		editableImage.stream.push(
+			new StreamCommon.Message(
+				'EditableImage::ReplaceImageURL',
+				message.parameters)
+		);
 		vm.step('display');
 	});
 
-	editableImage.view = function () {
-		var photoUrl = userImageURL() ? ImageModel.getURL(userImageURL()) : '/img/square-image.png';
+	editableImage.view = function (props) {
+		var userImageURL = props.userImageURL;
+		var photoUrl = userImageURL ? ImageModel.getURL(userImageURL) : '/img/square-image.png';
 
 		var stepView = null;
 		if (vm.step() == 'display') {
 			stepView = (
 				<div className="content">
-					{userImageURL() ?
+					{userImageURL ?
 						<a className="ui right corner label" onclick={
-							function() {console.log('remove photo', userImageURL())}}>
+							function() {console.log('remove photo', userImageURL)}}>
 							<i className="close icon"></i>
 						</a>
 						: null
@@ -39,7 +43,7 @@ var EditableImage = function (userImageURL, editable) {
 					<div className="center">
 						<div className="ui inverted button" onclick={
 							function() {vm.step('upload')}}>
-							{userImageURL() ? 'Change Photo' : 'Add Photo'}
+							{userImageURL ? 'Change Photo' : 'Add Photo'}
 						</div>
 					</div>
 				</div>

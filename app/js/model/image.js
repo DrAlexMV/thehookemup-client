@@ -11,6 +11,10 @@ var Image = function(API) {
 		return API.calcAddress('/image/' + imageName);
 	};
 
+	image.deleteImage = function(imageName) {
+		return this.delete('/image/' + imageName);
+	};
+
 	_.mixin(image, API);
 	return image;
 };

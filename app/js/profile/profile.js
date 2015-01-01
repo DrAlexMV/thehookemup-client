@@ -10,6 +10,8 @@ var InfoSegment = require('profile/info-segment');
 var User = require('model/user');
 var UserDetails = require('model/user-details');
 var UserEdges = require('model/user-edges');
+var ImageModel = require('model/image');
+var StreamCommon = require('common/stream-common');
 
 var profile = {};
 
@@ -17,12 +19,24 @@ profile.vm = {
 	init: function () {
 		userid = m.route.param('userid');
 
-		this.basicInfo = new User.UserModel({});
-		this.contactCard = new ContactCard(this.basicInfo, userid == 'me');
+		this.basicInfo = null;
+		this.contactCard = null;
 
-		User.getByID(userid).then(
-			function(response) {
-				profile.vm.basicInfo = response;
+		User.getByID(userid).then(function(response) {
+			profile.vm.basicInfo = response;
+			profile.vm.contactCard = new ContactCard(profile.vm.basicInfo, userid == 'me');
+			StreamCommon.on(profile.vm.contactCard.vm.profilePicture.stream,
+				'EditableImage::ReplaceImageURL',
+				function (message) {
+					var basicInfo = profile.vm.basicInfo;
+					if (basicInfo.picture()) {
+						ImageModel.deleteImage(basicInfo.picture());
+					}
+					basicInfo.picture(message.parameters.imageID);
+					// TODO: Make format: basicInfo.save(['picture']);
+					User.putByID(userid, {picture: basicInfo.picture()});
+				}
+			);
 			}, Error.handle);
 
 		this.details = [];

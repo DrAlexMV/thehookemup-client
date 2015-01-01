@@ -46,6 +46,26 @@ var API = (function () {
 		});
 	};
 
+	api.put = function(resourceLocation, data, resourceType) {
+		return m.request({
+			method: 'PUT',
+			url: api.calcAddress(resourceLocation),
+			type: resourceType,
+			data: data,
+			config: api.xhrConfig(),
+			extract: api.extract()
+		});
+	};
+
+	api.delete = function(resourceLocation) {
+		return m.request({
+			method: 'DELETE',
+			url: api.calcAddress(resourceLocation),
+			config: api.xhrConfig(),
+			extract: api.extract()
+		});
+	};
+
 	return api;
 })();
 

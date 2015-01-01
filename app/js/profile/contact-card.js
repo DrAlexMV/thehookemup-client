@@ -15,7 +15,7 @@ var ContactCard = function (basicUserInfo, editable) {
 	card.view = function () {
 		return (
 			<div className="ui card">
-				{card.vm.profilePicture.view({})}
+				{card.vm.profilePicture.view({userImageURL: basicUserInfo.picture()})}
 				<div className="content">
 					<h4 className="ui header">{basicUserInfo.role()}</h4>
 					<div className="ui divider"></div>
