@@ -9,7 +9,7 @@ var ContactCard = function (basicUserInfo, editable) {
 	var card = {};
 
 	card.vm = {
-		profilePicture: new EditableImage(basicUserInfo.picture, editable)
+		profilePicture: new EditableImage(editable)
 	};
 
 	card.view = function () {
