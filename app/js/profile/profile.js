@@ -33,8 +33,7 @@ profile.vm = {
 						ImageModel.deleteImage(basicInfo.picture());
 					}
 					basicInfo.picture(message.parameters.imageID);
-					// TODO: Make format: basicInfo.save(['picture']);
-					User.putByID(userid, {picture: basicInfo.picture()});
+					User.updatePicture(userid, picture);
 				}
 			);
 			}, Error.handle);
@@ -89,7 +88,7 @@ profile.view = function () {
 	var associations = new EntityList('Associations', '/', profile.vm.edges.associations());
 
 	return (
-		<div className="base ui padded stackable grid">
+		<div className="ui padded stackable grid">
 			<div className="row">
 				<div className="four wide column">
 					{vm.contactCard.view({})}

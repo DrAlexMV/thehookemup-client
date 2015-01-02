@@ -37,6 +37,10 @@ var User = function(API) {
 		return this.post('/signup', newUser);
 	};
 
+	user.updatePicture = function (userid, picture) {
+		user.putByID(userid, {picture: picture});
+	};
+
 	user.getProfilePicture = function(userInstance) {
 		return userInstance.picture() ? ImageModel.getURL(userInstance.picture()) : '/img/square-image.png';
 	};
