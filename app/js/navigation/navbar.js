@@ -10,7 +10,7 @@ var Navbar = function () {
 			m('div.ui.fixed.inverted.menu', [
 				m('a.item', "The Hook'Em Up"),
 				m('div.right.item', [
-					m('div.ui.icon.input', [
+					m('div.ui.transparent.icon.input', [
 						m('input[type="text"]', { placeholder: 'Search' }),
 						m('i.search.icon')
 					])
