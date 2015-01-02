@@ -1,4 +1,5 @@
 var API = require('common/api');
+var ImageModel = require('model/image');
 
 var User = function(API) {
 	var user = {};
@@ -34,6 +35,10 @@ var User = function(API) {
 
 	user.register = function (newUser) {
 		return this.post('/signup', newUser);
+	};
+
+	user.getProfilePicture = function(userInstance) {
+		return userInstance.picture() ? ImageModel.getURL(userInstance.picture()) : '/img/square-image.png';
 	};
 
 	_.mixin(user, API);
