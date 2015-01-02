@@ -3,39 +3,21 @@
  */
 
 var API = require('common/api');
-var Dropzone = require('common/form-builder').inputs.dropzone;
+var EditableImage = require('common/editable-image');
 
-var ContactCard = function (user_image_url, social_links, description, editable) {
+var ContactCard = function (basicUserInfo, editable) {
 	var card = {};
+
+	card.vm = {
+		profilePicture: new EditableImage(editable)
+	};
+
 	card.view = function () {
-		//var img_drop = Dropzone('myDropzone', {url: API.calcAddress('/image')});
-		var photo_url = (user_image_url == null) ? '/img/square-image.png' : user_image_url;
-		var profilePicture = null;
-		if (editable) {
-			profilePicture = (
-				<div className="image cssDimmer">
-					<div className="ui active dimmer">
-						<div className="content">
-							<div className="center">
-								<div className="ui inverted button">Change Photo</div>
-							</div>
-						</div>
-					</div>
-					<img src={photo_url} />
-				</div>
-			);
-		} else {
-			profilePicture = (
-				<div className="image">
-					<img src={photo_url} />
-				</div>
-			);
-		}
 		return (
 			<div className="ui card">
-				{profilePicture}
+				{card.vm.profilePicture.view({userImageURL: basicUserInfo.picture()})}
 				<div className="content">
-					<h4 className="ui header">{description}</h4>
+					<h4 className="ui header">{basicUserInfo.role()}</h4>
 					<div className="ui divider"></div>
 					<div className="ui circular linkedin icon button">
 						<i className="linkedin icon"></i>

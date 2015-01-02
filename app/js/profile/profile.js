@@ -10,27 +10,43 @@ var InfoSegment = require('profile/info-segment');
 var User = require('model/user');
 var UserDetails = require('model/user-details');
 var UserEdges = require('model/user-edges');
+var ImageModel = require('model/image');
+var StreamCommon = require('common/stream-common');
 
 var profile = {};
 
 profile.vm = {
 	init: function () {
-		this.userid = m.route.param('userid');
-		this.basicInfo = {};
-		User.getByID(this.userid).then(
-			function(response) {
-				profile.vm.basicInfo = response;
+		userid = m.route.param('userid');
+
+		this.basicInfo = null;
+		this.contactCard = null;
+
+		User.getByID(userid).then(function(response) {
+			profile.vm.basicInfo = response;
+			profile.vm.contactCard = new ContactCard(profile.vm.basicInfo, userid == 'me');
+			StreamCommon.on(profile.vm.contactCard.vm.profilePicture.stream,
+				'EditableImage::ReplaceImageURL',
+				function (message) {
+					var basicInfo = profile.vm.basicInfo;
+					if (basicInfo.picture()) {
+						ImageModel.deleteImage(basicInfo.picture());
+					}
+					basicInfo.picture(message.parameters.imageID);
+					// TODO: Make format: basicInfo.save(['picture']);
+					User.putByID(userid, {picture: basicInfo.picture()});
+				}
+			);
 			}, Error.handle);
 
 		this.details = [];
-		UserDetails.getByID(this.userid).then(
+		UserDetails.getByID(userid).then(
 			function(response) {
 				profile.vm.details = response;
 			}, Error.handle);
 
-
 		this.edges = {};
-		UserEdges.getByID(this.userid).then(
+		UserEdges.getByID(userid).then(
 			function(response) {
 				profile.vm.edges = response;
 			}, Error.handle);
@@ -43,13 +59,6 @@ profile.controller = function () {
 
 profile.view = function () {
 	var vm = profile.vm;
-
-	var contactCard = new ContactCard(
-		vm.basicInfo.picture(),
-		{},
-		vm.basicInfo.role(),
-		vm.userid == 'me'
-	);
 
 	var segments = vm.details.map(function(entry) {
 		return new InfoSegment(entry.title(), entry.content()).view({});
@@ -83,7 +92,7 @@ profile.view = function () {
 		<div className="base ui padded stackable grid">
 			<div className="row">
 				<div className="four wide column">
-					{contactCard.view({})}
+					{vm.contactCard.view({})}
 				</div>
 				<div className="eight wide column">
 					<h1 className="ui header">
