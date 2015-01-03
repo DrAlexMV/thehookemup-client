@@ -29,6 +29,7 @@ auth.vm = {
 			User.login(message.parameters)
 				.then(function (res) {
 					console.log(res);
+					Auth.setCurrentUser(res);
 				}, function (res) {
 					loginForm.vm.errorMessages([res.error]);
 				})

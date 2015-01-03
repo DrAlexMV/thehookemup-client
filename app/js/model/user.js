@@ -37,8 +37,16 @@ var User = function(API) {
 		return this.post('/signup', newUser);
 	};
 
+	user.updatePicture = function (userid, picture) {
+		user.putByID(userid, {picture: picture});
+	};
+
 	user.getProfilePicture = function(userInstance) {
 		return userInstance.picture() ? ImageModel.getURL(userInstance.picture()) : '/img/square-image.png';
+	};
+
+	user.connectMe = function(otherUserID) {
+		return this.post('/user/me/edges/connections', {user: otherUserID});
 	};
 
 	_.mixin(user, API);
