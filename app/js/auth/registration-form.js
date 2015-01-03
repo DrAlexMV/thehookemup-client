@@ -96,9 +96,9 @@ var RegistrationForm = function () {
 					m('ul', [vm.errorMessages().map(function (message) { return m('li', message); })])
 				]),
 				m('div.two.fields', [
-					nameFields.map(function (field) { return FormBuilder.inputs.formField(field.name, field.parameters, field.width); })
+					nameFields.map(function (field) { return FormBuilder.inputs.formField(field.parameters, '', field.width); })
 				]),
-				emailPasswordFields.map(function (field) { return FormBuilder.inputs.formField(field.name, field.parameters) }),
+				emailPasswordFields.map(function (field) { return FormBuilder.inputs.formField(field.parameters) }),
 				m('div.grouped.inline.fields', [
 					roles.map(function (role) {
 						return m('div.field', [FormBuilder.inputs.checkbox(role, {})]);

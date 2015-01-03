@@ -5,7 +5,7 @@ var FormBuilder = (function () {
 
 	var formBuilder = {
 		inputs: {
-			formField: function (name, parameters, width) {
+			formField: function (parameters, name, width) {
 				var defaultName = name ? name.toLowerCase() : null;
 				parameters.name = parameters.name ? parameters.name : defaultName;
 
