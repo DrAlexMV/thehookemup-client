@@ -45,6 +45,10 @@ var User = function(API) {
 		return userInstance.picture() ? ImageModel.getURL(userInstance.picture()) : '/img/square-image.png';
 	};
 
+	user.connectMe = function(otherUserID) {
+		return this.post('/user/me/edges/connections', {user: otherUserID});
+	};
+
 	_.mixin(user, API);
 	return user;
 };
