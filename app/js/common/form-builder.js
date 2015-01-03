@@ -6,10 +6,13 @@ var FormBuilder = (function () {
 	var formBuilder = {
 		inputs: {
 			formField: function (name, parameters, width) {
+				var defaultName = name ? name.toLowerCase() : null;
+				parameters.name = parameters.name ? parameters.name : defaultName;
+
 				return [
 					m('div.required.field', { class: width ? width + ' wide' : '' }, [
-						m('label', name),
-						m('input', _.extend({ name: name }, parameters))
+						name ? m('label', name) : null,
+						m('input', parameters)
 					])
 				];
 			},
