@@ -81,7 +81,7 @@ search.view = function () {
 		return (
 			<div className="item">
 				<div className="ui tiny image">
-					<img src={User.getProfilePicture(item)} />
+					<img src={User.getPicture(item)} />
 				</div>
 				<div className="content">
 					<a className="header">{User.getName(item)}</a>

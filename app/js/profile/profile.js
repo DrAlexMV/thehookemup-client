@@ -108,8 +108,6 @@ profile.view = function () {
 		 User
 	);
 
-	var associations = new EntityList('Associations', '/', profile.vm.edges.associations());
-
 	return (
 		<div className="ui padded stackable grid">
 			<div className="row">
@@ -138,7 +136,6 @@ profile.view = function () {
 				</div>
 				<div className="four wide column">
 					{connections.view({})}
-					{associations.view({})}
 				</div>
 			</div>
 		</div>
