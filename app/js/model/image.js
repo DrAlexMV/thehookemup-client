@@ -15,6 +15,11 @@ var Image = function(API) {
 		return this.delete('/image/' + imageName);
 	};
 
+	// Function provides fallback in event of null image path
+	image.getSource = function(imageName) {
+		return imageName ? image.getURL(imageName) : '/img/square-image.png';
+	};
+
 	_.mixin(image, API);
 	return image;
 };

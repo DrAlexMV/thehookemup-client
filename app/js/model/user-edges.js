@@ -1,10 +1,18 @@
 var API = require('common/api');
+var User = require('model/user');
 
 var Edges = function(API) {
 	var edges = {};
 
 	edges.EdgesModel = function(data) {
-		this.connections = m.prop(data.connections);
+		var connections = data.connections.map(
+			function(connection) { 
+				return new User.UserModel(connection);
+			}
+		);
+
+		this.connections = m.prop(connections);
+
 		this.associations = m.prop(data.associations);
 	};
 

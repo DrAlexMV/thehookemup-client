@@ -28,7 +28,7 @@ auth.vm = {
 
 			User.login(message.parameters)
 				.then(function (res) {
-					console.log(res);
+					m.route('/');
 					Auth.setCurrentUser(res);
 				}, function (res) {
 					loginForm.vm.errorMessages([res.error]);
@@ -46,7 +46,7 @@ auth.vm = {
 			var regForm = auth.vm.registrationForm;
 
 			User.register(message.parameters).then(function (res) {
-				console.log(res);
+				Auth.setCurrentUser(res);
 				m.route('/');
 			}, function (res) {
 				regForm.vm.errorMessages([res.error]);

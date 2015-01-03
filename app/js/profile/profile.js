@@ -34,7 +34,7 @@ profile.vm = {
 						ImageModel.deleteImage(basicInfo().picture());
 					}
 					basicInfo().picture(message.parameters.imageID);
-					User.updatePicture(userid, picture);
+					User.updatePicture(userid, basicInfo().picture());
 				}
 			);
 		}
@@ -54,7 +54,7 @@ profile.vm = {
 				profile.vm.details = response;
 			}, Error.handle);
 
-		this.edges = {};
+		this.edges = null;
 		UserEdges.getByID(userid).then(
 			function(response) {
 				profile.vm.edges = response;
@@ -101,8 +101,12 @@ profile.view = function () {
 		);
 	}
 
-	var connections = new EntityList('Connections', '/profile', profile.vm.edges.connections());
-	var associations = new EntityList('Associations', '/', profile.vm.edges.associations());
+	var connections = new EntityList(
+		'Connections',
+		'/profile',
+		 profile.vm.edges.connections(),
+		 User
+	);
 
 	return (
 		<div className="ui padded stackable grid">
@@ -112,7 +116,7 @@ profile.view = function () {
 				</div>
 				<div className="eight wide column">
 					<h1 className="ui header">
-						{basicInfo.firstName() + ' ' + basicInfo.lastName()}
+						{User.getName(basicInfo)}
 						<div className="blue ui buttons right floated">
 							<div className="ui button">
 								<i className="mail icon"></i>
@@ -132,7 +136,6 @@ profile.view = function () {
 				</div>
 				<div className="four wide column">
 					{connections.view({})}
-					{associations.view({})}
 				</div>
 			</div>
 		</div>
