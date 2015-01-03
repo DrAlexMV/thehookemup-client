@@ -5,6 +5,7 @@ var User = function(API) {
 	var user = {};
 
 	user.UserModel = function(data) {
+		this._id = m.prop(data._id);
 		this.firstName = m.prop(data.firstName);
 		this.lastName = m.prop(data.lastName);
 		this.email = m.prop(data.email);
@@ -15,6 +16,7 @@ var User = function(API) {
 		this.university = m.prop(data.university);
 		this.role = m.prop(data.role);
 		this.picture = m.prop(data.picture);
+		return this;
 	};
 
 	user.getByID = function (userID) {
@@ -41,8 +43,12 @@ var User = function(API) {
 		user.putByID(userid, {picture: picture});
 	};
 
-	user.getProfilePicture = function(userInstance) {
-		return userInstance.picture() ? ImageModel.getURL(userInstance.picture()) : '/img/square-image.png';
+	user.getPicture = function(userInstance) {
+		return ImageModel.getSource(userInstance.picture());
+	};
+
+	user.getName = function(userInstance) {
+		return userInstance.firstName() + ' ' + userInstance.lastName();
 	};
 
 	user.connectMe = function(otherUserID) {

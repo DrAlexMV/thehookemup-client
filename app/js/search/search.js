@@ -84,7 +84,7 @@ search.view = function () {
 					<img src={User.getProfilePicture(item)} />
 				</div>
 				<div className="content">
-					<a className="header">{item.firstName() + ' ' + item.lastName()}</a>
+					<a className="header">{User.getName(item)}</a>
 					<div className="meta">
 						<a>{item.role()}</a>
 					</div>
