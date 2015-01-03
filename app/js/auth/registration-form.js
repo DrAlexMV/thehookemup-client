@@ -76,19 +76,14 @@ var RegistrationForm = function () {
 	registrationForm.view = function () {
 
 		var nameFields = [
-			{ name: 'First Name',
-				parameters: { name: 'first-name', placeholder: 'First Name', onchange: m.withAttr('value', vm.firstName) } },
-			{ name: 'Last Name',
-				parameters: { name: 'last-name', placeholder: 'Last Name', onchange: m.withAttr('value', vm.lastName) } }
+			{ parameters: { name: 'first-name', placeholder: 'First Name', onchange: m.withAttr('value', vm.firstName) } },
+			{ parameters: { name: 'last-name', placeholder: 'Last Name', onchange: m.withAttr('value', vm.lastName) } }
 		];
 
 		var emailPasswordFields = [
-			{ name: 'Email',
-				parameters: { name: 'email', placeholder: 'Email', onchange: m.withAttr('value', vm.email) } },
-			{ name: 'Password',
-				parameters: { name: 'password', placeholder: 'Password', onchange: m.withAttr('value', vm.password), type: 'password' } },
-			{ name: 'Confirm Password',
-				parameters: { name: 'confirm-password', placeholder: 'Confirm Password', onchange: m.withAttr('value', vm.confirmPassword), type: 'password' } }
+			{ parameters: { name: 'email', placeholder: 'Email', onchange: m.withAttr('value', vm.email) } },
+			{ parameters: { name: 'password', placeholder: 'Password', onchange: m.withAttr('value', vm.password), type: 'password' } },
+			{ parameters: { name: 'confirm-password', placeholder: 'Confirm Password', onchange: m.withAttr('value', vm.confirmPassword), type: 'password' } }
 		];
 
 		var roles = ['Founder', 'Investor', 'Startuper'];
