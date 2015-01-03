@@ -6,13 +6,14 @@
 var Error = require('common/error');
 var User = require('model/user');
 var FormBuilder = require('common/form-builder');
+var SearchFilterForm = require('search/search-filter-form');
 
 var search = {};
 
 search.vm = {
 	init: function () {
 		this.query = m.route.param('query');
-		this.results = [{
+		var results = [{
 			"_id": m.prop("54a21dfc983fe41d6baf4d79"), 
 			"dateJoined": m.prop("2014-12-30 03:37:32.414000"), 
 			"description": m.prop("developer"), 
@@ -68,6 +69,9 @@ search.vm = {
 			"role": m.prop("Artist"), 
 			"university": m.prop(null)
 		}];
+
+		// make this fake data really huge
+		this.results = results.concat(results, results, results, results);
 	}
 };
 
@@ -98,22 +102,29 @@ search.view = function () {
 	return (
 		<div className="base ui padded stackable grid">
 			<div className="row">
-				<div className="two wide column"></div>
-				<div className="eight wide column">
-					<h1 className="ui header">
+				<div className="four wide column"></div>
+				<div className="ten wide column">
+					<h2 className="ui header">
 						Search - &quot;{search.vm.query}&quot;
-					</h1>
+					</h2>
+				</div>
+				<div className="two wide column"></div>
+			</div>
+			<div className="row">
+				<div className="four wide column">
+					<div className="ui segment">
+						<h4>Refine Search</h4>
+						{ (new SearchFilterForm()).view({}) }
+					</div>
+				</div>
+				<div className="ten wide column">
 					<div className="ui segment">
 						<div className="ui relaxed divided items">
 							{resultItems}
 						</div>
 					</div>
 				</div>
-				<div className="six wide column">
-					<div className="ui segment">
-						Search Options
-					</div>
-				</div>
+				<div className="two wide column"></div>
 			</div>
 		</div>
 	);
