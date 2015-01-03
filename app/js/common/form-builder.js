@@ -92,6 +92,27 @@ var FormBuilder = (function () {
 					el.form(rules, { onSuccess: wrap(onSuccess), onFailure: wrap(onFailure) });
 				}
 			}
+		},
+		Typeahead: function (resultsList) {
+			var typeahead = {};
+
+			typeahead.vm = {
+
+			};
+
+			typeahead.view = function (resultsList) {
+				var resultsList = [
+					m('ul', [
+						m('li', [
+
+						])
+					])
+				];
+
+				return [
+
+				];
+			};
 		}
 	};
 

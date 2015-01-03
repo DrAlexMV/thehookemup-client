@@ -90,7 +90,7 @@ var RegistrationForm = function () {
 
 		return [
 			m('form.ui.form', { class: vm.errorMessages().length > 0 ? 'warning' : '',
-													config: FormBuilder.validate(rules, register, formInvalid), action: '' }, [
+													config: FormBuilder.validate(rules, register, formInvalid) }, [
 				m('div.ui.warning.message', [
 					m('div.header', 'Oops!'),
 					m('ul', [vm.errorMessages().map(function (message) { return m('li', message); })])

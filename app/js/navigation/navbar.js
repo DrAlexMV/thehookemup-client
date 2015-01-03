@@ -2,7 +2,7 @@ var Navbar = function () {
 	var navbar = {};
 
 	navbar.vm = {
-		test: ''
+		searchQuery: m.prop('')
 	};
 
 	navbar.view = function () {
