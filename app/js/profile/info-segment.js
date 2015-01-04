@@ -13,7 +13,7 @@ var InfoSegment = function (title, content) {
 						<div className="item">
 							<i className="right triangle icon"></i>
 							<div className="content">
-								<a className="header">{point.title}</a>
+								<div className="header">{point.title}</div>
 								<div className="description">{point.description}</div>
 							</div>
 						</div>

@@ -3,6 +3,7 @@
  * @jsx m
  */
 
+var BasicUI = require('core/basic-ui');
 var ContactCard = require('profile/contact-card');
 var EntityList = require('profile/entity-list');
 var Error = require('common/error');
@@ -22,6 +23,7 @@ profile.vm = {
 
 		this.basicInfo = null;
 		this.contactCard = null;
+		this.isConnected = m.prop();
 
 		profile.stream = null;
 
@@ -45,7 +47,8 @@ profile.vm = {
 
 		// we might already have the data
 		if (userid === 'me') {
-			Context.getCurrentUser(handleLoadUser); // Use Auth's singleton prop
+			Context.getCurrentUser().then(handleLoadUser); // Use Auth's singleton prop
+			this.isConnected(true);
 		} else {
 			User.getByID(userid).then(function(userObject) {
 				handleLoadUser(m.prop(userObject)); // Make a new prop
@@ -62,14 +65,32 @@ profile.vm = {
 		UserEdges.getByID(userid).then(
 			function(response) {
 				profile.vm.edges = response;
+				// TODO: use parallel query. Potentially doubles latency
+				// .when(UserEdges.getByID(userid), Context.getCurrentUser())
+				if (userid !== 'me') { // prevent double call
+					Context.getCurrentUser().then(function(me) {
+						var connected = UserEdges.isConnection(me()._id(), userid, profile.vm.edges);
+						profile.vm.isConnected(connected);
+					});
+				}
 			}, Error.handle);
 	}
 };
 
 profile.connectTo = function(otherUserID) {
 	User.connectMe(m.route.param('userid')).then(
-		function() {console.log('connected to', m.route.param('userid'))},
-		function() {console.log('failed to connect')});
+		function() {
+			console.log('connected to', m.route.param('userid'));
+			// these should be loaded by now, but who knows
+			if (profile.vm.edges) {
+				var conns = profile.vm.edges.connections();
+				conns.push(profile.vm.basicInfo());
+				profile.vm.edges.connections(conns);
+			}
+			profile.vm.isConnected(true);
+		},
+		function() {console.log('failed to connect')}
+	);
 };
 
 profile.controller = function () {
@@ -121,16 +142,25 @@ profile.view = function () {
 				<div className="eight wide column">
 					<h1 className="ui header">
 						{User.getName(basicInfo)}
-						<div className="blue ui buttons right floated">
-							<div className="ui button">
-								<i className="mail icon"></i>
-								Mail
-							</div>
-							<div className="ui positive button" onclick={profile.connectTo}>
-								<i className="share alternate icon"></i>
-								Connect
-							</div>
-						</div>
+						{
+							vm.isConnected() ?
+								<div className="ui buttons right floated">
+									<div className="ui icon positive button"
+										data-variation="inverted"
+										data-content="Connected"
+										data-position="bottom center"
+										config={BasicUI.PopupLabel}>
+										<i className="share alternate icon"></i>
+									</div>
+									<a href={'mailto:'+basicInfo.email()} className="ui button blue">
+										<i className="mail icon"></i>Mail
+									</a>
+								</div> :
+								<div className="ui positive button right floated" onclick={profile.connectTo}>
+									<i className="share alternate icon"></i>
+									Connect
+								</div>
+						}
 					</h1>
 					{university_info}
 					<div className="description">

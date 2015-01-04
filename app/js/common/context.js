@@ -14,24 +14,25 @@ var Context = (function () {
 	};
 
 	// Lazy Singleton
-	context.getCurrentUser = (function(callback) {
+	context.getCurrentUser = function() {
+		var deferred = m.deferred();
 		if (currentUser() === undefined) {
 			console.log('Getting from /me');
 			User.getMe().then(
 				function(response) {
 					currentUser(response);
-					callback(currentUser);
+					deferred.resolve(currentUser);
 				},
 				function(error) {
-					// Not sure what to do in this case yet.
 					currentUser(null);
-					callback(currentUser);
+					deferred.reject(error);
 				}
 			);
 		} else {
-			callback(currentUser);
+			deferred.resolve(currentUser);
 		}
-	});
+		return deferred.promise;
+	};
 
 	return context;
 })();
