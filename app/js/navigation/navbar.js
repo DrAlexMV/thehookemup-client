@@ -1,19 +1,22 @@
+var ENTER = require('common/constants').ENTER_KEY;
+var NavbarSearchInput = require('common/form-builder').inputs.NavbarSearchInput;
+
 var Navbar = function () {
 	var navbar = {};
 
+	var vm =
 	navbar.vm = {
-		searchQuery: m.prop('')
+		navbarSearchInput: new NavbarSearchInput()
 	};
+
+	navbar.stream = Bacon.mergeAll(vm.navbarSearchInput.stream);
 
 	navbar.view = function () {
 		return [
-			m('div.ui.fixed.inverted.menu', [
+			m('div.ui.fixed.menu', [
 				m('a.item', "The Hook'Em Up"),
 				m('div.right.item', [
-					m('div.ui.transparent.icon.input', [
-						m('input[type="text"]', { placeholder: 'Search' }),
-						m('i.search.icon')
-					])
+					vm.navbarSearchInput.view()
 				])
 			])
 		];

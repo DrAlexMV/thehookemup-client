@@ -3,14 +3,16 @@
 var auth = require('auth/auth');
 var profile = require('profile/profile');
 var search = require('search/search');
-var layout = require('navigation/layout');
+var SimplePageLayoutMixin = require('navigation/simple-page-layout-mixin');
 var Logger = require('common/logger');
 
+var layout = new SimplePageLayoutMixin();
+
 m.route(document.getElementById('app'), '/', {
-	'/': layout,
+//	'/': layout(search),
 	'/login': auth,
-	'/profile/:userid': profile,
-	'/search': search
+	'/profile/:userid': layout(profile),
+	'/search': layout(search)
 });
 
 //(function() {

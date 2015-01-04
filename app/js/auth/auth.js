@@ -46,7 +46,7 @@ auth.vm = {
 			var regForm = auth.vm.registrationForm;
 
 			User.register(message.parameters).then(function (res) {
-				Auth.setCurrentUser(res);
+				Context.setCurrentUser(res);
 				m.route('/');
 			}, function (res) {
 				regForm.vm.errorMessages([res.error]);
