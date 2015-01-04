@@ -27,7 +27,9 @@ search.vm = {
 	
 		this.searchFilterForm = new SearchFilterForm(SearchResults.normalizeFields(this.fields));
 
-		StreamCommon.on(this.searchFilterForm.stream, 'SearchFilterForm::Search', function (message) {
+		search.stream = Bacon.mergeAll(this.searchFilterForm.stream);
+
+		StreamCommon.on(search.stream, 'SearchFilterForm::Search', function (message) {
 			var params = message.parameters;
 			// Clean parameters
 			var nonEmptyFields = {}; // ugly and not functional-style

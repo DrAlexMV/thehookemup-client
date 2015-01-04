@@ -3,7 +3,7 @@ var RegistrationForm = require('auth/registration-form');
 var SocialSignInForm = require('auth/social-signIn-form');
 var StreamCommon = require('common/stream-common');
 var User = require('model/user');
-var Auth = require('common/auth');
+var Context = require('common/context');
 
 var auth = {};
 
@@ -29,7 +29,7 @@ auth.vm = {
 			User.login(message.parameters)
 				.then(function (res) {
 					m.route('/');
-					Auth.setCurrentUser(res);
+					Context.setCurrentUser(res);
 				}, function (res) {
 					loginForm.vm.errorMessages([res.error]);
 				})

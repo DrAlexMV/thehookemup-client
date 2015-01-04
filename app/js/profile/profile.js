@@ -12,7 +12,7 @@ var UserDetails = require('model/user-details');
 var UserEdges = require('model/user-edges');
 var ImageModel = require('model/image');
 var StreamCommon = require('common/stream-common');
-var Auth = require('common/auth');
+var Context = require('common/context');
 
 var profile = {};
 
@@ -23,10 +23,14 @@ profile.vm = {
 		this.basicInfo = null;
 		this.contactCard = null;
 
+		profile.stream = null;
+
 		function handleLoadUser(response) {
 			profile.vm.basicInfo = response;
 			profile.vm.contactCard = new ContactCard(profile.vm.basicInfo, userid == 'me');
-			StreamCommon.on(profile.vm.contactCard.vm.profilePicture.stream,
+
+			profile.stream = Bacon.mergeAll(profile.vm.contactCard.vm.profilePicture.stream);
+			StreamCommon.on(profile.stream,
 				'EditableImage::ReplaceImageURL',
 				function (message) {
 					var basicInfo = profile.vm.basicInfo;
@@ -41,7 +45,7 @@ profile.vm = {
 
 		// we might already have the data
 		if (userid === 'me') {
-			Auth.getCurrentUser(handleLoadUser); // Use Auth's singleton prop
+			Context.getCurrentUser(handleLoadUser); // Use Auth's singleton prop
 		} else {
 			User.getByID(userid).then(function(userObject) {
 				handleLoadUser(m.prop(userObject)); // Make a new prop
