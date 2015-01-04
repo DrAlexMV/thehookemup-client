@@ -10,8 +10,7 @@ m.route(document.getElementById('app'), '/', {
 	'/': layout,
 	'/login': auth,
 	'/profile/:userid': profile,
-	'/search': search,
-	'/search/:query': search
+	'/search': search
 });
 
 //(function() {
