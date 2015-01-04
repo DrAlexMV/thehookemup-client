@@ -17,9 +17,12 @@ var UserListBig = function (users) {
 								<img src={User.getPicture(item)} />
 							</div>
 							<div className="content">
-								<a className="header">{User.getName(item)}</a>
+								<a href={'/profile/' + item._id()} 
+									config={m.route} className="header">
+									{User.getName(item)}
+								</a>
 								<div className="meta">
-									<a>{item.role()}</a>
+									{item.role()}
 								</div>
 								<div className="description">
 									{item.description()}
