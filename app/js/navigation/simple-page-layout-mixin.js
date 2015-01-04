@@ -20,11 +20,9 @@ var SimplePageLayoutMixin = function () {
 
 		layout.view = function () {
 			return [
-				m('div.ui.page.grid', [
-					m('div.row', [
-						m('header', [
-							navbar.view()
-						])
+				m('div', [
+					m('header', [
+						navbar.view()
 					]),
 					m('main', [
 						vm.body.view()
