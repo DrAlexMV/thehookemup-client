@@ -16,6 +16,7 @@ var User = function(API) {
 		this.university = m.prop(data.university);
 		this.role = m.prop(data.role);
 		this.picture = m.prop(data.picture);
+		this.isConnection = m.prop(data.isConnection);
 		return this;
 	};
 
