@@ -23,7 +23,6 @@ profile.vm = {
 
 		this.basicInfo = null;
 		this.contactCard = null;
-		this.isConnected = m.prop();
 
 		profile.stream = null;
 
@@ -48,7 +47,6 @@ profile.vm = {
 		// we might already have the data
 		if (userid === 'me') {
 			Context.getCurrentUser().then(handleLoadUser); // Use Auth's singleton prop
-			this.isConnected(true);
 		} else {
 			User.getByID(userid).then(function(userObject) {
 				handleLoadUser(m.prop(userObject)); // Make a new prop
@@ -65,29 +63,16 @@ profile.vm = {
 		UserEdges.getByID(userid).then(
 			function(response) {
 				profile.vm.edges = response;
-				// TODO: use parallel query. Potentially doubles latency
-				// .when(UserEdges.getByID(userid), Context.getCurrentUser())
-				if (userid !== 'me') { // prevent double call
-					Context.getCurrentUser().then(function(me) {
-						var connected = UserEdges.isConnection(me()._id(), userid, profile.vm.edges);
-						profile.vm.isConnected(connected);
-					});
-				}
 			}, Error.handle);
 	}
 };
 
 profile.connectTo = function(otherUserID) {
+	m.route(m.route());
 	User.connectMe(m.route.param('userid')).then(
 		function() {
 			console.log('connected to', m.route.param('userid'));
-			// these should be loaded by now, but who knows
-			if (profile.vm.edges) {
-				var conns = profile.vm.edges.connections();
-				conns.push(profile.vm.basicInfo());
-				profile.vm.edges.connections(conns);
-			}
-			profile.vm.isConnected(true);
+			m.route(m.route());
 		},
 		function() {console.log('failed to connect')}
 	);
@@ -143,7 +128,7 @@ profile.view = function () {
 					<h1 className="ui header">
 						{User.getName(basicInfo)}
 						{
-							vm.isConnected() ?
+							basicInfo.isConnection() ?
 								<div className="ui buttons right floated">
 									<div className="ui icon positive button"
 										data-variation="inverted"
