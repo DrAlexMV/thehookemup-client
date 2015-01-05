@@ -5,7 +5,19 @@ var Details = function(API) {
 
 	details.DetailModel = function(data) {
 		this.title = m.prop(data.title);
-		this.content = m.prop(data.content); // We can further modularize if need be
+		this.content = data.content.map(function(item) {
+			var subpoints = [];
+			if (item.subpoints) {
+				subpoints = item.subpoints.map(function(point) {
+					return { title: m.prop(point.title), description: m.prop(point.description) };
+				});
+			}
+			return {
+				subpoints: subpoints,
+				description: m.prop(item.description),
+				title: m.prop(item.title)
+			};
+		});
 	};
 
 	details.getByID = function(userID) {

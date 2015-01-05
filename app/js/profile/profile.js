@@ -5,6 +5,7 @@
 
 var PopupLabel = require('common/ui-core/popup-label');
 var ContactCard = require('profile/contact-card');
+var Editable = require('common/form-builder').inputs.editable;
 var EntityList = require('profile/entity-list');
 var Error = require('common/error');
 var InfoSegment = require('profile/info-segment');
@@ -19,10 +20,13 @@ var profile = {};
 
 profile.vm = {
 	init: function () {
+		this.userid =
 		userid = m.route.param('userid');
 
 		this.basicInfo = null;
 		this.contactCard = null;
+
+		this.editing = m.prop(false);
 
 		profile.stream = null;
 
@@ -87,7 +91,7 @@ profile.view = function () {
 	var basicInfo = profile.vm.basicInfo();
 
 	var segments = vm.details.map(function(entry) {
-		return new InfoSegment(entry.title(), entry.content()).view({});
+		return (new InfoSegment(entry.title(), entry.content, profile.vm.editing())).view({});
 	});
 
 	var associations = null;
@@ -111,12 +115,51 @@ profile.view = function () {
 		);
 	}
 
+	var description = profile.vm.editing() ?
+		<div className="description"
+			data-type="textarea"
+			data-inputclass="ui fluid"
+			config={Editable(basicInfo.description, {})}>
+			{basicInfo.description()}
+		</div> :
+		<div className="description">
+			{basicInfo.description()}
+		</div>;
+
 	var connections = new EntityList(
 		'Connections',
 		'/profile',
 		 profile.vm.edges.connections(),
 		 User
 	);
+
+	var editButton = null;
+	if (profile.vm.userid == 'me') {
+		if (profile.vm.editing()) {
+			editButton = (
+				<div>
+					<div className="mini ui blue button"
+						onclick={function() {
+							console.log(profile.vm.details);
+							profile.vm.editing(false);
+						}}>
+						Save
+					</div>
+					<div className="mini ui red button"
+						onclick={function() {profile.vm.editing(false)} }>
+						Discard
+					</div>
+				</div>
+			);
+		} else {
+			editButton = (
+				<div className="mini ui blue button"
+					onclick={function() {profile.vm.editing(true)} }>
+					Edit
+				</div>
+			);
+		}
+	}
 
 	return (
 		<div className="ui padded stackable grid">
@@ -147,10 +190,9 @@ profile.view = function () {
 								</div>
 						}
 					</h1>
+					{editButton}
 					{university_info}
-					<div className="description">
-						{basicInfo.description()}
-					</div>
+					{description}
 					{segments}
 				</div>
 				<div className="four wide column">
