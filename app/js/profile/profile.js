@@ -152,7 +152,7 @@ profile.view = function () {
 										config={PopupLabel}>
 										<i className="share alternate icon"></i>
 									</div>
-									<a href={'mailto:'+basicInfo.email()} className="ui button blue">
+									<a className="ui button blue">
 										<i className="mail icon"></i>Mail
 									</a>
 								</div> :

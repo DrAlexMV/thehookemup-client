@@ -13,16 +13,16 @@ var NavbarSearchInput = function (parameters) {
 	searchInput.stream = new Bacon.Bus();
 
 	var vm =
-		searchInput.vm = {
-			searchQuery: m.prop(''),
+	searchInput.vm = {
+		searchQuery: m.prop(''),
 
-			search: function () {
-				if (vm.searchQuery().length >= parameters.minCharacters) {
-					searchInput.stream.push(new StreamCommon.Message('SearchInput::Search',
-						{ query_string: vm.searchQuery() }));
-				}
+		search: function () {
+			if (vm.searchQuery().length >= parameters.minCharacters) {
+				searchInput.stream.push(new StreamCommon.Message('SearchInput::Search',
+					{ query_string: vm.searchQuery() }));
 			}
-		};
+		}
+	};
 
 	var keyHandlers = {
 		13: function () {

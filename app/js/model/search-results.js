@@ -42,12 +42,12 @@ var SearchResults = function(API) {
 
 	searchResults.getResults = function(params) {
 		var stringified = jQuery.param(params); // another library for this?
-		return this.get('/search?'+stringified, searchResults.ResultsModel);
+		return this.get('/search?' + stringified, searchResults.ResultsModel);
 	};
 
 	searchResults.buildURL = function(params) {
 		var stringified = jQuery.param(params);
-		return '/search?'+stringified;
+		return '/search?' + stringified;
 	};
 
 	// Fill in missing fields with values of ''
