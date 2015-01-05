@@ -3,7 +3,7 @@
  * @jsx m
  */
 
-var BasicUI = require('core/basic-ui');
+var PopupLabel = require('common/ui-core/popup-label');
 var ContactCard = require('profile/contact-card');
 var EntityList = require('profile/entity-list');
 var Error = require('common/error');
@@ -149,7 +149,7 @@ profile.view = function () {
 										data-variation="inverted"
 										data-content="Connected"
 										data-position="bottom center"
-										config={BasicUI.PopupLabel}>
+										config={PopupLabel}>
 										<i className="share alternate icon"></i>
 									</div>
 									<a href={'mailto:'+basicInfo.email()} className="ui button blue">

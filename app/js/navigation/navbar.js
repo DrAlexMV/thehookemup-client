@@ -1,5 +1,7 @@
 var ENTER = require('common/constants').ENTER_KEY;
-var NavbarSearchInput = require('common/form-builder').inputs.NavbarSearchInput;
+var NavbarSearchInput = require('navigation/navbar-search-input');
+var StreamCommon = require('common/stream-common');
+var SearchResults = require('model/search-results');
 
 var Navbar = function () {
 	var navbar = {};
@@ -10,6 +12,10 @@ var Navbar = function () {
 	};
 
 	navbar.stream = Bacon.mergeAll(vm.navbarSearchInput.stream);
+
+	StreamCommon.on(navbar.stream, 'SearchInput::Search', function (message) {
+		m.route(SearchResults.buildURL(message.parameters));
+	});
 
 	navbar.view = function () {
 		return [

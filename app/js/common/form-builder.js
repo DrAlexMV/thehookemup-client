@@ -73,55 +73,6 @@ var FormBuilder = (function () {
 				return [
 					m('div.dropzone', {id: id, config: config})
 				];
-			},
-			NavbarSearchInput: function (parameters) {
-				var searchInput = {},
-						ENTER_KEY = require('common/constants').ENTER_KEY,
-						defaultParameters =  {
-							minCharacters: 3,
-							delay: 1000
-						};
-
-				parameters = _.extend(defaultParameters, parameters);
-
-				searchInput.stream = Bacon.Bus();
-
-				var vm =
-				searchInput.vm = {
-					lastQuery: m.prop(''),
-					searchQuery: m.prop(''),
-
-					search: function () {
-						if (vm.searchQuery() !== vm.lastQuery() &&
-							vm.searchQuery().length >= parameters.minCharacters) {
-							searchInput.stream.push(new StreamCommon.Message('SearchInput::Search',
-								{ searchQuery: vm.searchQuery() }));
-							vm.lastQuery(vm.searchQuery());
-						}
-					}
-				};
-
-				var keyHandlers = {
-					13: function () {
-						vm.search();
-					}
-				};
-
-				function keyup(e) {
-					keyHandlers[e.keyCode] && keyHandlers[e.keyCode]();
-				}
-
-				searchInput.view = function () {
-					return m('div.ui.action.input', [
-						m('input[type="text"', { placeholder: 'Search', onkeyup: keyup,
-							onchange: m.withAttr('value', vm.searchQuery), value: vm.lastQuery() }),
-						m('div.ui.icon.button', [
-							m('i.search.icon')
-						])
-					]);
-				};
-
-				return searchInput;
 			}
 		},
 		validate: function (rules, onSuccess, onFailure) {
