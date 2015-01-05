@@ -73,6 +73,18 @@ var FormBuilder = (function () {
 				return [
 					m('div.dropzone', {id: id, config: config})
 				];
+			},
+			editable: function (textProp, settings) {
+				var config = function (element, isInitialized) {
+					if (!isInitialized) {
+						settings.success = function(response, newValue) {
+							textProp(newValue);
+						}
+						settings.mode = 'inline';
+						$(element).editable(settings);
+					}
+				};
+				return config;
 			}
 		},
 		validate: function (rules, onSuccess, onFailure) {
