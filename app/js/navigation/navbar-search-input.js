@@ -39,7 +39,7 @@ var NavbarSearchInput = function (parameters) {
 	}
 
 	searchInput.view = function () {
-		return m('div.ui.action.input', [
+		return m('div.ui.fluid.action.input', [
 			m('input[type="text"]', { placeholder: 'Search', onkeyup: keyup,
 				onchange: m.withAttr('value', vm.searchQuery), value: vm.searchQuery() }),
 			m('div.ui.icon.button', { onclick: vm.search }, [

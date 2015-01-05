@@ -4,7 +4,7 @@ var ImageModel = require('model/image');
 var User = function(API) {
 	var user = {};
 
-	user.UserModel = function(data) {
+	user.UserModel = function (data) {
 		this._id = m.prop(data._id);
 		this.firstName = m.prop(data.firstName);
 		this.lastName = m.prop(data.lastName);
@@ -32,11 +32,11 @@ var User = function(API) {
 	};
 
 	user.login = function (credentials) {
-		return this.post('/login', credentials);
+		return this.post('/login', credentials, user.UserModel);
 	};
 
 	user.register = function (newUser) {
-		return this.post('/signup', newUser);
+		return this.post('/signup', newUser, user.UserModel);
 	};
 
 	user.updatePicture = function (userid, picture) {

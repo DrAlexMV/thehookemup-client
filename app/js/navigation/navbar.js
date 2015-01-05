@@ -3,6 +3,9 @@ var NavbarSearchInput = require('navigation/navbar-search-input');
 var StreamCommon = require('common/stream-common');
 var SearchResults = require('model/search-results');
 var Context = require('common/context');
+var User = require('model/user');
+var UserModel = User.UserModel;
+var Image = require('model/image');
 
 var Navbar = function () {
 	var navbar = {};
@@ -10,7 +13,7 @@ var Navbar = function () {
 	var vm =
 	navbar.vm = {
 		navbarSearchInput: new NavbarSearchInput(),
-		currentUser: m.prop()
+		currentUser: m.prop(new UserModel({}))
 	};
 
 	navbar.stream = Bacon.mergeAll(Context.stream, vm.navbarSearchInput.stream);
@@ -25,10 +28,26 @@ var Navbar = function () {
 
 	navbar.view = function () {
 		return [
-			m('div.ui.fixed.menu', [
-				m('a.item', "The Hook'Em Up"),
-				m('div.right.item', [
-					vm.navbarSearchInput.view()
+			m('div.ui.borderless.fixed.menu', [
+				m('div.ui.grid', [
+					m('div.two.wide.center.aligned.column', [
+						m('a.item', [
+							m('i.lemon.icon')
+						])
+					]),
+					m('div.seven.wide.column', [
+						m('div.item#nav-search', [
+							vm.navbarSearchInput.view()
+						])
+					]),
+					m('div.seven.wide.column', [
+						m('div.right.item', [
+							m('div.ui.image.label', [
+								m('img', { src: User.getPicture(vm.currentUser()) }),
+								vm.currentUser().email()
+							])
+						])
+					])
 				])
 			])
 		];

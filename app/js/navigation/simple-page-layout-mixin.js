@@ -7,12 +7,7 @@ var SimplePageLayoutMixin = function () {
 	return function (body) {
 		var layout = {};
 
-		var vm =
-		layout.vm = {
-			body: body
-		};
-
-		layout.stream = Bacon.mergeAll(vm.body.stream, navbar.stream);
+		layout.stream = Bacon.mergeAll(body.stream, navbar.stream);
 
 		layout.controller = function () {
 			body.controller();
@@ -25,7 +20,7 @@ var SimplePageLayoutMixin = function () {
 						navbar.view()
 					]),
 					m('main', [
-						vm.body.view()
+						body.view()
 					])
 				])
 			]
