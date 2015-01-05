@@ -9,7 +9,7 @@ var Logger = require('common/logger');
 var layout = new SimplePageLayoutMixin();
 
 m.route(document.getElementById('app'), '/', {
-//	'/': layout(search),
+	'/': layout({ controller: function () {}, view: function () {} }),
 	'/login': auth,
 	'/profile/:userid': layout(profile),
 	'/search': layout(search)

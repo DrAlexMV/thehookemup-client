@@ -113,8 +113,8 @@ var FormBuilder = (function () {
 
 				searchInput.view = function () {
 					return m('div.ui.action.input', [
-						m('input[type="text"', { placeholder: 'Search',
-							onkeyup: keyup, onchange: m.withAttr('value', vm.searchQuery) }),
+						m('input[type="text"', { placeholder: 'Search', onkeyup: keyup,
+							onchange: m.withAttr('value', vm.searchQuery), value: vm.lastQuery() }),
 						m('div.ui.icon.button', [
 							m('i.search.icon')
 						])
