@@ -15,6 +15,8 @@ var UserEdges = require('model/user-edges');
 var ImageModel = require('model/image');
 var StreamCommon = require('common/stream-common');
 var Context = require('common/context');
+var ModalMixin = require('common/modal-mixin');
+var ConnectWith = require('profile/connect-with');
 
 var profile = {};
 
@@ -26,7 +28,7 @@ profile.vm = {
 		this.basicInfo = null;
 		this.contactCard = null;
 		this.infoSegments = [];
-
+    this.connectWithModal = new ModalMixin(new ConnectWith());
 		this.editing = m.prop(false);
 
 		profile.stream = null;
@@ -77,6 +79,7 @@ profile.vm = {
 };
 
 profile.connectTo = function(otherUserID) {
+  profile.vm.connectWithModal.vm.open();
 	m.route(m.route());
 	User.connectMe(m.route.param('userid')).then(
 		function() {
@@ -180,6 +183,7 @@ profile.view = function () {
 
 	return (
 		<div className="ui padded stackable grid">
+      <div> {vm.connectWithModal.view()}</div>
 			<div className="row">
 				<div className="four wide column">
 					{vm.contactCard.view({})}

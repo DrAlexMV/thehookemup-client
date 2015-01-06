@@ -17,6 +17,8 @@ var ConnectWith = function () {
 			m("div", "U WANNA CONNECT NIGGA?")
 		];
 	};
+
+  return connectWith;
 };
 
 module.exports = ConnectWith;

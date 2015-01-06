@@ -27,10 +27,10 @@ var ModalMixin = function (body) {
 		}
 	}
 
-	modal.controller = function () {
-		vm.init();
-		body.controller();
-	};
+
+  vm.init();
+	body.controller();
+
 
 	modal.view = function () {
 		return [
