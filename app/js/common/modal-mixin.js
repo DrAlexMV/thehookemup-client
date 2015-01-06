@@ -40,7 +40,9 @@
                     modal.controller = function () {
                     var vm = modal.vm
 
-                    this.checkDisplayed = m.prop(vm.displayed)
+                    this.checkDisplayed = function(){
+                    return vm.displayed()
+                    }
 
                     this.display = function () {
                     vm.displayed(true)
@@ -59,7 +61,8 @@
 
                     if (!isInitialized) {
                     //set up select2 (only if not initialized already)
-                    if (ctrl.checkDisplayed())
+                    document.write(ctrl.checkDisplayed())
+                    if(ctrl.checkDisplayed()==true)
                     {
                     $('.modal').modal('show');
                     }
@@ -78,7 +81,7 @@
                     }
 
                     //update the view with the latest controller value
-                    document.write("modal changed 2");
+                    //document.write("modal changed 2");
                     }
                     }
 
@@ -92,14 +95,10 @@
 
                     //this view implements select2's `<select>` progressive enhancement mode
                     modal.view = function(ctrl) {
-                    return (
-                    m("div",[
-                    m('input[type=text]', { value:"test value",  onchange: m.withAttr(true, ctrl.displayed) }),
-                    m("div", {config: modal.config(ctrl)}, [
+                    return ([
+                    m('button',{onclick: function(e){$('.modal').modal('show');}},"Click me"),
                     body.view()
                     ])
-                    ]
-                    ,"hey hey hey"))
                     };
 
                     return modal;
@@ -137,7 +136,7 @@
 
                 body.controller=function()
 {
-    this.prop=function(){
+    this.prop = function () {
         return 0
     };
 
