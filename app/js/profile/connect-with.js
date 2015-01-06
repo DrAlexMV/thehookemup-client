@@ -1,9 +1,12 @@
 var ConnectWith = function () {
+
+  var User = require('model/user');
   var connectWith = {};
 
 	var vm =
   connectWith.vm = {
     init: function() {
+
 
 		}
   };
