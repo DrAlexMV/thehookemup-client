@@ -8,6 +8,7 @@ var UserModel = User.UserModel;
 var Image = require('model/image');
 
 var Navbar = function () {
+
 	var navbar = {};
 
 	var vm =
@@ -18,6 +19,7 @@ var Navbar = function () {
 
 	navbar.stream = Bacon.mergeAll(Context.stream, vm.navbarSearchInput.stream);
 
+
 	StreamCommon.on(navbar.stream, 'SearchInput::Search', function (message) {
 		m.route(SearchResults.buildURL(message.parameters));
 	});
@@ -25,7 +27,6 @@ var Navbar = function () {
 	StreamCommon.on(navbar.stream, 'Context::Login', function (message) {
 		vm.currentUser(message.parameters.user);
 	});
-
 	navbar.view = function () {
 		return [
 			m('div.ui.borderless.fixed.menu', [

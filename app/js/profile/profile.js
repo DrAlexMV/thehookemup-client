@@ -25,6 +25,7 @@ profile.vm = {
 
 		this.basicInfo = null;
 		this.contactCard = null;
+		this.infoSegments = [];
 
 		this.editing = m.prop(false);
 
@@ -61,6 +62,10 @@ profile.vm = {
 		UserDetails.getByID(userid).then(
 			function(response) {
 				profile.vm.details = response;
+				profile.vm.infoSegments = profile.vm.details.map(function(entry) {
+					return new InfoSegment(entry, profile.vm.userid == 'me', userid);
+				});
+
 			}, Error.handle);
 
 		this.edges = null;
@@ -90,8 +95,8 @@ profile.view = function () {
 	var vm = profile.vm;
 	var basicInfo = profile.vm.basicInfo();
 
-	var segments = vm.details.map(function(entry) {
-		return (new InfoSegment(entry.title(), entry.content, profile.vm.editing())).view({});
+	var segments = vm.infoSegments.map(function(infoSegment) {
+		return infoSegment.view({});
 	});
 
 	var associations = null;
@@ -140,8 +145,13 @@ profile.view = function () {
 				<div>
 					<div className="mini ui blue button"
 						onclick={function() {
-							console.log(profile.vm.details);
-							profile.vm.editing(false);
+							User.putByID(
+									profile.vm.userid,
+									{ description: profile.vm.basicInfo().description() }
+								)
+								.then(function() {
+									profile.vm.editing(false);
+								});
 						}}>
 						Save
 					</div>

@@ -3,6 +3,7 @@ var StreamCommon = require('common/stream-common');
 
 var Context = (function () {
 	var context = {};
+
 	context.stream = new Bacon.Bus();
 
 	var currentUser =
@@ -11,7 +12,6 @@ var Context = (function () {
 	// If we already have the user object. e.g. after login
 	context.setCurrentUser = function (userObject) {
 		currentUser(userObject);
-
 		context.stream.push(new StreamCommon.Message('Context::Login', { user: currentUser() }));
 	};
 

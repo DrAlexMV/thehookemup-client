@@ -57,6 +57,17 @@ var API = (function () {
 		});
 	};
 
+	api.patch = function(resourceLocation, data, resourceType) {
+		return m.request({
+			method: 'PATCH',
+			url: api.calcAddress(resourceLocation),
+			type: resourceType,
+			data: data,
+			config: api.xhrConfig(),
+			extract: api.extract()
+		});
+	};
+
 	api.delete = function(resourceLocation) {
 		return m.request({
 			method: 'DELETE',

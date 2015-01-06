@@ -3,12 +3,28 @@
  */
 
 var Editable = require('common/form-builder').inputs.editable;
+var UserDetail = require('model/user-details');
 
-var InfoSegment = function (title, content, editable) {
+var InfoSegment = function (detail, canEdit, userID) {
 	var segment = {};
+
+	segment.vm = {
+		editing: m.prop(false)
+	};
+
+	segment.controller = function () {
+		segment.vm.init();
+	};
+
+	function save() {
+		UserDetail.patchByID(userID, [detail]).then(function() {
+			segment.vm.editing(false);
+		});
+	}
 
 	function viewEdit() {
 		function addItem(sectionIndex) {
+			var content = detail.content;
 			return function() {
 				if (!content[sectionIndex].subpoints) {
 					content[sectionIndex].subpoints = [];
@@ -20,9 +36,9 @@ var InfoSegment = function (title, content, editable) {
 			}
 		}
 
-		function addSection(sectionList) {
+		function addSection() {
 			return function() {
-				sectionList.push({
+				detail.content.push({
 					title: m.prop('Add a title'),
 					description: m.prop('Enter a description.'),
 					subpoints: []
@@ -30,7 +46,7 @@ var InfoSegment = function (title, content, editable) {
 			}
 		}
 
-		var items = content.map(function(item, index) {
+		var items = detail.content.map(function(item, index) {
 			var subpoints = null;
 			if (item.subpoints) {
 				subpoints = item.subpoints.map(function(point) {
@@ -82,7 +98,7 @@ var InfoSegment = function (title, content, editable) {
 			<div className="ui list">
 				{items}
 				<div className="item">
-					<a onclick={addSection(content)}>
+					<a onclick={addSection()}>
 						+ Add section
 					</a>
 				</div>
@@ -91,7 +107,7 @@ var InfoSegment = function (title, content, editable) {
 	}
 
 	function viewRegular() {
-		var items = content.map(function(item) {
+		var items = detail.content.map(function(item) {
 			var subpoints = null;
 			if (item.subpoints) {
 				subpoints = item.subpoints.map(function(point) {
@@ -123,12 +139,42 @@ var InfoSegment = function (title, content, editable) {
 	}
 
 	segment.view = function () {
+		var sections = null;
+		var editButton = null;
+		if (canEdit) {
+			if (segment.vm.editing()) {
+				editButton = (
+					<div className="mini ui buttons right floated">
+						<div className="ui red button"
+							onclick={function() {segment.vm.editing(false)} }>
+							Discard
+						</div>
+						<div className="ui blue button" onclick={save}>
+							Save
+						</div>
+					</div>
+				);
+				sections = viewEdit();
+			} else {
+				editButton = (
+					<div className="mini ui blue button right floated"
+						onclick={function() {segment.vm.editing(true)} }>
+						Edit
+					</div>
+				);
+			}
+		}
+
+		if (sections === null) {
+			sections = viewRegular();
+		}
 		return (
 			<div className="ui segment">
 				<div className="ui ribbon label">
-					<h4 className="ui header">{title.toUpperCase()}</h4>
+					<h4 className="ui header">{detail.title().toUpperCase()}</h4>
 				</div>
-				{ editable ? viewEdit() : viewRegular() }
+				{editButton}
+				{sections}
 			</div>
 		);
 	};

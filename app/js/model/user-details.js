@@ -24,6 +24,14 @@ var Details = function(API) {
 		return this.get('/user/' + userID + '/details', details.DetailModel);
 	};
 
+	details.putByID = function(userID, details) {
+		return this.put('/user/' + userID + '/details', details);
+	};
+
+	details.patchByID = function(userID, details) {
+		return this.patch('/user/' + userID + '/details', details);
+	};
+
 	_.mixin(details, API);
 	return details;
 };

@@ -12,7 +12,8 @@ var StreamCommon = {
 		var wrapRedraw = function (fn) {
 			return function (args) {
 				fn(args);
-				m.redraw();
+				console.log(cb, args, fn);
+				//m.redraw();
 			}
 		};
 
