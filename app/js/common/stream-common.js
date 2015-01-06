@@ -8,12 +8,11 @@ var StreamCommon = {
 	 * @param cb
 	 * @returns {*}
 	 */
-	on: function (stream, messageNames, cb) {
+	on: function (stream, messageNames, cb, redraw) {
 		var wrapRedraw = function (fn) {
 			return function (args) {
 				fn(args);
-				console.log(cb, args, fn);
-				//m.redraw();
+				m.redraw();
 			}
 		};
 
@@ -22,7 +21,7 @@ var StreamCommon = {
 				return messageNames.indexOf(message.name) > -1;
 			}
 			return message.name === messageNames;
-		}).onValue(wrapRedraw(cb));
+		}).onValue(redraw ? wrapRedraw(cb) : cb);
 	},
 
 	/**
