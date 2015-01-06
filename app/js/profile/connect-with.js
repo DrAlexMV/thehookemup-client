@@ -1,28 +1,22 @@
-var modalMixin = require('common/modal-mixin.js');
+var ConnectWith = function () {
+  var connectWith = {};
 
-var ConnectWith = function (body){
-
-    connect = {}
-
-   var vm = connect.vm = {
-		init: function () {
-            vm.modal = ModalMixin(body)
+	var vm =
+  connectWith.vm = {
+    init: function() {
 
 		}
-	};
+  };
 
-    connect.controller=function () {
-	    var vm = vm.init();
-	};
-	connect.view = function (ctrl) {
-	return [
-			m('button', { onclick: function(e)
-		    {
-               ctrl.vm.modal.open()
-			}
-			}, "Click Here to Connect")]
-	};
+  connectWith.controller = function() {
+    vm.init()
+  };
 
-}
+	connectWith.view = function () {
+		return [
+			m("div", "U WANNA CONNECT NIGGA?")
+		];
+	};
+};
 
 module.exports = ConnectWith;
