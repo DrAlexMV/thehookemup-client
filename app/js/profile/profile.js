@@ -87,6 +87,16 @@ profile.connectTo = function(otherUserID) {
 	);
 };
 
+profile.saveDetail = function() {
+	User.putByID(
+		profile.vm.userid,
+		{ description: profile.vm.basicInfo().description() }
+	)
+	.then(function() {
+		profile.vm.editing(false);
+	});
+};
+
 profile.controller = function () {
 	profile.vm.init();
 };
@@ -122,8 +132,7 @@ profile.view = function () {
 
 	var description = profile.vm.editing() ?
 		<div className="description"
-			data-type="textarea"
-			data-inputclass="ui fluid"
+			data-type="text"
 			config={Editable(basicInfo.description, {})}>
 			{basicInfo.description()}
 		</div> :
@@ -143,29 +152,27 @@ profile.view = function () {
 		if (profile.vm.editing()) {
 			editButton = (
 				<div>
-					<div className="mini ui blue button"
-						onclick={function() {
-							User.putByID(
-									profile.vm.userid,
-									{ description: profile.vm.basicInfo().description() }
-								)
-								.then(function() {
-									profile.vm.editing(false);
-								});
-						}}>
-						Save
+					<div className="mini ui buttons">
+						<div className="ui blue button" onclick={profile.saveDetail}>
+							Save
+						</div>
+						<div className="ui red button"
+							onclick={function() {profile.vm.editing(false)} }>
+							Discard
+						</div>
 					</div>
-					<div className="mini ui red button"
-						onclick={function() {profile.vm.editing(false)} }>
-						Discard
-					</div>
+					<div className="ui hidden divider"></div>
 				</div>
+
 			);
 		} else {
 			editButton = (
-				<div className="mini ui blue button"
-					onclick={function() {profile.vm.editing(true)} }>
-					Edit
+				<div>
+					<div className="mini ui blue button"
+						onclick={function() {profile.vm.editing(true)} }>
+						Edit
+					</div>
+					<div className="ui hidden divider"></div>
 				</div>
 			);
 		}
@@ -190,7 +197,8 @@ profile.view = function () {
 										config={PopupLabel}>
 										<i className="share alternate icon"></i>
 									</div>
-									<a className="ui button blue">
+									<a className="ui button blue"
+										href={'mailto:' + basicInfo.email()}>
 										<i className="mail icon"></i>Mail
 									</a>
 								</div> :
@@ -201,6 +209,7 @@ profile.view = function () {
 						}
 					</h1>
 					{editButton}
+
 					{university_info}
 					{description}
 					{segments}
