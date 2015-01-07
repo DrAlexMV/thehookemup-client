@@ -80,11 +80,11 @@ profile.vm = {
 
 profile.connectTo = function(otherUserID) {
   profile.vm.connectWithModal.vm.open();
-	m.route(m.route());
+	//m.route(m.route());
 	User.connectMe(m.route.param('userid')).then(
 		function() {
 			console.log('connected to', m.route.param('userid'));
-			m.route(m.route());
+			//m.route(m.route());
 		},
 		function() {console.log('failed to connect')}
 	);
@@ -182,8 +182,9 @@ profile.view = function () {
 	}
 
 	return (
+    <div>
+    {vm.connectWithModal.view()}
 		<div className="ui padded stackable grid">
-      <div> {vm.connectWithModal.view()}</div>
 			<div className="row">
 				<div className="four wide column">
 					{vm.contactCard.view({})}
@@ -223,6 +224,7 @@ profile.view = function () {
 				</div>
 			</div>
 		</div>
+      </div>
 	);
 };
 
