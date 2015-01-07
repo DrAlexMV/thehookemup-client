@@ -58,3 +58,5 @@ gulp.task('browser-sync', function() {
 });
 
 gulp.task('default', ['watch', 'js', 'less', 'browser-sync']);
+
+gulp.task('build', ['js', 'less']);
