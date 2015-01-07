@@ -4,12 +4,13 @@
 
 var User = require('model/user');
 var SuggestedConnections = require('dashboard/suggested-connections');
+var UserListBig = require('search/user-list-big');
 
 var dashboard = {};
 
 dashboard.vm = {
   init: function () {
-    this.suggestedConnections = m.prop(SuggestedConnections({}));
+    this.suggestedConnections = SuggestedConnections();
   }
 };
 
@@ -19,10 +20,26 @@ dashboard.controller = function () {
 };
 
 dashboard.view = function () {
+  var vm = dashboard.vm;
   return [
-    m("div.ui.relaxed.divided.items",[
-    m("div.item","This is an item!!")
-    ])
+    m("div.ui.three.column.grid",[
+        m("div.center.aligned.column",[
+          m("div.ui.segment",[
+            vm.suggestedConnections.view()
+            ])
+          ]),
+          m("div.center.aligned.column",[
+            m("div.ui.segment",[
+
+            ])
+
+          ]),
+          m("div.center.aligned.column",[
+            m("div.ui.segment",[
+
+          ])
+        ])
+      ])
   ]
 };
 
