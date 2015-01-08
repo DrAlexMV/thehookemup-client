@@ -48,14 +48,6 @@ profile.vm = {
 					User.updatePicture(userid, basicInfo().picture());
 				}
 			);
-
-
-   /* StreamCommon.on(profile.stream,
-      'ConnectWithModal::NoConnect',
-      function()
-      {
-        console.log("No was clicked")
-      })*/
   }
 
 		// we might already have the data
@@ -88,7 +80,11 @@ profile.vm = {
 
 profile.connectTo = function(otherUserID) {
   profile.vm.connectWithModal.vm.open();
+  //Removed the following line - This is needed for the modal to work.
   //m.route(m.route());
+
+  //listen to input from the modal. An input of 'ConnectWithModal::Connect' means the user clicked the the button on
+  //the modal to connect.
   StreamCommon.on(profile.stream,
     'ConnectWithModal::Connect',
     function(){
@@ -102,6 +98,9 @@ profile.connectTo = function(otherUserID) {
       }
     )}
   )
+
+  //listen to input from the modal. An input of 'ConnectWithModal::NoConnect' means the user clicked the the button on
+  //the modal to close the window without connecting.
   StreamCommon.on(profile.stream,
     'ConnectWithModal::NoConnect',
       function() {

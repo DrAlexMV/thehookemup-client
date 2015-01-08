@@ -7,11 +7,16 @@ var ConnectWith = function (basicUserInfo) {
 
   connectWith.stream = new Bacon.Bus();
 
-  function connect(message) {
+  /*
+  I tried to make the functions below combined into one function that takes a parameter,
+  but it seems that using {onclick: connect(someParam)} automatically calls the function upon loading
+  whereas {onclick: connect} actually waits until the button is clicked as desired.
+   */
+  function connect() {
     connectWith.stream.push(new StreamCommon.Message('ConnectWithModal::Connect', {}));
   }
 
-  function noConnect(message) {
+  function noConnect() {
     connectWith.stream.push(new StreamCommon.Message('ConnectWithModal::NoConnect', {}));
   }
 
