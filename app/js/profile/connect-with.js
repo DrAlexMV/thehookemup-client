@@ -6,8 +6,12 @@ var ConnectWith = function (basicUserInfo) {
 
   connectWith.stream = new Bacon.Bus();
 
-  function connect() {
-    connectWith.stream.push(new StreamCommon.Message('ConnectWithModal::Yes', {}));
+  function connect(message) {
+    connectWith.stream.push(new StreamCommon.Message('ConnectWithModal::Connect', {}));
+  }
+
+  function noConnect(message) {
+    connectWith.stream.push(new StreamCommon.Message('ConnectWithModal::NoConnect', {}));
   }
 
 
@@ -38,8 +42,8 @@ var ConnectWith = function (basicUserInfo) {
         ])
       ]),
       m("div.actions",[
-        m("div.ui.black.button",{onclick: connect()}, "No"),
-        m("div.ui.positive.right.labeled.icon.button",{ onclick: connect() },"Yes",[
+        m("div.ui.black.button",{onclick: noConnect}, "No"),
+        m("div.ui.positive.right.labeled.icon.button",{onclick: connect},"Yes",[
           m("i.checkmark.icon")
         ])
       ])

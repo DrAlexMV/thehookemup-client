@@ -36,7 +36,7 @@ profile.vm = {
 			profile.vm.basicInfo = response;
 			profile.vm.contactCard = new ContactCard(profile.vm.basicInfo, userid == 'me');
       profile.vm.connectWithModal = new ModalMixin(new ConnectWith(profile.vm.basicInfo));
-			profile.stream = Bacon.mergeAll(profile.vm.contactCard.vm.profilePicture.stream);
+			profile.stream = Bacon.mergeAll(profile.vm.contactCard.vm.profilePicture.stream, profile.vm.connectWithModal.vm.body.stream);
 			StreamCommon.on(profile.stream,
 				'EditableImage::ReplaceImageURL',
 				function (message) {
@@ -48,7 +48,15 @@ profile.vm = {
 					User.updatePicture(userid, basicInfo().picture());
 				}
 			);
-		}
+
+
+   /* StreamCommon.on(profile.stream,
+      'ConnectWithModal::NoConnect',
+      function()
+      {
+        console.log("No was clicked")
+      })*/
+  }
 
 		// we might already have the data
 		if (userid === 'me') {
@@ -80,14 +88,28 @@ profile.vm = {
 
 profile.connectTo = function(otherUserID) {
   profile.vm.connectWithModal.vm.open();
-	//m.route(m.route());
-	User.connectMe(m.route.param('userid')).then(
-		function() {
-			console.log('connected to', m.route.param('userid'));
-			//m.route(m.route());
-		},
-		function() {console.log('failed to connect')}
-	);
+  //m.route(m.route());
+  StreamCommon.on(profile.stream,
+    'ConnectWithModal::Connect',
+    function(){
+    User.connectMe(m.route.param('userid')).then(
+      function () {
+        console.log('connected to', m.route.param('userid'));
+        //m.route(m.route());
+      },
+      function () {
+        console.log('failed to connect')
+      }
+    )}
+  )
+  StreamCommon.on(profile.stream,
+    'ConnectWithModal::NoConnect',
+      function() {
+        console.log("No connect")
+        //m.route(m.route());
+      },
+      function() {console.log('failed to connect')}
+    )
 };
 
 profile.saveDetail = function() {
