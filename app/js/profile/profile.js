@@ -15,6 +15,8 @@ var UserEdges = require('model/user-edges');
 var ImageModel = require('model/image');
 var StreamCommon = require('common/stream-common');
 var Context = require('common/context');
+var ModalMixin = require('common/modal-mixin');
+var ConnectWith = require('profile/connect-with');
 
 var profile = {};
 
@@ -26,7 +28,6 @@ profile.vm = {
 		this.basicInfo = null;
 		this.contactCard = null;
 		this.infoSegments = [];
-
 		this.editing = m.prop(false);
 
 		profile.stream = null;
@@ -34,8 +35,8 @@ profile.vm = {
 		function handleLoadUser(response) {
 			profile.vm.basicInfo = response;
 			profile.vm.contactCard = new ContactCard(profile.vm.basicInfo, userid == 'me');
-
-			profile.stream = Bacon.mergeAll(profile.vm.contactCard.vm.profilePicture.stream);
+      profile.vm.connectWithModal = new ModalMixin(new ConnectWith(profile.vm.basicInfo));
+			profile.stream = Bacon.mergeAll(profile.vm.contactCard.vm.profilePicture.stream, profile.vm.connectWithModal.vm.body.stream);
 			StreamCommon.on(profile.stream,
 				'EditableImage::ReplaceImageURL',
 				function (message) {
@@ -47,7 +48,15 @@ profile.vm = {
 					User.updatePicture(userid, basicInfo().picture());
 				}
 			);
-		}
+
+
+   /* StreamCommon.on(profile.stream,
+      'ConnectWithModal::NoConnect',
+      function()
+      {
+        console.log("No was clicked")
+      })*/
+  }
 
 		// we might already have the data
 		if (userid === 'me') {
@@ -76,15 +85,31 @@ profile.vm = {
 	}
 };
 
+
 profile.connectTo = function(otherUserID) {
-	m.route(m.route());
-	User.connectMe(m.route.param('userid')).then(
-		function() {
-			console.log('connected to', m.route.param('userid'));
-			m.route(m.route());
-		},
-		function() {console.log('failed to connect')}
-	);
+  profile.vm.connectWithModal.vm.open();
+  //m.route(m.route());
+  StreamCommon.on(profile.stream,
+    'ConnectWithModal::Connect',
+    function(){
+    User.connectMe(m.route.param('userid')).then(
+      function () {
+        console.log('connected to', m.route.param('userid'));
+        //m.route(m.route());
+      },
+      function () {
+        console.log('failed to connect')
+      }
+    )}
+  )
+  StreamCommon.on(profile.stream,
+    'ConnectWithModal::NoConnect',
+      function() {
+        console.log("No connect")
+        //m.route(m.route());
+      },
+      function() {console.log('failed to connect')}
+    )
 };
 
 profile.saveDetail = function() {
@@ -179,6 +204,8 @@ profile.view = function () {
 	}
 
 	return (
+    <div>
+    {vm.connectWithModal.view()}
 		<div className="ui padded stackable grid">
 			<div className="row">
 				<div className="four wide column">
@@ -219,6 +246,7 @@ profile.view = function () {
 				</div>
 			</div>
 		</div>
+      </div>
 	);
 };
 

@@ -32,9 +32,8 @@ auth.vm = {
 					Context.setCurrentUser(res);
 				}, function (res) {
 					loginForm.vm.errorMessages([res.error]);
-				})
-				.then(function () { auth.vm.awaitingResponse(false); });
-		});
+				}).then(function () { auth.vm.awaitingResponse(false); });
+		}, true);
 
 		StreamCommon.on(auth.stream, ['LoginForm::Register', 'RegistrationForm::Back'], function (message) {
 			auth.vm.userRegistering(message.name === 'LoginForm::Register');
