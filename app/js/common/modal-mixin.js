@@ -30,7 +30,7 @@ var ModalMixin = function (body) {
 
 	modal.view = function () {
 		return [
-			m('div.ui.basic.modal', { config: config } , [
+			m('div.ui.modal', { config: config } , [
 				body.view()
 			])
 		];

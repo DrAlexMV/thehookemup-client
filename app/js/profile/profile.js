@@ -28,7 +28,6 @@ profile.vm = {
 		this.basicInfo = null;
 		this.contactCard = null;
 		this.infoSegments = [];
-    this.connectWithModal = new ModalMixin(new ConnectWith());
 		this.editing = m.prop(false);
 
 		profile.stream = null;
@@ -36,7 +35,7 @@ profile.vm = {
 		function handleLoadUser(response) {
 			profile.vm.basicInfo = response;
 			profile.vm.contactCard = new ContactCard(profile.vm.basicInfo, userid == 'me');
-
+      profile.vm.connectWithModal = new ModalMixin(new ConnectWith(profile.vm.basicInfo));
 			profile.stream = Bacon.mergeAll(profile.vm.contactCard.vm.profilePicture.stream);
 			StreamCommon.on(profile.stream,
 				'EditableImage::ReplaceImageURL',
@@ -77,6 +76,7 @@ profile.vm = {
 			}, Error.handle);
 	}
 };
+
 
 profile.connectTo = function(otherUserID) {
   profile.vm.connectWithModal.vm.open();
