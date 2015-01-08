@@ -82,7 +82,6 @@ profile.connectTo = function(otherUserID) {
   profile.vm.connectWithModal.vm.open();
   //Removed the following line - This is needed for the modal to work.
   //m.route(m.route());
-
   //listen to input from the modal. An input of 'ConnectWithModal::Connect' means the user clicked the the button on
   //the modal to connect.
   StreamCommon.on(profile.stream,
@@ -223,6 +222,7 @@ profile.view = function () {
 										config={PopupLabel}>
 										<i className="share alternate icon"></i>
 									</div>
+
 									<a className="ui button blue"
 										href={'mailto:' + basicInfo.email()}>
 										<i className="mail icon"></i>Mail

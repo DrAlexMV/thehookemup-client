@@ -1,26 +1,16 @@
 
 var EditableImage = require('common/editable-image');
 var StreamCommon = require('common/stream-common');
+var UtilsGeneral = require('common/utils-general');
 
 var ConnectWith = function (basicUserInfo) {
   var connectWith = {};
 
   connectWith.stream = new Bacon.Bus();
 
-  /*
-  I tried to make the functions below combined into one function that takes a parameter,
-  but it seems that using {onclick: connect(someParam)} automatically calls the function upon loading
-  whereas {onclick: connect} actually waits until the button is clicked as desired.
-   */
-  function connect() {
-    connectWith.stream.push(new StreamCommon.Message('ConnectWithModal::Connect', {}));
+  function connect(whichButton) {
+    connectWith.stream.push(new StreamCommon.Message('ConnectWithModal::'+whichButton, {}));
   }
-
-  function noConnect() {
-    connectWith.stream.push(new StreamCommon.Message('ConnectWithModal::NoConnect', {}));
-  }
-
-
 
   var vm = connectWith.vm = {
     profilePicture: new EditableImage(false)
@@ -29,10 +19,6 @@ var ConnectWith = function (basicUserInfo) {
   connectWith.controller = function(basicUserInfo) {
 
   };
-
-
-
-
 
 	connectWith.view = function () {
 		return [
@@ -49,8 +35,8 @@ var ConnectWith = function (basicUserInfo) {
         ])
       ]),
       m("div.actions",[
-        m("div.ui.black.button",{onclick: noConnect}, "No"),
-        m("div.ui.positive.right.labeled.icon.button",{onclick: connect},"Yes",[
+        m("div.ui.black.button",{onclick: connect.curry("NoConnect")}, "No"),
+        m("div.ui.positive.right.labeled.icon.button",{onclick: connect.curry("Connect")},"Yes",[
           m("i.checkmark.icon")
         ])
       ])
