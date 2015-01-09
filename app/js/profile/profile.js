@@ -35,7 +35,7 @@ profile.vm = {
 		function handleLoadUser(response) {
 			profile.vm.basicInfo = response;
 			profile.vm.contactCard = new ContactCard(profile.vm.basicInfo, userid == 'me');
-      profile.vm.connectWithModal = new ModalMixin(new ConnectWith(profile.vm.basicInfo));
+			profile.vm.connectWithModal = new ModalMixin(new ConnectWith(profile.vm.basicInfo));
 			profile.stream = Bacon.mergeAll(profile.vm.contactCard.vm.profilePicture.stream, profile.vm.connectWithModal.vm.body.stream);
 			StreamCommon.on(profile.stream,
 				'EditableImage::ReplaceImageURL',
@@ -79,35 +79,30 @@ profile.vm = {
 
 
 profile.connectTo = function(otherUserID) {
-  profile.vm.connectWithModal.vm.open();
-  //Removed the following line - This is needed for the modal to work.
-  //m.route(m.route());
-  //listen to input from the modal. An input of 'ConnectWithModal::Connect' means the user clicked the the button on
-  //the modal to connect.
-  StreamCommon.on(profile.stream,
-    'ConnectWithModal::Connect',
-    function(){
-    User.connectMe(m.route.param('userid')).then(
-      function () {
-        console.log('connected to', m.route.param('userid'));
-        //m.route(m.route());
-      },
-      function () {
-        console.log('failed to connect')
-      }
-    )}
-  )
+	profile.vm.connectWithModal.vm.open();
+	//Removed the following line - This is needed for the modal to work.
+	//m.route(m.route());
+	//listen to input from the modal. An input of 'ConnectWithModal::Connect' means the user clicked the the button on
+	//the modal to connect.
+	StreamCommon.on(profile.stream, 'ConnectWithModal::Connect', function() {
+		User.connectMe(m.route.param('userid')).then(
+			function () {
+				console.log('connected to', m.route.param('userid'));
+				//m.route(m.route());
+			},
+			function () {
+				console.log('failed to connect');
+			});
+		}
+	);
 
-  //listen to input from the modal. An input of 'ConnectWithModal::NoConnect' means the user clicked the the button on
-  //the modal to close the window without connecting.
-  StreamCommon.on(profile.stream,
-    'ConnectWithModal::NoConnect',
-      function() {
-        console.log("No connect")
-        //m.route(m.route());
-      },
-      function() {console.log('failed to connect')}
-    )
+	//listen to input from the modal. An input of 'ConnectWithModal::NoConnect' means the user clicked the the button on
+	//the modal to close the window without connecting.
+	StreamCommon.on(profile.stream, 'ConnectWithModal::NoConnect', function() {
+		console.log("No connect");
+			//m.route(m.route());
+		}
+	);
 };
 
 profile.saveDetail = function() {
@@ -202,8 +197,8 @@ profile.view = function () {
 	}
 
 	return (
-    <div>
-    {vm.connectWithModal.view()}
+	<div>
+	{vm.connectWithModal.view()}
 		<div className="ui padded stackable grid">
 			<div className="row">
 				<div className="four wide column">
@@ -245,7 +240,7 @@ profile.view = function () {
 				</div>
 			</div>
 		</div>
-      </div>
+	  </div>
 	);
 };
 
