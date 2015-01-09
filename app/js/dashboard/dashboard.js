@@ -4,9 +4,9 @@
  */
 
 var Context = require('common/context');
+var EntityList = require('profile/entity-list');
 var Error = require('common/error');
 var HorizontalEntityListSegment = require('dashboard/horizontal-entity-list-segment');
-//var SuggestedConnections = require('dashboard/suggested-connections');
 var User = require('model/user');
 var UserEdges = require('model/user-edges');
 
@@ -30,14 +30,14 @@ var dashboard = {};
 
 dashboard.vm = {
 	init: function () {
-		//this.suggestedConnections = SuggestedConnections();
-
 		this.pendingRequestsSegment = null;
 		this.connectionsSegment = null;
+		this.suggestedConnectionsList = null;
 
 		this.basicInfo = null;
 		this.edges = null;
 		this.pendingConnections = [];
+		this.suggestedConnections = [];
 
 		Context.getCurrentUser().then(function(response) {
 			dashboard.vm.basicInfo = response;
@@ -67,6 +67,11 @@ dashboard.vm = {
 					 {showAll: true}
 				);
 			}, Error.handle);
+
+		UserEdges.getMySuggestedConnections().then(
+			function(response) {
+				dashboard.vm.suggestedConnections = response;
+			}, Error.handle);
 	}
 };
 
@@ -82,6 +87,14 @@ dashboard.view = function () {
 	var numPendingRequests = dashboard.vm.pendingConnections.length;
 	var numConnections = dashboard.vm.edges.connections().length;
 	var numAssociations = 5;
+
+	var suggestedConnectionsSegment = new EntityList(
+		'Suggested Connections',
+		'/profile',
+		dashboard.vm.suggestedConnections,
+		User,
+		true
+	).view({});
 
 	return (
 		<div className="ui stackable padded grid">
@@ -178,39 +191,7 @@ dashboard.view = function () {
 									dashboard.vm.connectionsSegment.view({}) : null }
 							</div>
 							<div className="six wide column">
-								<div className="ui segment">
-									<h4 className="ui header">Suggested Connections</h4>
-									<div className="ui divided very relaxed list">
-										<a className="item">
-											<img className="ui top aligned avatar image" src="/img/square-image.png" />
-											<div className="content">
-												<div className="header">Alexander Ventura</div>
-												Developer
-											</div>
-										</a>
-										<a className="item">
-											<img className="ui top aligned avatar image" src="/img/square-image.png" />
-											<div className="content">
-												<div className="header">Brandon Olivier</div>
-												Developer
-											</div>
-										</a>
-										<a className="item">
-											<img className="ui top aligned avatar image" src="/img/square-image.png" />
-											<div className="content">
-												<div className="header">Austin Stone</div>
-												Developer
-											</div>
-										</a>
-										<a className="item">
-											<img className="ui top aligned avatar image" src="/img/square-image.png" />
-											<div className="content">
-												<div className="header">Santa Claus</div>
-												Investor
-											</div>
-										</a>
-									</div>
-								</div>
+								{ suggestedConnectionsSegment }
 								<div className="ui segment">
 									<h4 className="ui header">Suggested Associations</h4>
 									<div className="ui divided very relaxed list">

@@ -24,6 +24,10 @@ var Edges = function(API) {
 		return this.get('/user/me/edges/pending-connections', User.UserModel);
 	};
 
+	edges.getMySuggestedConnections = function() {
+		return this.get('/user/me/edges/suggested-connections', User.UserModel);
+	};
+
 	_.mixin(edges, API);
 	return edges;
 };
