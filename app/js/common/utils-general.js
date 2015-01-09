@@ -10,3 +10,8 @@ Function.prototype.curry = function () {
     fn.apply(this, args.concat(slice.call(arguments)))
   }
 }
+
+Function.prototype.method = function (name, func) {
+  this.prototype[name] = func;
+  return this;
+};

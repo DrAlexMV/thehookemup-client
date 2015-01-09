@@ -6,15 +6,16 @@ var Context = require('common/context');
 var User = require('model/user');
 var UserModel = User.UserModel;
 var Image = require('model/image');
-
+var NotificationList = require('navigation/notification-list');
+var DropdownMixin = require('common/dropdown-mixin')
 var Navbar = function () {
 
 	var navbar = {};
-
 	var vm =
 	navbar.vm = {
 		navbarSearchInput: new NavbarSearchInput(),
-		currentUser: m.prop(new UserModel({}))
+		currentUser: m.prop(new UserModel({})),
+    dropdownMixin: m.prop(DropdownMixin(NotificationList([])))
 	};
 
 	navbar.stream = Bacon.mergeAll(Context.stream, vm.navbarSearchInput.stream);
@@ -26,6 +27,8 @@ var Navbar = function () {
 
 	StreamCommon.on(navbar.stream, 'Context::Login', function (message) {
 		vm.currentUser(message.parameters.user);
+    vm.dropdownMixin(DropdownMixin(NotificationList([vm.currentUser()])))
+    console.log("HEREERERE1!")
 	});
 	navbar.view = function () {
 		return [
@@ -43,10 +46,11 @@ var Navbar = function () {
 					]),
 					m('div.seven.wide.column', [
 						m('div.right.item', [
-							m('div.ui.image.label', [
-								m('img', { src: User.getPicture(vm.currentUser()) }),
-								vm.currentUser().email()
-							])
+            vm.dropdownMixin().view(),
+							  m('div.ui.image.label', [
+								  m('img', { src: User.getPicture(vm.currentUser()) }),
+								  vm.currentUser().email()
+                  ])
 						])
 					])
 				])
