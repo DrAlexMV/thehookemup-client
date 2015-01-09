@@ -20,11 +20,8 @@ var Edges = function(API) {
 		return this.get('/user/' + userID + '/edges', edges.EdgesModel);
 	};
 
-	edges.isConnection = function(myID, othersID, othersEdgeData) {
-		if (myID == othersID) return true;
-		return othersEdgeData.connections().some(function(user) {
-			return user._id() === myID;
-		});
+	edges.getMyPendingConnections = function() {
+		return this.get('/user/me/edges/pending-connections', User.UserModel);
 	};
 
 	_.mixin(edges, API);

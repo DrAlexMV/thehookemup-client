@@ -48,7 +48,7 @@ profile.vm = {
 					User.updatePicture(userid, basicInfo().picture());
 				}
 			);
-  }
+		}
 
 		// we might already have the data
 		if (userid === 'me') {
