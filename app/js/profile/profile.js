@@ -77,32 +77,43 @@ profile.vm = {
 	}
 };
 
-
-profile.connectTo = function(otherUserID) {
-	profile.vm.connectWithModal.vm.open();
-	//Removed the following line - This is needed for the modal to work.
-	//m.route(m.route());
-	//listen to input from the modal. An input of 'ConnectWithModal::Connect' means the user clicked the the button on
-	//the modal to connect.
-	StreamCommon.on(profile.stream, 'ConnectWithModal::Connect', function() {
-		User.connectMe(m.route.param('userid')).then(
+// Serves as both request and confirmation
+profile.connectMe = function(isConfirmation) {
+	return function() {
+		UserEdges.connectMe(m.route.param('userid')).then(
 			function () {
-				console.log('connected to', m.route.param('userid'));
-				//m.route(m.route());
+				if (isConfirmation) {
+					profile.vm.basicInfo().connectionType('c'); // Connected
+					// TODO: push to this user's connections in local model
+				} else {
+					profile.vm.basicInfo().connectionType('s'); // Sent
+				}
 			},
 			function () {
 				console.log('failed to connect');
-			});
+			}
+		);
+	};
+};
+
+profile.deleteConnection = function() {
+	UserEdges.deleteConnection(m.route.param('userid')).then(
+		function () {
+			profile.vm.basicInfo().connectionType(''); // Not connected/NA
+		},
+		function () {
+			console.log('failed to delete');
 		}
 	);
+};
+
+profile.connectDialog = function(otherUserID) {
+	profile.vm.connectWithModal.vm.open();
+	StreamCommon.on(profile.stream, 'ConnectWithModal::Connect', profile.connectMe());
 
 	//listen to input from the modal. An input of 'ConnectWithModal::NoConnect' means the user clicked the the button on
 	//the modal to close the window without connecting.
-	StreamCommon.on(profile.stream, 'ConnectWithModal::NoConnect', function() {
-		console.log("No connect");
-			//m.route(m.route());
-		}
-	);
+	//StreamCommon.on(profile.stream, 'ConnectWithModal::NoConnect', function() {});
 };
 
 profile.saveDetail = function() {
@@ -132,6 +143,68 @@ profile.view = function () {
 	var university_insignia = (basicInfo.university === 'University of Texas') ? 
 		<img src="/img/bevo_icon.jpg" id="bevo_icon" />
 		: null;
+
+	var connectionButtons = null;
+
+	// Connected
+	if (basicInfo.connectionType() == 'c') {
+		connectionButtons =	(
+			<div className="ui buttons right floated">
+				<div className="ui icon positive button"
+					data-variation="inverted"
+					data-content="Connected"
+					data-position="bottom center"
+					config={PopupLabel}>
+					<i className="share alternate icon"></i>
+				</div>
+
+				<a className="ui button blue"
+					href={'mailto:' + basicInfo.email()}>
+					<i className="mail icon"></i>Mail
+				</a>
+			</div>
+		);
+
+	// Sent
+	} else if (basicInfo.connectionType() == 's') {
+		connectionButtons =	(
+			<div className="ui positive disabled button right floated">
+				<i className="share alternate icon"></i>
+				Request Sent
+			</div>
+		);
+	// pending approval
+	} else if (basicInfo.connectionType() == 'pa') {
+		connectionButtons =	(
+			<div className="ui buttons right floated">
+				<div className="ui negative icon button" onclick={profile.deleteConnection}
+					data-variation="inverted"
+					data-content="Dismiss request"
+					data-position="bottom center"
+					config={PopupLabel}>
+					<i className="remove icon"></i>
+				</div>
+				<div className="ui positive button" onclick={profile.connectMe(true)}
+					data-variation="inverted"
+					data-content="Approve request"
+					data-position="bottom center"
+					config={PopupLabel}>
+					<i className="checkmark icon"></i>
+					Add
+				</div>
+			</div>
+		);
+	// not connected/other
+	} else {
+		connectionButtons =	(
+			<div className="ui positive button right floated" onclick={profile.connectDialog}>
+				{vm.connectWithModal.view()}
+				<i className="share alternate icon"></i>
+				Connect
+			</div>
+		);
+	}
+
 
 	var university_info = null;
 	if (basicInfo.university()) {
@@ -197,8 +270,6 @@ profile.view = function () {
 	}
 
 	return (
-	<div>
-	{vm.connectWithModal.view()}
 		<div className="ui padded stackable grid">
 			<div className="row">
 				<div className="four wide column">
@@ -207,27 +278,7 @@ profile.view = function () {
 				<div className="eight wide column">
 					<h1 className="ui header">
 						{User.getName(basicInfo)}
-						{
-							basicInfo.isConnection() ?
-								<div className="ui buttons right floated">
-									<div className="ui icon positive button"
-										data-variation="inverted"
-										data-content="Connected"
-										data-position="bottom center"
-										config={PopupLabel}>
-										<i className="share alternate icon"></i>
-									</div>
-
-									<a className="ui button blue"
-										href={'mailto:' + basicInfo.email()}>
-										<i className="mail icon"></i>Mail
-									</a>
-								</div> :
-								<div className="ui positive button right floated" onclick={profile.connectTo}>
-									<i className="share alternate icon"></i>
-									Connect
-								</div>
-						}
+						{connectionButtons}
 					</h1>
 					{editButton}
 
@@ -240,7 +291,6 @@ profile.view = function () {
 				</div>
 			</div>
 		</div>
-	  </div>
 	);
 };
 
