@@ -3,7 +3,7 @@
  * @jsx m
  */
 
-var EntityList = function (title, linkBase, entities, model) {
+var EntityList = function (title, linkBase, entities, model, inSegment) {
 	var entitylist = {};
 
 	entitylist.view = function () {
@@ -23,8 +23,8 @@ var EntityList = function (title, linkBase, entities, model) {
 			});
 		}
 		return (
-			<div>
-				<h4 className="header">{title}</h4>
+			<div className={inSegment ? 'ui segment' : null}>
+				<h4 className="ui header">{title}</h4>
 				<div className="ui divided very relaxed list">
 					{list}
 				</div>

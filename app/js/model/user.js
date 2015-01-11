@@ -16,7 +16,7 @@ var User = function(API) {
 		this.university = m.prop(data.university);
 		this.role = m.prop(data.role);
 		this.picture = m.prop(data.picture);
-		this.isConnection = m.prop(data.isConnection);
+		this.connectionType = m.prop(data.connectionType);
 		return this;
 	};
 
@@ -50,10 +50,6 @@ var User = function(API) {
 
 	user.getName = function(userInstance) {
 		return userInstance.firstName() + ' ' + userInstance.lastName();
-	};
-
-	user.connectMe = function(otherUserID) {
-		return this.post('/user/me/edges/connections', {user: otherUserID});
 	};
 
 	_.mixin(user, API);

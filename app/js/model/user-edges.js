@@ -20,11 +20,20 @@ var Edges = function(API) {
 		return this.get('/user/' + userID + '/edges', edges.EdgesModel);
 	};
 
-	edges.isConnection = function(myID, othersID, othersEdgeData) {
-		if (myID == othersID) return true;
-		return othersEdgeData.connections().some(function(user) {
-			return user._id() === myID;
-		});
+	edges.getMyPendingConnections = function() {
+		return this.get('/user/me/edges/pending-connections', User.UserModel);
+	};
+
+	edges.getMySuggestedConnections = function() {
+		return this.get('/user/me/edges/suggested-connections', User.UserModel);
+	};
+
+	edges.connectMe = function(otherUserID) {
+		return this.post('/user/me/edges/connections', {user: otherUserID});
+	};
+
+	edges.deleteConnection = function(otherUserID) {
+		return this.delete('/user/me/edges/connections/' + otherUserID);
 	};
 
 	_.mixin(edges, API);

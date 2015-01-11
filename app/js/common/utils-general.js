@@ -2,6 +2,8 @@
  * Created by austinstone on 1/8/15.
  */
 
+var utils = {};
+
 Function.prototype.curry = function () {
   var slice = Array.prototype.slice
   var fn = this
@@ -11,7 +13,19 @@ Function.prototype.curry = function () {
   }
 }
 
+
 Function.prototype.method = function (name, func) {
   this.prototype[name] = func;
   return this;
 };
+
+utils.handlePlural = function(string, number) {
+	if (number == 1) {
+		return string;
+	} else {
+		return string + 's';
+	}
+}
+
+module.exports = utils;
+
