@@ -43,6 +43,14 @@ var NotificationList = function (users) {
 
 
 
+
+
+
+
+
+
+
+
   notificationList.view = function () {
     var vm = notificationList.vm;
     var list = [];
@@ -51,22 +59,31 @@ var NotificationList = function (users) {
         return [
           m("div.item",[
             m("a.item[href=http://127.0.0.1:5000/profile/" + user._id() + "]", {config: m.route},[
-            m('div.ui.image', [
-              m('img', { src: User.getPicture(user) })
+            m("div.ui.card",[
+               m("div.content",[
+               m("div.header", [
+                  m('img.ui.avatar.image', { src: User.getPicture(user) }),
+                  "Request from " + User.getName(user)
             ]),
-            m("div.content", [
-              m("div.header", User.getName(user)),
-              m("div.content", user.role())
+            m("div.description", "Would you like to connect?"),
+                 m("div.ui.two.bottom.attached.buttons",[
+                   m("div.ui.green.button","Yes"),
+                   m("div.ui.red.button","No")
+
+                 ])
+                 ])
             ])
           ])
-        ])
+
+      ])
+
        ]
       });
     }
 
 
     return([
-      m("i.world.icon"),
+      m("i.alarm.outline.icon"),
       m("div.menu",[
         list
       ])

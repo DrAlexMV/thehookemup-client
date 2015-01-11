@@ -27,7 +27,7 @@ var Navbar = function () {
 
 	StreamCommon.on(navbar.stream, 'Context::Login', function (message) {
 		vm.currentUser(message.parameters.user);
-    vm.dropdownMixin(DropdownMixin(NotificationList([vm.currentUser()])))
+    vm.dropdownMixin(DropdownMixin(NotificationList([vm.currentUser(), vm.currentUser()])))
     console.log("HEREERERE1!")
 	});
 	navbar.view = function () {
