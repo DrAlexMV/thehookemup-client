@@ -140,7 +140,7 @@ profile.view = function () {
 
 	var associations = null;
 
-	var university_insignia = (basicInfo.university === 'University of Texas') ? 
+	var university_insignia = (basicInfo.university() === 'University of Texas') ? 
 		<img src="/img/bevo_icon.jpg" id="bevo_icon" />
 		: null;
 
@@ -223,8 +223,13 @@ profile.view = function () {
 
 	var description = profile.vm.editing() ?
 		<div className="description"
-			data-type="text"
-			config={Editable(basicInfo.description, {})}>
+			data-type="textarea"
+			config={Editable(basicInfo.description, {
+				placeholder: 'Add a description of yourself',
+				showbuttons: false,
+				rows: 3,
+				onblur: 'submit'
+		})}>
 			{basicInfo.description()}
 		</div> :
 		<div className="description">

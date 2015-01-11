@@ -30,8 +30,8 @@ var InfoSegment = function (detail, canEdit, userID) {
 					content[sectionIndex].subpoints = [];
 				}
 				content[sectionIndex].subpoints.push({
-					title: m.prop('Add a title'),
-					description: m.prop('Enter a description.')
+					title: m.prop(''),
+					description: m.prop('')
 				});
 			}
 		}
@@ -39,8 +39,8 @@ var InfoSegment = function (detail, canEdit, userID) {
 		function addSection() {
 			return function() {
 				detail.content.push({
-					title: m.prop('Add a title'),
-					description: m.prop('Enter a description.'),
+					title: m.prop(''),
+					description: m.prop(''),
 					subpoints: []
 				});
 			}
@@ -55,12 +55,21 @@ var InfoSegment = function (detail, canEdit, userID) {
 							<i className="right triangle icon"></i>
 							<div className="content subfield-editable">
 								<div className="header"
-									config={Editable(point.title, {})}>
+									config={Editable(point.title, {
+										placeholder: 'Add a title',
+										showbuttons: false,
+										onblur: 'submit'
+									})}>
 									{point.title()}
 								</div>
 								<div data-type="textarea"
 									data-inputclass="ui fluid"
-									config={Editable(point.description, {})}>
+									config={Editable(point.description, {
+										placeholder: 'Enter a description.',
+										showbuttons: false,
+										rows: 5,
+										onblur: 'submit'
+									})}>
 									{point.description()}
 								</div>
 							</div>
@@ -71,13 +80,22 @@ var InfoSegment = function (detail, canEdit, userID) {
 			return (
 				<div className="item">
 					<div className="header"
-						config={Editable(item.title, {})}>
+						config={Editable(item.title, {
+							placeholder: 'Add a title',
+							showbuttons: false,
+							onblur: 'submit'
+						})}>
 						{item.title()}
 					</div>
 					<div className="content">
 						<div data-inputclass="ui fluid"
 							data-type="textarea"
-							config={Editable(item.description, {})}>
+							config={Editable(item.description, {
+								placeholder: 'Enter a description.',
+								showbuttons: false,
+								rows: 5,
+								onblur: 'submit'
+							})}>
 							{item.description()}
 						</div>
 						<div className="list">
