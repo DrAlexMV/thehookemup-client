@@ -51,3 +51,26 @@ main {
 .ad {
   width: 100%;
 }
+
+.editable-item-container {
+  position: relative;
+  .close {
+    visibility: hidden;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+  }
+}
+
+
+.editable-item-container:hover {
+  position: relative;
+  background-color: rgba(180, 180, 180, 0.15);
+}
+
+.editable-item-container:hover > .close {
+    visibility: visible;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}

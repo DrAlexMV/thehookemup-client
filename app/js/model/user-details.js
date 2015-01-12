@@ -18,6 +18,8 @@ var Details = function(API) {
 				title: m.prop(item.title)
 			};
 		});
+
+		return this;
 	};
 
 	details.getByID = function(userID) {
