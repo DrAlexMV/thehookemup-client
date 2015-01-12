@@ -1,9 +1,12 @@
 var browserify = require('gulp-browserify');
 var browserSync = require('browser-sync');
 var gulp = require('gulp');
+var gulpif = require('gulp-if');
 var less = require('gulp-less');
 var rename = require('gulp-rename');
 var plumber = require('gulp-plumber');
+var uglify = require('gulp-uglify');
+
 
 // Define some paths.
 var paths = {
@@ -23,21 +26,27 @@ gulp.task('less', function () {
     .pipe(gulp.dest(paths.style));
 });
  
-gulp.task('js', function() {
-	try {
-		gulp.src(paths.app_js)
-			.pipe(plumber())
-			.pipe(browserify({
-				transform: ['mithrilify'],
-				paths: [paths.scripts],
-			}))
-			.pipe(rename(paths.bundle))
-			.pipe(gulp.dest(paths.build))
-	} catch (e) {
-		console.log(e);
-	}
-});
- 
+function buildJS(isProduction) {
+	return function() {
+		try {
+			gulp.src(paths.app_js)
+				.pipe(plumber())
+				.pipe(browserify({
+					transform: ['mithrilify'],
+					paths: [paths.scripts],
+				}))
+				.pipe(gulpif(isProduction, uglify()))
+				.pipe(rename(paths.bundle))
+				.pipe(gulp.dest(paths.build))
+		} catch (e) {
+			console.log(e);
+		}
+	};
+}
+
+gulp.task('js', buildJS());
+gulp.task('js-prod', buildJS(true));
+
 // Rerun tasks whenever a file changes.
 gulp.task('watch', function() {
 	try {
@@ -59,4 +68,4 @@ gulp.task('browser-sync', function() {
 
 gulp.task('default', ['watch', 'js', 'less', 'browser-sync']);
 
-gulp.task('build', ['js', 'less']);
+gulp.task('build', ['js-prod', 'less']);
