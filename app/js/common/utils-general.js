@@ -13,6 +13,12 @@ Function.prototype.curry = function () {
   }
 }
 
+
+Function.prototype.method = function (name, func) {
+  this.prototype[name] = func;
+  return this;
+};
+
 utils.handlePlural = function(string, number) {
 	if (number == 1) {
 		return string;
@@ -22,3 +28,4 @@ utils.handlePlural = function(string, number) {
 }
 
 module.exports = utils;
+

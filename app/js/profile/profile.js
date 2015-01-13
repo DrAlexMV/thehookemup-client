@@ -17,7 +17,6 @@ var StreamCommon = require('common/stream-common');
 var Context = require('common/context');
 var ModalMixin = require('common/modal-mixin');
 var ConnectWith = require('profile/connect-with');
-
 var profile = {};
 
 profile.vm = {
@@ -35,7 +34,10 @@ profile.vm = {
 		function handleLoadUser(response) {
 			profile.vm.basicInfo = response;
 			profile.vm.contactCard = new ContactCard(profile.vm.basicInfo, userid == 'me');
+
+
 			profile.vm.connectWithModal = new ModalMixin(new ConnectWith(profile.vm.basicInfo));
+
 			profile.stream = Bacon.mergeAll(profile.vm.contactCard.vm.profilePicture.stream, profile.vm.connectWithModal.vm.body.stream);
 			StreamCommon.on(profile.stream,
 				'EditableImage::ReplaceImageURL',

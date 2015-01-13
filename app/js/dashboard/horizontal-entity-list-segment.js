@@ -2,6 +2,8 @@
  * @jsx m
  */
 
+
+
 // Two column wide except on mobile
 var HorizontalEntityListSegment = function (title, linkBase, entities, model, config) {
 	var horizontalEntityList = {};

@@ -6,15 +6,17 @@ var Context = require('common/context');
 var User = require('model/user');
 var UserModel = User.UserModel;
 var Image = require('model/image');
-
+var NotificationList = require('navigation/notification-list');
+var DropdownMixin = require('common/dropdown-mixin')
+var UserEdges = require('model/user-edges');
 var Navbar = function () {
 
 	var navbar = {};
-
-	var vm =
-	navbar.vm = {
+	var vm = navbar.vm = {
 		navbarSearchInput: new NavbarSearchInput(),
-		currentUser: m.prop(new UserModel({}))
+		currentUser: m.prop(new UserModel({})),
+    dropdownMixin: m.prop(DropdownMixin(NotificationList([]),'div.ui.icon.top.right.pointing.dropdown.button')),
+    pendingConnections: []
 	};
 
 	navbar.stream = Bacon.mergeAll(Context.stream, vm.navbarSearchInput.stream);
@@ -24,9 +26,17 @@ var Navbar = function () {
 		m.route(SearchResults.buildURL(message.parameters));
 	});
 
+
 	StreamCommon.on(navbar.stream, 'Context::Login', function (message) {
 		vm.currentUser(message.parameters.user);
+    UserEdges.getMyPendingConnections().then(
+      function(response) {
+        vm.pendingConnections = response;
+        vm.dropdownMixin(DropdownMixin(NotificationList(vm.pendingConnections), 'div.ui.icon.top.right.pointing.dropdown.button'));
+
+      }, Error.handle);
 	});
+
 
 	navbar.view = function () {
 		return [
@@ -44,9 +54,11 @@ var Navbar = function () {
 					]),
 					m('div.seven.wide.column', [
 						m('div#nav-avatar.right.item', [
-							m('a[href="?/profile/me"].ui.avatar.image', [
-								m('img', { src: User.getPicture(vm.currentUser()) })
-							])
+            vm.dropdownMixin().view(),
+							 m('a[href="?/profile/me"].ui.avatar.image', [
+								  m('img', { src: User.getPicture(vm.currentUser()) }),
+               ])
+
 						])
 					])
 				])
