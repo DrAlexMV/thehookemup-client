@@ -27,12 +27,13 @@ var Navbar = function () {
 	StreamCommon.on(navbar.stream, 'Context::Login', function (message) {
 		vm.currentUser(message.parameters.user);
 	});
+
 	navbar.view = function () {
 		return [
 			m('div.ui.borderless.fixed.menu', [
 				m('div.ui.grid', [
 					m('div.two.wide.center.aligned.column', [
-						m('a.item', [
+						m('a[href="?/"].item', [
 							m('i.lemon.icon')
 						])
 					]),
@@ -42,10 +43,9 @@ var Navbar = function () {
 						])
 					]),
 					m('div.seven.wide.column', [
-						m('div.right.item', [
-							m('div.ui.image.label', [
-								m('img', { src: User.getPicture(vm.currentUser()) }),
-								vm.currentUser().email()
+						m('div#nav-avatar.right.item', [
+							m('a[href="?/profile/me"].ui.avatar.image', [
+								m('img', { src: User.getPicture(vm.currentUser()) })
 							])
 						])
 					])
