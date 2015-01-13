@@ -28,8 +28,7 @@ var HorizontalEntityListSegment = function (title, linkBase, entities, model, co
 	}
 
 	horizontalEntityList.view = function () {
-		var leftItems = [];
-		var rightItems = [];
+		var items = [];
 
 		if (entities) {
 			var filteredItems = [];
@@ -48,12 +47,7 @@ var HorizontalEntityListSegment = function (title, linkBase, entities, model, co
 					filteredItems.length : LARGE_MAX_ELEMENTS) :
 				SMALL_MAX_ELEMENTS;
 			
-			var filteredItems = filteredItems.slice(0, showNumber);
-
-			var cutpoint = filteredItems.length / 2;
-
-			leftItems = filteredItems.slice(0, cutpoint).map(makeItem);
-			rightItems = filteredItems.slice(cutpoint).map(makeItem);
+			items = filteredItems.slice(0, showNumber).map(makeItem);
 		}
 
 		var search = null;
@@ -88,17 +82,8 @@ var HorizontalEntityListSegment = function (title, linkBase, entities, model, co
 						{search}
 					</div>
 				</h4>
-				<div className="ui two column stackable relaxed grid">
-					<div className="column">
-						<div className="ui list">
-							{rightItems}
-						</div>
-					</div>
-					<div className="column">
-						<div className="ui small list">
-							{leftItems}
-						</div>
-					</div>
+				<div className="ui list horizontal-list">
+					{items}
 				</div>
 				{showToggle}
 			</div>
