@@ -93,8 +93,14 @@ var NotificationList = function (users) {
       return([
         m("i.alarm.outline.icon"),
         m("div.menu", [
-          list
-        ])
+          m("div.item", [
+            m("div.ui.card", [
+              m("div.content", [
+                m("div.description", "You don't have any notifications right now.")
+                ])
+              ])
+            ])
+          ])
       ])
     }
     else {
