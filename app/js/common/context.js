@@ -13,6 +13,9 @@ var Context = (function () {
   var pendingConnections =
   context.pendingConnections = m.prop();
 
+  var edges =
+    context.edges = m.prop();
+
 	// If we already have the user object. e.g. after login
 	context.setCurrentUser = function (userObject) {
 		currentUser(userObject);
@@ -63,6 +66,34 @@ var Context = (function () {
       );
     } else {
       deferred.resolve(pendingConnections);
+    }
+    return deferred.promise;
+  };
+
+
+
+
+  context.setEdges = function (updatedEdges) {
+    edges(updatedEdges);
+    context.stream.push(new StreamCommon.Message('Context::Edges', { edges:edges() }))
+  };
+
+  // Lazy Singleton
+  context.getEdges = function() {
+    var deferred = m.deferred();
+    if (!edges()) {
+      UserEdges.getByID('me').then(
+        function(response) {
+          Context.setEdges(response);
+          deferred.resolve(edges)
+        },
+        function(error){
+          edges(null);
+          deferred.reject(error);
+        }
+      );
+    } else {
+      deferred.resolve(edges);
     }
     return deferred.promise;
   };

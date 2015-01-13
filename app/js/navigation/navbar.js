@@ -15,26 +15,24 @@ var Navbar = function () {
 	var vm = navbar.vm = {
 		navbarSearchInput: new NavbarSearchInput(),
 		currentUser: m.prop(new UserModel({})),
-    dropdownMixin: m.prop(DropdownMixin(NotificationList([]))),
+    dropdownMixin: m.prop(DropdownMixin(NotificationList([]),'div.ui.icon.top.right.pointing.dropdown.button')),
     pendingConnections: []
 	};
 
 	navbar.stream = Bacon.mergeAll(Context.stream, vm.navbarSearchInput.stream);
 
 
-
 	StreamCommon.on(navbar.stream, 'SearchInput::Search', function (message) {
 		m.route(SearchResults.buildURL(message.parameters));
 	});
+
 
 	StreamCommon.on(navbar.stream, 'Context::Login', function (message) {
 		vm.currentUser(message.parameters.user);
     UserEdges.getMyPendingConnections().then(
       function(response) {
         vm.pendingConnections = response;
-        vm.dropdownMixin(DropdownMixin(NotificationList(vm.pendingConnections)));
-        //reset the stream to receive from the new notificationList
-        console.log("hererere!!!!!!");
+        vm.dropdownMixin(DropdownMixin(NotificationList(vm.pendingConnections), 'div.ui.icon.top.right.pointing.dropdown.button'));
 
       }, Error.handle);
 	});
@@ -60,7 +58,7 @@ var Navbar = function () {
 							  m('div.ui.image.label', [
 								  m('img', { src: User.getPicture(vm.currentUser()) }),
 								  vm.currentUser().email()
-                  ])
+               ])
 						])
 					])
 				])

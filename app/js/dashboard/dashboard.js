@@ -80,20 +80,30 @@ dashboard.vm = {
 dashboard.stream = Bacon.mergeAll(Context.stream);
 
 StreamCommon.on(dashboard.stream, 'Context::PendingConnections', function (message) {
-  /*i = 0
-  while(i<1000000000){i++}*/
-  //dashboard.vm.init();
   dashboard.vm.pendingConnections=message.parameters.pendingConnections;
   dashboard.vm.pendingRequestsSegment = new HorizontalEntityListSegment(
-        'Pending Requests',
-        '/profile',
-        message.parameters.pendingConnections,
-        User,
-        {showAll: true}
-      );
-  console.log("heard message in dashboard from context!!");
-  console.log(dashboard.vm.pendingConnections);
+    'Pending Requests',
+    '/profile',
+    message.parameters.pendingConnections,
+    User,
+    {showAll: true}
+  );
+}, true);
 
+
+
+
+
+
+StreamCommon.on(dashboard.stream, 'Context::Edges', function (message) {
+  dashboard.vm.edges=message.parameters.edges;
+  dashboard.vm.connectionsSegment = new HorizontalEntityListSegment(
+    'Connections',
+    '/profile',
+    message.parameters.edges.connections(),
+    User,
+    {searchable: true}
+  );
 }, true);
 
 dashboard.controller = function () {

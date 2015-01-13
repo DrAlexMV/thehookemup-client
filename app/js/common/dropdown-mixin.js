@@ -1,9 +1,8 @@
 /**
  * Created by austinstone on 1/9/15.
  */
-var StreamCommon = require('common/stream-common');
 
-var DropdownMixin = function (body) {
+var DropdownMixin = function (body, buttonType) {
 
   var dropdownMixin = {};
 
@@ -11,11 +10,6 @@ var DropdownMixin = function (body) {
     body: body
   };
 
-  dropdownMixin.stream = Bacon.mergeAll(body.stream);
-
-  StreamCommon.on(dropdownMixin.stream, 'NotificationList::Connect', function(message){
-    console.log("received stream from dropdownMixin!")
-  });
 
   function config(element, isInitialized) {
       $(element).dropdown()
@@ -23,7 +17,7 @@ var DropdownMixin = function (body) {
 
   dropdownMixin.view = function () {
     return [
-      m('div.ui.top.right.pointing.dropdown.button', {config:config},[
+      m(buttonType, {config:config},[
         body.view()
         ])
     ];
