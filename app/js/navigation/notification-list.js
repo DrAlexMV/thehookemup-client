@@ -7,6 +7,7 @@ var UtilsGeneral = require('common/utils-general');
 var User = require('model/user');
 var API = require('common/api');
 var UserEdges = require('model/user-edges');
+var Context = require('common/context');
 
 
 /*
@@ -17,11 +18,11 @@ var NotificationList = function (users) {
   var notificationList = {};
 
   notificationList.stream = new Bacon.Bus();
-/*
-  function dismiss(whichNotification) {
-    .stream.push(new StreamCommon.Message('ConnectWithModal::'+whichButton, {}));
-  }
-*/
+
+
+
+
+
  notificationList.vm = {
         users: users
       /*users: [
@@ -32,10 +33,38 @@ var NotificationList = function (users) {
        ]*/
 
 
-
-
-
 };
+
+
+  //TODO: asyncronously save the requests to database, and have the dashboard update based only on the stream update.
+  //I can't for the life of me get this to work.
+  function respond(response,userId, userIndex) {
+    /*response is yes or no whether the request was accepted*/
+    if (response==='Connect')
+    {
+      notificationList.vm.users.splice(userIndex, 1);
+      UserEdges.connectMe(userId).then(
+        //console.log("Request Confirmed!!!"),
+
+      Context.setPendingConnections(notificationList.vm.users)
+    );
+    }
+    else
+    {
+      notificationList.vm.users.splice(userIndex, 1);
+      UserEdges.deleteConnection(userId).then(
+        //
+        Context.setPendingConnections(notificationList.vm.users)
+        //console.log("Request deleted!")
+       );
+
+    }
+    console.log(response);
+    console.log('NotificationList::'+response);
+    notificationList.stream.push(new StreamCommon.Message('NotificationList::'+response, {
+      _id:userId
+    }));
+  }
 
   notificationList.controller = function() {
 
@@ -55,7 +84,7 @@ var NotificationList = function (users) {
     var vm = notificationList.vm;
     var list = [];
     if (vm.users) {
-      list = vm.users.map(function(user) {
+      list = vm.users.map(function(user,idx) {
         return [
           m("div.item",[
             m("a.item[href=http://127.0.0.1:5000/profile/" + user._id() + "]", {config: m.route},[
@@ -63,12 +92,12 @@ var NotificationList = function (users) {
                m("div.content",[
                m("div.header", [
                   m('img.ui.avatar.image', { src: User.getPicture(user) }),
-                  "Request from " + User.getName(user)
+                  "Request from " + User.getName(user) + "!"
             ]),
             m("div.description", "Would you like to connect?"),
                  m("div.ui.two.bottom.attached.buttons",[
-                   m("div.ui.green.button","Yes"),
-                   m("div.ui.red.button","No")
+                   m("div.ui.green.button",{onclick: respond.curry('Connect', user._id(), idx)},"Yes"),
+                   m("div.ui.red.button",{onclick: respond.curry('NoConnect', user._id(), idx)},"No")
 
                  ])
                  ])

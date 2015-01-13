@@ -8,17 +8,19 @@ var UserModel = User.UserModel;
 var Image = require('model/image');
 var NotificationList = require('navigation/notification-list');
 var DropdownMixin = require('common/dropdown-mixin')
+var UserEdges = require('model/user-edges');
 var Navbar = function () {
 
 	var navbar = {};
-	var vm =
-	navbar.vm = {
+	var vm = navbar.vm = {
 		navbarSearchInput: new NavbarSearchInput(),
 		currentUser: m.prop(new UserModel({})),
-    dropdownMixin: m.prop(DropdownMixin(NotificationList([])))
+    dropdownMixin: m.prop(DropdownMixin(NotificationList([]))),
+    pendingConnections: []
 	};
 
 	navbar.stream = Bacon.mergeAll(Context.stream, vm.navbarSearchInput.stream);
+
 
 
 	StreamCommon.on(navbar.stream, 'SearchInput::Search', function (message) {
@@ -27,9 +29,17 @@ var Navbar = function () {
 
 	StreamCommon.on(navbar.stream, 'Context::Login', function (message) {
 		vm.currentUser(message.parameters.user);
-    vm.dropdownMixin(DropdownMixin(NotificationList([vm.currentUser(), vm.currentUser()])))
-    console.log("HEREERERE1!")
+    UserEdges.getMyPendingConnections().then(
+      function(response) {
+        vm.pendingConnections = response;
+        vm.dropdownMixin(DropdownMixin(NotificationList(vm.pendingConnections)));
+        //reset the stream to receive from the new notificationList
+        console.log("hererere!!!!!!");
+
+      }, Error.handle);
 	});
+
+
 	navbar.view = function () {
 		return [
 			m('div.ui.borderless.fixed.menu', [

@@ -9,6 +9,8 @@ var Error = require('common/error');
 var HorizontalEntityListSegment = require('dashboard/horizontal-entity-list-segment');
 var User = require('model/user');
 var UserEdges = require('model/user-edges');
+var StreamCommon = require('common/stream-common');
+
 
 var handlePlural = require('common/utils-general').handlePlural;
 
@@ -75,6 +77,24 @@ dashboard.vm = {
 	}
 };
 
+dashboard.stream = Bacon.mergeAll(Context.stream);
+
+StreamCommon.on(dashboard.stream, 'Context::PendingConnections', function (message) {
+  /*i = 0
+  while(i<1000000000){i++}*/
+  //dashboard.vm.init();
+  dashboard.vm.pendingConnections=message.parameters.pendingConnections;
+  dashboard.vm.pendingRequestsSegment = new HorizontalEntityListSegment(
+        'Pending Requests',
+        '/profile',
+        message.parameters.pendingConnections,
+        User,
+        {showAll: true}
+      );
+  console.log("heard message in dashboard from context!!");
+  console.log(dashboard.vm.pendingConnections);
+
+}, true);
 
 dashboard.controller = function () {
 	dashboard.vm.init();

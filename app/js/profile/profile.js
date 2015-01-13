@@ -17,7 +17,6 @@ var StreamCommon = require('common/stream-common');
 var Context = require('common/context');
 var ModalMixin = require('common/modal-mixin');
 var ConnectWith = require('profile/connect-with');
-
 var profile = {};
 
 profile.vm = {
