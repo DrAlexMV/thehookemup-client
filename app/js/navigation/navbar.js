@@ -9,6 +9,7 @@ var Image = require('model/image');
 var NotificationList = require('navigation/notification-list');
 var DropdownMixin = require('common/dropdown-mixin')
 var UserEdges = require('model/user-edges');
+
 var Navbar = function () {
 
 	var navbar = {};
@@ -54,12 +55,14 @@ var Navbar = function () {
 					]),
 					m('div.seven.wide.column', [
 						m('div#nav-avatar.right.item', [
-            vm.dropdownMixin().view(),
 							 m('a[href="?/profile/me"].ui.avatar.image', [
 								  m('img', { src: User.getPicture(vm.currentUser()) }),
                ])
 
-						])
+						]),
+						m('div.right.item', [
+							vm.dropdownMixin().view()
+						]),
 					])
 				])
 			])
