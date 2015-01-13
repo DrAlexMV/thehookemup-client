@@ -39,6 +39,13 @@ var NavbarSearchInput = function (parameters) {
 	}
 
 	searchInput.view = function () {
+		// Populate search bar with current query
+		// Has to be in the view code since during init, no route exists.
+		var queryString = m.route.param('query_string');
+		if (queryString && !searchInput.vm.searchQuery()) {
+			searchInput.vm.searchQuery(queryString);
+		}
+
 		return m('div.ui.fluid.action.input', [
 			m('input[type="text"]', { placeholder: 'Search', onkeyup: keyup,
 				onchange: m.withAttr('value', vm.searchQuery), value: vm.searchQuery() }),
