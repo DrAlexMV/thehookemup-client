@@ -6,7 +6,7 @@ var Edges = function(API) {
 
 	edges.EdgesModel = function(data) {
 		this.connections = m.prop(data.connections.map(
-			function(connection) { 
+			function(connection) {
 				return new User.UserModel(connection);
 			}
 		));
@@ -18,7 +18,7 @@ var Edges = function(API) {
 		));
 
 		this.suggestedConnections = m.prop(data.suggestedConnections.map(
-			function(suggestedConnection) { 
+			function(suggestedConnection) {
 				return new User.UserModel(suggestedConnection);
 			}
 		));
