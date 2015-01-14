@@ -26,7 +26,7 @@ var Navbar = function () {
 		Context.getCurrentUserEdges().then(
 			function(edgesProp) {
 				navbar.vm.currentUserEdges = edgesProp;
-				navbar.vm.dropdownMixin(DropdownMixin(NotificationList(edgesProp), 'div.ui.icon.top.right.pointing.dropdown.button'));
+				navbar.vm.dropdownMixin(DropdownMixin(NotificationList(edgesProp), 'div.ui.icon.top.right.pointing.dropdown.basic.button'));
 		}, Error.handle);
 	}
 

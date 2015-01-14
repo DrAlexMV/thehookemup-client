@@ -64,8 +64,8 @@ dashboard.vm = {
 				);
 			}, Error.handle);
 
-		dashboard.stream = Bacon.mergeAll(Context.stream);
-		StreamCommon.on(dashboard.stream, 'Context::Edges', function (message) {}, true);
+		dashboard.stream = null;
+		StreamCommon.on(Context.stream, 'Context::Edges', function (message) {}, true);
 	}
 };
 
@@ -104,7 +104,7 @@ dashboard.view = function () {
 					<div className="ui stackable grid">
 						<div className="row">
 							<div className="sixteen wide tablet computer only column" config={twitterIntegration}>
-								<a className="twitter-timeline" href="https://twitter.com/search?q=austin%20startup" data-widget-id="552673756879912961">Tweets about austin startup</a>
+								<a className="twitter-timeline" href="https://twitter.com/search?q=austin%20startup" data-widget-id="555318512722272256">Tweets about austin startup</a>
 							</div>
 						</div>
 						<div className="row">

@@ -41,11 +41,13 @@ var Context = (function () {
 		return deferred.promise;
 	};
 
-	context.setCurrentUserEdges = function (updatedEdges) {
+	context.setCurrentUserEdges = function (updatedEdges, silent) {
 		currentUserEdges(updatedEdges);
-		context.stream.push(new StreamCommon.Message('Context::Edges', {
-			edges: currentUserEdges()
-		}));
+		if (!silent) {
+			context.stream.push(new StreamCommon.Message('Context::Edges', {
+				edges: currentUserEdges()
+			}));
+		}
 	};
 
 	context.getCurrentUserEdges = function() {
@@ -53,7 +55,7 @@ var Context = (function () {
 		if (!currentUserEdges()) {
 			UserEdges.getByID('me').then(
 				function(response) {
-					Context.setCurrentUserEdges(response);
+					context.setCurrentUserEdges(response, true);
 					deferred.resolve(currentUserEdges)
 				},
 				function(error){

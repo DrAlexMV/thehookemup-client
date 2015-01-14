@@ -69,7 +69,7 @@ search.view = function () {
 						{ vm.searchFilterForm.view({}) }
 					</div>
 				</div>
-				<div className="ten wide column center aligned">
+				<div className="ten wide column">
 					{ vm.searchResults && vm.searchResults.results().length ?
 						(new UserListBig(search.vm.searchResults.results())).view({})
 						: <div>No results found</div>
