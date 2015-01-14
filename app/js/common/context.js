@@ -44,7 +44,7 @@ var Context = (function () {
 		return deferred.promise;
 	};
 
-  // If we already have the user object. e.g. after login
+
   context.setPendingConnections = function (pendingConnectionsUserArray) {
     pendingConnections(pendingConnectionsUserArray);
     context.stream.push(new StreamCommon.Message('Context::PendingConnections', { pendingConnections: pendingConnections() }))

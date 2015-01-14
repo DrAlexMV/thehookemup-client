@@ -59,7 +59,9 @@ var NotificationList = function (users) {
 
   };
 
-
+  var truncate = notificationList.truncate = function(string, n){
+    return string.length>n ? string.substr(0,n-1)+'...': string+'!';
+  };
 
   notificationList.view = function () {
     var vm = notificationList.vm;
@@ -73,7 +75,7 @@ var NotificationList = function (users) {
                 m("div.header", [
                   m('img.ui.avatar.image', { src: User.getPicture(user) }),
                     m("a", {href: "http://localhost:3000/?/profile/" + user._id() }, {config: m.route}, [
-                     "Request from " + User.getName(user) + "!"
+                     "Request from " + truncate(User.getName(user),14)
                     ]),
                   m("p",[
                     m("div.description", "Would you like to connect?")
