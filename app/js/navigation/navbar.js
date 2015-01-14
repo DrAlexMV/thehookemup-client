@@ -1,4 +1,3 @@
-var ENTER = require('common/constants').ENTER_KEY;
 var NavbarSearchInput = require('navigation/navbar-search-input');
 var StreamCommon = require('common/stream-common');
 var SearchResults = require('model/search-results');

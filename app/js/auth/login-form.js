@@ -61,7 +61,7 @@ var LoginForm = function () {
 						m('i.lock.icon')
 					])
 				]),
-				m('div.ui.right.floated.buttons', [
+				m('div#login-buttons.ui.fluid.buttons', [
 					m('div.ui.button.primary', { onclick: register }, 'Register'),
 					m('.or'),
 					m('div.ui.submit.button.positive', 'Sign In')
