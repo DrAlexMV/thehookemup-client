@@ -48,12 +48,12 @@ var Navbar = function () {
 							m('i.lemon.icon')
 						])
 					]),
-					m('div.seven.wide.column', [
+					m('div.eight.wide.column', [
 						m('div.item#nav-search', [
 							vm.navbarSearchInput.view()
 						])
 					]),
-					m('div.seven.wide.column', [
+					m('div.six.wide.column', [
 						m('div#nav-avatar.right.item', [
 							 m('a[href="?/profile/me"].ui.avatar.image', [
 								  m('img', { src: User.getPicture(vm.currentUser()) }),

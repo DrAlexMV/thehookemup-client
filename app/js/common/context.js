@@ -70,9 +70,6 @@ var Context = (function () {
     return deferred.promise;
   };
 
-
-
-
   context.setEdges = function (updatedEdges) {
     edges(updatedEdges);
     context.stream.push(new StreamCommon.Message('Context::Edges', { edges:edges() }))
@@ -98,6 +95,9 @@ var Context = (function () {
     return deferred.promise;
   };
 
+	(function initContext() {
+		context.getCurrentUser();
+	})();
 
 	return context;
 })();
