@@ -11,7 +11,6 @@ var User = require('model/user');
 var UserEdges = require('model/user-edges');
 var StreamCommon = require('common/stream-common');
 
-
 var handlePlural = require('common/utils-general').handlePlural;
 
 function twitterIntegration(element, isInitialized) {
@@ -34,77 +33,41 @@ dashboard.vm = {
 	init: function () {
 		this.pendingRequestsSegment = null;
 		this.connectionsSegment = null;
-		this.suggestedConnectionsList = null;
 
 		this.basicInfo = null;
 		this.edges = null;
-		this.pendingConnections = [];
-		this.suggestedConnections = [];
 
 		Context.getCurrentUser().then(function(response) {
 			dashboard.vm.basicInfo = response;
 		});
 
-		// Perhaps change to call to singleton
-		UserEdges.getByID('me').then(
+		Context.getCurrentUserEdges().then(
 			function(response) {
 				dashboard.vm.edges = response;
 				dashboard.vm.connectionsSegment = new HorizontalEntityListSegment(
 					'Connections',
 					'/profile',
-					 response.connections(),
-					 User,
-					 {searchable: true}
+					function() {
+						return dashboard.vm.edges().connections();
+					},
+					User,
+					{searchable: true}
 				);
-			}, Error.handle);
-
-		UserEdges.getMyPendingConnections().then(
-			function(response) {
-				dashboard.vm.pendingConnections = response;
 				dashboard.vm.pendingRequestsSegment = new HorizontalEntityListSegment(
 					'Pending Requests',
 					'/profile',
-					 response,
-					 User,
-					 {showAll: true}
+					function() {
+						return dashboard.vm.edges().pendingConnections();
+					},
+					User,
+					{showAll: true}
 				);
 			}, Error.handle);
 
-		UserEdges.getMySuggestedConnections().then(
-			function(response) {
-				dashboard.vm.suggestedConnections = response;
-			}, Error.handle);
+		dashboard.stream = Bacon.mergeAll(Context.stream);
+		StreamCommon.on(dashboard.stream, 'Context::Edges', function (message) {}, true);
 	}
 };
-
-dashboard.stream = Bacon.mergeAll(Context.stream);
-
-StreamCommon.on(dashboard.stream, 'Context::PendingConnections', function (message) {
-  dashboard.vm.pendingConnections=message.parameters.pendingConnections;
-  dashboard.vm.pendingRequestsSegment = new HorizontalEntityListSegment(
-    'Pending Requests',
-    '/profile',
-    message.parameters.pendingConnections,
-    User,
-    {showAll: true}
-  );
-}, true);
-
-
-
-
-
-
-StreamCommon.on(dashboard.stream, 'Context::Edges', function (message) {
-  dashboard.vm.edges=message.parameters.edges;
-  dashboard.vm.connectionsSegment = new HorizontalEntityListSegment(
-    'Connections',
-    '/profile',
-    message.parameters.edges.connections(),
-    User,
-    {searchable: true}
-  );
-}, true);
 
 dashboard.controller = function () {
 	dashboard.vm.init();
@@ -114,14 +77,22 @@ dashboard.view = function () {
 	var vm = dashboard.vm;
 
 	var basicInfo = dashboard.vm.basicInfo();
-	var numPendingRequests = dashboard.vm.pendingConnections.length;
-	var numConnections = dashboard.vm.edges.connections().length;
-	var numAssociations = 5;
+	
+	var numPendingRequests = [];
+	var numConnections = 0;
+	var suggestedConnections = [];
+	var numAssociations = 2;
+
+	if (dashboard.vm.edges) {
+		numPendingRequests = dashboard.vm.edges().pendingConnections().length;
+		numConnections = dashboard.vm.edges().connections().length;
+		suggestedConnections = dashboard.vm.edges().suggestedConnections();
+	}
 
 	var suggestedConnectionsSegment = new EntityList(
 		'Suggested Connections',
 		'/profile',
-		dashboard.vm.suggestedConnections,
+		suggestedConnections,
 		User,
 		true
 	).view({});
@@ -133,7 +104,7 @@ dashboard.view = function () {
 					<div className="ui stackable grid">
 						<div className="row">
 							<div className="sixteen wide tablet computer only column" config={twitterIntegration}>
-							  <a className="twitter-timeline" href="https://twitter.com/search?q=austin%20startup" data-widget-id="552673756879912961">Tweets about austin startup</a>
+								<a className="twitter-timeline" href="https://twitter.com/search?q=austin%20startup" data-widget-id="552673756879912961">Tweets about austin startup</a>
 							</div>
 						</div>
 						<div className="row">

@@ -25,7 +25,7 @@ var User = function(API) {
 	};
 
 	user.getMe = function () {
-		return this.get('/user/me', user.UserModel);
+		return user.getByID('me');
 	};
 
 	user.putByID = function (userID, updatedProperties) {

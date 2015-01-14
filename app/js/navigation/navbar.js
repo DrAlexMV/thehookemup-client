@@ -16,28 +16,30 @@ var Navbar = function () {
 	var vm = navbar.vm = {
 		navbarSearchInput: new NavbarSearchInput(),
 		currentUser: m.prop(new UserModel({})),
-    dropdownMixin: m.prop(DropdownMixin(NotificationList([]),'div.ui.icon.top.right.pointing.dropdown.button')),
-    pendingConnections: []
+		currentUserEdges: null,
+		dropdownMixin: m.prop()
 	};
 
 	navbar.stream = Bacon.mergeAll(Context.stream, vm.navbarSearchInput.stream);
 
+	function updateEdges() {
+		Context.getCurrentUserEdges().then(
+			function(edgesProp) {
+				navbar.vm.currentUserEdges = edgesProp;
+				navbar.vm.dropdownMixin(DropdownMixin(NotificationList(edgesProp), 'div.ui.icon.top.right.pointing.dropdown.button'));
+		}, Error.handle);
+	}
+
+	updateEdges();
 
 	StreamCommon.on(navbar.stream, 'SearchInput::Search', function (message) {
 		m.route(SearchResults.buildURL(message.parameters));
 	});
 
-
 	StreamCommon.on(navbar.stream, 'Context::Login', function (message) {
-		vm.currentUser(message.parameters.user);
-    UserEdges.getMyPendingConnections().then(
-      function(response) {
-        vm.pendingConnections = response;
-        vm.dropdownMixin(DropdownMixin(NotificationList(vm.pendingConnections), 'div.ui.icon.top.right.pointing.dropdown.button'));
-
-      }, Error.handle);
+		navbar.vm.currentUser(message.parameters.user);
+		updateEdges();
 	});
-
 
 	navbar.view = function () {
 		return [
@@ -57,11 +59,10 @@ var Navbar = function () {
 						m('div#nav-avatar.right.item', [
 							 m('a[href="?/profile/me"].ui.avatar.image', [
 								  m('img', { src: User.getPicture(vm.currentUser()) }),
-               ])
-
+							])
 						]),
 						m('div.right.item', [
-							vm.dropdownMixin().view()
+							vm.dropdownMixin() ? vm.dropdownMixin().view() : null
 						]),
 					])
 				])

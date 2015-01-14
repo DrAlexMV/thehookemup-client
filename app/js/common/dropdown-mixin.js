@@ -4,26 +4,26 @@
 
 var DropdownMixin = function (body, buttonType) {
 
-  var dropdownMixin = {};
+	var dropdownMixin = {};
 
-  var vm = dropdownMixin.vm = {
-    body: body
-  };
+	var vm =
+	dropdownMixin.vm = {
+		body: body
+	};
 
+	function config(element, isInitialized) {
+		$(element).dropdown()
+	}
 
-  function config(element, isInitialized) {
-      $(element).dropdown()
-  }
+	dropdownMixin.view = function () {
+		return [
+			m(buttonType, {config:config},[
+				body.view()
+			])
+		];
+	};
 
-  dropdownMixin.view = function () {
-    return [
-      m(buttonType, {config:config},[
-        body.view()
-        ])
-    ];
-  };
-
-  return dropdownMixin;
+	return dropdownMixin;
 };
 
 module.exports = DropdownMixin;

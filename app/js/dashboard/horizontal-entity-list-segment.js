@@ -2,10 +2,8 @@
  * @jsx m
  */
 
-
-
 // Two column wide except on mobile
-var HorizontalEntityListSegment = function (title, linkBase, entities, model, config) {
+var HorizontalEntityListSegment = function (title, linkBase, entitiesFunction, model, config) {
 	var horizontalEntityList = {};
 
 	var SMALL_MAX_ELEMENTS = 6;
@@ -32,16 +30,16 @@ var HorizontalEntityListSegment = function (title, linkBase, entities, model, co
 	horizontalEntityList.view = function () {
 		var items = [];
 
-		if (entities) {
+		if (entitiesFunction()) {
 			var filteredItems = [];
 			// Filter if we have search:
 			if (config.searchable && horizontalEntityList.vm.searchInput()) {
 				var query = horizontalEntityList.vm.searchInput();
-				filteredItems = entities.filter(function(entity) {
+				filteredItems = entitiesFunction().filter(function(entity) {
 					return model.getName(entity).toLowerCase().indexOf(query.toLowerCase()) != -1;
 				});
 			} else {
-				filteredItems = entities;
+				filteredItems = entitiesFunction();
 			}
 
 			var showNumber = horizontalEntityList.vm.showMore() ?
@@ -62,7 +60,7 @@ var HorizontalEntityListSegment = function (title, linkBase, entities, model, co
 		}
 
 		var showToggle = null;
-		if (entities.length > SMALL_MAX_ELEMENTS) {
+		if (entitiesFunction().length > SMALL_MAX_ELEMENTS) {
 			var showToggle = horizontalEntityList.vm.showMore() ?
 				<div className="ui bottom right attached label">
 					<a className="ui item" onclick={ function() { horizontalEntityList.vm.showMore(false); } }>

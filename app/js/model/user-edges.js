@@ -5,27 +5,31 @@ var Edges = function(API) {
 	var edges = {};
 
 	edges.EdgesModel = function(data) {
-		var connections = data.connections.map(
+		this.connections = m.prop(data.connections.map(
 			function(connection) { 
 				return new User.UserModel(connection);
 			}
-		);
+		));
 
-		this.connections = m.prop(connections);
+		this.pendingConnections = m.prop(data.pendingConnections.map(
+			function(pendingConnection) { 
+				return new User.UserModel(pendingConnection);
+			}
+		));
+
+		this.suggestedConnections = m.prop(data.suggestedConnections.map(
+			function(suggestedConnection) { 
+				return new User.UserModel(suggestedConnection);
+			}
+		));
 
 		this.associations = m.prop(data.associations);
+
+		return this;
 	};
 
 	edges.getByID = function(userID) {
 		return this.get('/user/' + userID + '/edges', edges.EdgesModel);
-	};
-
-	edges.getMyPendingConnections = function() {
-		return this.get('/user/me/edges/pending-connections', User.UserModel);
-	};
-
-	edges.getMySuggestedConnections = function() {
-		return this.get('/user/me/edges/suggested-connections', User.UserModel);
 	};
 
 	edges.connectMe = function(otherUserID) {
