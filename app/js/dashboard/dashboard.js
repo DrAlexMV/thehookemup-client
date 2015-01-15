@@ -183,6 +183,22 @@ dashboard.view = function () {
 								<div id="connections"></div>
 								{ dashboard.vm.connectionsSegment ?
 									dashboard.vm.connectionsSegment.view({}) : null }
+								<div className="ui segment">
+									<h4 className="ui header">Search For</h4>
+									<div className="ui content">
+										<div className="3 fluid ui orange buttons">
+											<a href="/search?role=Startupper" config={m.route} className="ui button">
+												Startuppers
+											</a>
+											<a href="/search?role=Founder" config={m.route} className="ui button">
+												Founders
+											</a>
+											<a href="/search?role=Investor" config={m.route} className="ui button">
+												Investors
+											</a>
+										</div>
+									</div>
+								</div>
 							</div>
 							<div className="six wide column">
 								{ suggestedConnectionsSegment }

@@ -86,7 +86,7 @@ var RegistrationForm = function () {
 			{ parameters: { name: 'confirm-password', placeholder: 'Confirm Password', onchange: m.withAttr('value', vm.confirmPassword), type: 'password' } }
 		];
 
-		var roles = ['Founder', 'Investor', 'Startuper'];
+		var roles = ['Founder', 'Investor', 'Startupper'];
 
 		return [
 			m('form.ui.form', { class: vm.errorMessages().length > 0 ? 'warning' : '',
