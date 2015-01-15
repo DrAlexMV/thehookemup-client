@@ -10,6 +10,7 @@ var SearchResults = require('model/search-results');
 var StreamCommon = require('common/stream-common');
 var User = require('model/user');
 var UserListBig = require('search/user-list-big');
+var Pagination = require('common/ui-core/pagination');
 
 var search = {};
 
@@ -26,6 +27,8 @@ search.vm = {
 			}, Error.handle);
 	
 		this.searchFilterForm = new SearchFilterForm(SearchResults.normalizeFields(this.fields));
+
+		this.pagination = Pagination();
 
 		search.stream = Bacon.mergeAll(this.searchFilterForm.stream);
 
@@ -70,11 +73,14 @@ search.view = function () {
 					</div>
 				</div>
 				<div className="ten wide column">
-					{ vm.searchResults && vm.searchResults.results().length ?
-						(new UserListBig(search.vm.searchResults.results())).view({})
-						: <div>No results found</div>
+					{
+						vm.searchResults && vm.searchResults.results().length ?
+						(new UserListBig(search.vm.searchResults.results())).view({}) : <div>No results found</div>
 					}
 
+				<div className="row">
+					{ vm.pagination.view(20) }
+				</div>
 				</div>
 				<div className="two wide column"></div>
 			</div>

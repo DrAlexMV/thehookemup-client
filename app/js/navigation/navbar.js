@@ -45,7 +45,7 @@ var Navbar = function () {
 			m('div.ui.borderless.fixed.menu', [
 				m('div.ui.grid', [
 					m('div.two.wide.center.aligned.column', [
-						m('a[href="?/"].item', [
+						m('a[href="?/"].item', { config: m.route }, [
 							m('i.lemon.icon')
 						])
 					]),
@@ -56,7 +56,7 @@ var Navbar = function () {
 					]),
 					m('div.six.wide.column', [
 						m('div#nav-avatar.right.item', [
-							 m('a[href="?/profile/me"].ui.avatar.image', [
+							 m('a[href="/profile/me"].ui.avatar.image', { config: m.route } ,[
 								  m('img', { src: User.getPicture(vm.currentUser()) }),
 							])
 						]),

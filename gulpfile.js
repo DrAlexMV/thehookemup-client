@@ -6,6 +6,7 @@ var less = require('gulp-less');
 var rename = require('gulp-rename');
 var plumber = require('gulp-plumber');
 var uglify = require('gulp-uglify');
+var webserver = require('gulp-webserver');
 
 
 // Define some paths.
@@ -58,14 +59,13 @@ gulp.task('watch', function() {
 });
 
 // Static server
-gulp.task('browser-sync', function() {
-  browserSync({
-    server: {
-      baseDir: "./app"
-    }
-  });
+gulp.task('serve', function() {
+	gulp.src('app')
+		.pipe(webserver({
+			port: 3000
+		}));
 });
 
-gulp.task('default', ['watch', 'js', 'less', 'browser-sync']);
+gulp.task('default', ['watch', 'js', 'less', 'serve']);
 
 gulp.task('build', ['js-prod', 'less']);
