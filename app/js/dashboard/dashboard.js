@@ -107,13 +107,6 @@ dashboard.view = function () {
 								<a className="twitter-timeline" href="https://twitter.com/search?q=austin%20startup" data-widget-id="555318512722272256">Tweets about austin startup</a>
 							</div>
 						</div>
-						<div className="row">
-							<div className="sixteen wide tablet computer only column">
-								<div className="ui segment">
-									<img className="ad" src="/img/sample_ad.jpeg" />
-								</div>
-							</div>
-						</div>
 					</div>
 				</div>
 				<div className="twelve wide column">
@@ -209,9 +202,6 @@ dashboard.view = function () {
 											</div>
 										</a>
 									</div>
-								</div>
-								<div className="ui segment">
-									<img className="ad" src="/img/sample_ad.jpeg" />
 								</div>
 							</div>
 						</div>

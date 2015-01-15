@@ -85,8 +85,10 @@ profile.connectMe = function(isConfirmation) {
 		UserEdges.connectMe(m.route.param('userid')).then(
 			function () {
 				if (isConfirmation) {
-					profile.vm.basicInfo().connectionType('c'); // Connected
-					// TODO: push to this user's connections in local model
+					// Get user's email, along with correct connections list, etc.
+					User.getByID(userid).then(function(userObject) {
+						profile.vm.basicInfo(userObject);
+					}, Error.handle);
 				} else {
 					profile.vm.basicInfo().connectionType('s'); // Sent
 				}
