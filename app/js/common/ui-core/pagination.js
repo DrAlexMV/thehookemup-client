@@ -11,6 +11,7 @@ var Pagination = function () {
 		vm.maxPagesToDisplay = m.prop();
 		vm.totalPages = m.prop();
 		vm.currentPage = m.prop(0);
+		vm.currentFrame = m.prop(0);
 
 		var propagateSelection =  function () {
 			pagination.stream.push(new Message('PageSelected::Pagination', { page: vm.currentPage() }));
@@ -27,7 +28,7 @@ var Pagination = function () {
 		vm.next = wrapSelect(function () {
 			var success = false;
 
-			if (success = vm.currentPage() + 1 <= vm.totalPages()) { vm.currentPage(vm.currentPage() + 1); }
+			if (success = vm.currentPage() + 1 < vm.totalPages()) { vm.currentPage(vm.currentPage() + 1); }
 
 			return success;
 
@@ -54,15 +55,32 @@ var Pagination = function () {
 		vm.totalPages(totalPages);
 
 		var range = (function () {
-			var range = {};
+
+			function calcOffset() { return vm.currentFrame() * vm.maxPagesToDisplay() }
+			var range = {},
+					offset =  calcOffset(),
+					hardMax = function () {
+						var last = calcOffset() + vm.maxPagesToDisplay();
+						return last <= vm.totalPages() ? last : vm.totalPages();
+					};
+
+			function inCurrentFrame(page) { return page >= offset && page < hardMax(); }
+
+			function inNextFrame(page) { return page >= hardMax(); }
+
 			if (vm.totalPages() <= vm.maxPagesToDisplay()) {
 				range = { first: 0, last: vm.totalPages() };
 			} else {
-				if (vm.currentPage() >= vm.maxPagesToDisplay()) {
-					var last = vm.currentPage() + vm.maxPagesToDisplay();
-					range = { first: vm.currentPage(), last: last < totalPages ? last : totalPages };
+				if (inCurrentFrame(vm.currentPage())) {
+					range = { first: offset, last: hardMax() }
 				} else {
-					range = { first: 0, last: vm.maxPagesToDisplay() };
+					if (inNextFrame(vm.currentPage())) {
+						vm.currentFrame(vm.currentFrame() + 1);
+						range = { first: calcOffset(), last: hardMax() };
+					} else {
+						vm.currentFrame(vm.currentFrame() - 1 > 0 ? vm.currentFrame() - 1 : 0);
+						range = { first: calcOffset(), last: hardMax() };
+					}
 				}
 			}
 
