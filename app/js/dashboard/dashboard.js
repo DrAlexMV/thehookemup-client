@@ -81,7 +81,7 @@ dashboard.view = function () {
 	var numPendingRequests = [];
 	var numConnections = 0;
 	var suggestedConnections = [];
-	var numAssociations = 2;
+	var numEndorsements = 2;
 
 	if (dashboard.vm.edges) {
 		numPendingRequests = dashboard.vm.edges().pendingConnections().length;
@@ -158,33 +158,18 @@ dashboard.view = function () {
 										</div>
 									</div>
 									<div className="ui statistic">
-										<div className="value">{numAssociations}</div>
+										<div className="value">{numEndorsements}</div>
 										<div className="label">
 											<div className="ui list">
 												<a className="item">
-													{handlePlural('Association', numAssociations)}
+													{handlePlural('Endorsement', numEndorsements)}
 												</a>
 											</div>
 										</div>
 									</div>
 								</div>
 								<div className="ui segment">
-									<h4 className="ui header">Actions</h4>
-									<div className="ui content">
-										<div className="ui bulleted list">
-											<a className="item">Find someone</a>
-											<a href="/profile/me" config={m.route} className="item">Update my profile</a>
-										</div>
-									</div>
-								</div>
-								<div id="pending-requests"></div>
-								{ dashboard.vm.pendingRequestsSegment ?
-									dashboard.vm.pendingRequestsSegment.view({}) : null }
-								<div id="connections"></div>
-								{ dashboard.vm.connectionsSegment ?
-									dashboard.vm.connectionsSegment.view({}) : null }
-								<div className="ui segment">
-									<h4 className="ui header">Search For</h4>
+									<h4 className="ui header">Find</h4>
 									<div className="ui content">
 										<div className="3 fluid ui orange buttons">
 											<a href="/search?role=Startupper" config={m.route} className="ui button">
@@ -199,26 +184,37 @@ dashboard.view = function () {
 										</div>
 									</div>
 								</div>
-							</div>
-							<div className="six wide column">
-								{ suggestedConnectionsSegment }
 								<div className="ui segment">
-									<h4 className="ui header">Suggested Associations</h4>
-									<div className="ui divided very relaxed list">
-										<a className="item">
-											<img className="ui center aligned avatar image" src="/img/square-image.png" />
-											<div className="content">
-												<div className="header">UT Alum Web App Jobs</div>
-											</div>
-										</a>
-										<a className="item">
-											<img className="ui center aligned avatar image" src="/img/square-image.png" />
-											<div className="content">
-												<div className="header">Computer Sci Hackers</div>
-											</div>
-										</a>
+									<h4 className="ui header">Actions</h4>
+									<div className="ui content">
+										<div className="ui bulleted list">
+											<a className="item">Find someone</a>
+											<a href="/profile/me" config={m.route} className="item">Update my profile</a>
+										</div>
 									</div>
 								</div>
+								<div id="pending-requests"></div>
+								{ dashboard.vm.pendingRequestsSegment && dashboard.vm.edges().pendingConnections().length ?
+									dashboard.vm.pendingRequestsSegment.view({}) : null }
+								<div id="connections"></div>
+								{ dashboard.vm.connectionsSegment ?
+									dashboard.vm.connectionsSegment.view({}) : null }
+							</div>
+							<div className="six wide column">
+								<div className="ui segment">
+									<h4 className="ui header">Invite Others</h4>
+									<div className="ui content">
+										<div className="ui orange button">Create Invite</div>
+										<div className="ui divider"></div>
+										<div className="fluid ui action input">
+											<input type="text" value="http://ww.short.url/c0opq" placeholder="Invite Link" readonly />
+											<div className="ui gray right icon button">
+												<i className="copy icon"></i>
+											</div>
+										</div>
+									</div>
+								</div>
+								{ suggestedConnectionsSegment }
 							</div>
 						</div>
 					</div>
