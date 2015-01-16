@@ -1,36 +1,40 @@
 /**
  * Provides search page
- * @jsx m
  */
 
 var Error = require('common/error');
-var FormBuilder = require('common/form-builder');
 var SearchFilterForm = require('search/search-filter-form');
 var SearchResults = require('model/search-results');
 var StreamCommon = require('common/stream-common');
 var User = require('model/user');
 var UserListBig = require('search/user-list-big');
 var Pagination = require('common/ui-core/pagination');
+var SearchRecommendations = require('search/search-recommendations');
 
 var search = {};
 
+var vm =
 search.vm = {
 	init: function () {
-		this.query_string = m.route.param('query_string');
+		var vm = this;
 
-		this.fields = SearchResults.extractFields(m.route);
+		vm.fields = SearchResults.extractFields(m.route);
+		vm.query_string = m.route.param('query_string');
 
-		this.searchResults = null;
-		SearchResults.getResults(this.fields).then(
-			function(response) {
-				search.vm.searchResults = response;
-			}, Error.handle);
-	
-		this.searchFilterForm = new SearchFilterForm(SearchResults.normalizeFields(this.fields));
+		vm.pagination = Pagination();
+		vm.skillRecommendations = SearchRecommendations('Skills');
+		vm.roleRecommendations = SearchRecommendations('Roles');
+		vm.searchFilterForm = new SearchFilterForm(SearchResults.normalizeFields(vm.fields));
 
-		this.pagination = Pagination();
+		vm.skills = m.prop(['Java', 'Javascript', 'Web Development', 'Marketing']);
+		vm.roles = m.prop(['Founder', 'Startupper', 'Investor']);
 
-		search.stream = Bacon.mergeAll(this.searchFilterForm.stream);
+		search.stream = Bacon.mergeAll(vm.searchFilterForm.stream, vm.roleRecommendations.stream,
+			vm.skillRecommendations.stream);
+
+		SearchResults.getResults(this.fields).then(function(response) {
+				vm.searchResults = response;
+		}, Error.handle);
 
 		StreamCommon.on(search.stream, 'SearchFilterForm::Search', function (message) {
 			var params = message.parameters;
@@ -40,10 +44,14 @@ search.vm = {
 				.filter(function(key) { return params[key]; })
 				.forEach(function(key) { nonEmptyFields[key] = params[key]; });
 
-			if (search.vm.query_string) {
-				nonEmptyFields.query_string = search.vm.query_string;
-			}
+			if (search.vm.query_string) { nonEmptyFields.query_string = search.vm.query_string; }
+
 			m.route(SearchResults.buildURL(nonEmptyFields));
+		});
+
+		StreamCommon.on(search.stream, 'RecommendationSelected::SearchRecommendations', function (message) {
+			vm.query_string = message.parameters.recommendation;
+			m.route(SearchResults.buildURL({ query_string: vm.query_string }));
 		});
 	}
 };
@@ -53,39 +61,34 @@ search.controller = function () {
 };
 
 search.view = function () {
-	var vm = search.vm;
-	return (
-		<div className="base ui padded stackable grid">
-			<div className="row">
-				<div className="four wide column"></div>
-				<div className="ten wide column">
-					<h2 className="ui header">
-						Search - &quot;{search.vm.query_string}&quot;
-					</h2>
-				</div>
-				<div className="two wide column"></div>
-			</div>
-			<div className="row">
-				<div className="four wide column">
-					<div className="ui segment">
-						<h4 className="ui header">Refine Search</h4>
-						{ vm.searchFilterForm.view({}) }
-					</div>
-				</div>
-				<div className="ten wide column">
-					{
-						vm.searchResults && vm.searchResults.results().length ?
-						(new UserListBig(search.vm.searchResults.results())).view({}) : <div>No results found</div>
-					}
-
-				<div className="row">
-					{ vm.pagination.view(20) }
-				</div>
-				</div>
-				<div className="two wide column"></div>
-			</div>
-		</div>
-	);
+	return [
+		m('div.base.ui.padded.stackable.page.grid', [
+			m('div.row', [
+				m('div.ten.wide.column', [
+					m('h2.ui.header', vm.query_string)
+				])
+			]),
+			m('div#search-area.ui.segment.row', [
+				m('div.four.wide.column', [
+					m('div.ui.grid', [
+						m('div.row', [
+							m('div.column', vm.skillRecommendations.view(vm.skills()))
+						]),
+						m('div.row', [
+							m('div.column', vm.roleRecommendations.view(vm.roles()))
+						])
+					])
+				]),
+				m('div#search-results.twelve.wide.column', [
+					vm.searchResults.results().length ?
+						new UserListBig(vm.searchResults.results()).view({}) : m('div', 'No results found!'),
+					m('div.row', [
+						m('div.right.aligned.column', vm.searchResults.results().length ? vm.pagination.view(1) : null)
+					])
+				])
+			])
+		])
+	];
 };
 
 module.exports = search;
