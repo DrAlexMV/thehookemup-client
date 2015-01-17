@@ -20,21 +20,26 @@ search.vm = {
 
 		vm.fields = SearchResults.extractFields(m.route);
 		vm.query_string = m.route.param('query_string');
+		vm.currentPage = m.prop(_.parseInt(m.route.param('page')));
 
 		vm.pagination = Pagination();
 		vm.skillRecommendations = SearchRecommendations('Skills');
 		vm.roleRecommendations = SearchRecommendations('Roles');
 		vm.searchFilterForm = new SearchFilterForm(SearchResults.normalizeFields(vm.fields));
 
-		vm.skills = m.prop(['Java', 'Javascript', 'Web Development', 'Marketing']);
+		vm.skills = m.prop(['Java', 'Javascript', 'WebDev', 'Marketing']);
 		vm.roles = m.prop(['Founder', 'Startupper', 'Investor']);
 
 		search.stream = Bacon.mergeAll(vm.searchFilterForm.stream, vm.roleRecommendations.stream,
 			vm.skillRecommendations.stream);
 
-		SearchResults.getResults(this.fields).then(function(response) {
+		vm.search = function (query) {
+			SearchResults.getResults(query).then(function(response) {
 				vm.searchResults = response;
-		}, Error.handle);
+			}, Error.handle);
+		};
+
+		vm.search(vm.fields);
 
 		StreamCommon.on(search.stream, 'SearchFilterForm::Search', function (message) {
 			var params = message.parameters;
@@ -50,8 +55,9 @@ search.vm = {
 		});
 
 		StreamCommon.on(search.stream, 'RecommendationSelected::SearchRecommendations', function (message) {
-			vm.query_string = message.parameters.recommendation;
-			m.route(SearchResults.buildURL({ query_string: vm.query_string }));
+			vm.query_string = message.parameters.recommendations.join(' ');
+			var query = { query_string: vm.query_string };
+			m.route(SearchResults.buildURL(query));
 		});
 	}
 };
@@ -72,10 +78,10 @@ search.view = function () {
 				m('div.four.wide.column', [
 					m('div.ui.grid', [
 						m('div.row', [
-							m('div.column', vm.skillRecommendations.view(vm.skills()))
+							m('div.column', vm.skillRecommendations.view(vm.skills(), vm.query_string.split(' ')))
 						]),
 						m('div.row', [
-							m('div.column', vm.roleRecommendations.view(vm.roles()))
+							m('div.column', vm.roleRecommendations.view(vm.roles(), vm.query_string.split(' ')))
 						])
 					])
 				]),
@@ -83,7 +89,8 @@ search.view = function () {
 					vm.searchResults.results().length ?
 						new UserListBig(vm.searchResults.results()).view({}) : m('div', 'No results found!'),
 					m('div.row', [
-						m('div.right.aligned.column', vm.searchResults.results().length ? vm.pagination.view(1) : null)
+						m('div.right.aligned.column', vm.searchResults.results().length ?
+							vm.pagination.view(1, vm.currentPage()) : null)
 					])
 				])
 			])

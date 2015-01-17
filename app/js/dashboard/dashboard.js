@@ -172,13 +172,13 @@ dashboard.view = function () {
 									<h4 className="ui header">Find</h4>
 									<div className="ui content">
 										<div className="3 fluid ui orange buttons">
-											<a href="/search?role=Startupper" config={m.route} className="ui button">
+											<a href="/search?query_string=Startupper" config={m.route} className="ui button">
 												Startuppers
 											</a>
-											<a href="/search?role=Founder" config={m.route} className="ui button">
+											<a href="/search?query_string=Founder" config={m.route} className="ui button">
 												Founders
 											</a>
-											<a href="/search?role=Investor" config={m.route} className="ui button">
+											<a href="/search?query_string=Investor" config={m.route} className="ui button">
 												Investors
 											</a>
 										</div>

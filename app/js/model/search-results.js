@@ -15,7 +15,8 @@ var SearchResults = function(API) {
 		'graduationYear',
 		'university',
 		'details',
-		'jobs'
+		'jobs',
+		'skills'
 	];
 
 	searchResults.ResultsModel = function(data) {

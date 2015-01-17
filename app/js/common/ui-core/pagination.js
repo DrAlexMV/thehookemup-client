@@ -49,10 +49,11 @@ var Pagination = function () {
 		return vm;
 	})();
 
-	pagination.view = function (totalPages, maxPagesToDisplay) {
+	pagination.view = function (totalPages, currentPage, maxPagesToDisplay) {
 
 		vm.maxPagesToDisplay(maxPagesToDisplay ? maxPagesToDisplay : 6);
 		vm.totalPages(totalPages);
+		vm.currentPage(currentPage ? currentPage : 0);
 
 		var range = (function () {
 
