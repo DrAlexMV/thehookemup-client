@@ -16,7 +16,7 @@ var EntityList = function (title, linkBase, entities, model, inSegment) {
 							src={model.getPicture(entity)} />
 						<div className="content">
 							<div className="header">{model.getName(entity)}</div>
-							{entity.role()}
+							{ entity.roles().join(', ') }
 						</div>
 					</a>
 				);
