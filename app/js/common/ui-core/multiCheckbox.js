@@ -1,3 +1,0 @@
-var MultiCheckbox = function () {
-	
-};

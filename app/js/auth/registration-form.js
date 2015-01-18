@@ -1,5 +1,6 @@
 var FormBuilder = require('common/form-builder');
 var StreamCommon = require('common/stream-common');
+var MultiCheckbox = require('common/ui-core/multi-checkbox');
 
 var RegistrationForm = function () {
 	var registrationForm = {};
@@ -10,12 +11,19 @@ var RegistrationForm = function () {
 		lastName: m.prop(''),
 		email: m.prop(''),
 		password: m.prop(''),
-		role: m.prop('Founder'),
+		roles: m.prop([]),
 		confirmPassword: m.prop(''),
-		errorMessages: m.prop([])
+		errorMessages: m.prop([]),
+		availableRoles: m.prop(['Founder', 'Investor', 'Startupper']),
+		rolesCheckbox: MultiCheckbox()
 	};
 
 	registrationForm.stream = new Bacon.Bus();
+	registrationForm.stream.plug(vm.rolesCheckbox.stream);
+
+	StreamCommon.on(registrationForm.stream, 'Change::MultiCheckbox', function (message) {
+		vm.roles(message.parameters.choices);
+	});
 
 	function back() {
 		vm.errorMessages([]);
@@ -29,7 +37,7 @@ var RegistrationForm = function () {
 			lastName: vm.lastName(),
 			email: vm.email(),
 			password: vm.password(),
-			role: vm.role()
+			roles: vm.roles()
 		}));
 	}
 
@@ -86,8 +94,6 @@ var RegistrationForm = function () {
 			{ parameters: { name: 'confirm-password', placeholder: 'Confirm Password', onchange: m.withAttr('value', vm.confirmPassword), type: 'password' } }
 		];
 
-		var roles = ['Founder', 'Investor', 'Startupper'];
-
 		return [
 			m('form.ui.form', { class: vm.errorMessages().length > 0 ? 'warning' : '',
 													config: FormBuilder.validate(rules, register, formInvalid) }, [
@@ -100,9 +106,7 @@ var RegistrationForm = function () {
 				]),
 				emailPasswordFields.map(function (field) { return FormBuilder.inputs.formField(field.parameters) }),
 				m('div.grouped.inline.fields', [
-					roles.map(function (role) {
-						return m('div.field', [FormBuilder.inputs.checkbox(role, {})]);
-					})
+					vm.rolesCheckbox.view(vm.availableRoles())
 				]),
 				m('div.ui.negative.button', { onclick: back }, 'Back'),
 				m('div.ui.right.floated.buttons', [

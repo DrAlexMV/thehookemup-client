@@ -8,7 +8,7 @@ var SearchResults = function(API) {
 		'query_string',
 		'firstName',
 		'lastName',
-		'role',
+		'roles',
 		'description',
 		'email',
 		'major',

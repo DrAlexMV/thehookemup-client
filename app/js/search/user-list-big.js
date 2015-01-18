@@ -24,7 +24,7 @@ var UserListBig = function (users) {
 											{User.getName(item)}
 										</a>
 										<div className="ui meta">
-											{item.role()}
+											{ item.roles().join(", ") }
 										</div>
 									</div>
 									<div className="description">

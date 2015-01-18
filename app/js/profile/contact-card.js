@@ -17,7 +17,9 @@ var ContactCard = function (basicUserInfo, editable) {
 			<div className="ui card">
 				{card.vm.profilePicture.view({userImageURL: basicUserInfo().picture()})}
 				<div className="content">
-					<h4 className="ui header">{basicUserInfo().role()}</h4>
+					<h4 className="ui header">{basicUserInfo().roles().map(function (role) {
+						return role;
+					})}</h4>
 					<div className="ui divider"></div>
 					<div className="ui circular linkedin icon button">
 						<i className="linkedin icon"></i>

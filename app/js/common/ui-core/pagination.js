@@ -29,7 +29,6 @@ var Pagination = function () {
 			var success = false;
 
 			if (success = vm.currentPage() + 1 < vm.totalPages()) { vm.currentPage(vm.currentPage() + 1); }
-
 			return success;
 
 		});
@@ -38,12 +37,12 @@ var Pagination = function () {
 			var success = false;
 
 			if (success = vm.currentPage() - 1 >= 0) { vm.currentPage(vm.currentPage() - 1); }
-
 			return success;
 		});
 
 		vm.pageSelected = wrapSelect(function (page) {
 			vm.currentPage(page);
+			return true;
 		});
 
 		return vm;
@@ -72,19 +71,14 @@ var Pagination = function () {
 			if (vm.totalPages() <= vm.maxPagesToDisplay()) {
 				range = { first: 0, last: vm.totalPages() };
 			} else {
-				if (inCurrentFrame(vm.currentPage())) {
-					range = { first: offset, last: hardMax() }
-				} else {
-					if (inNextFrame(vm.currentPage())) {
-						vm.currentFrame(vm.currentFrame() + 1);
-						range = { first: calcOffset(), last: hardMax() };
-					} else {
-						vm.currentFrame(vm.currentFrame() - 1 > 0 ? vm.currentFrame() - 1 : 0);
-						range = { first: calcOffset(), last: hardMax() };
-					}
+				if (inNextFrame(vm.currentPage())) {
+					vm.currentFrame(vm.currentFrame() + 1);
+				} else if (!inCurrentFrame(vm.currentPage())) {
+					vm.currentFrame(vm.currentFrame() - 1 > 0 ? vm.currentFrame() - 1 : 0);
 				}
-			}
 
+				range = { first: calcOffset(), last: hardMax() };
+			}
 			return range;
 		})();
 
@@ -96,7 +90,6 @@ var Pagination = function () {
 				}, page + 1);
 			});
 		}
-		console.log(vm.currentPage() + 1);
 
 		return [
 			m('div.ui.borderless.pagination.menu', [

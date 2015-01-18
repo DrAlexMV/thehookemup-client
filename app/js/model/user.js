@@ -14,7 +14,7 @@ var User = function(API) {
 		this.major = m.prop(data.major);
 		this.description = m.prop(data.description);
 		this.university = m.prop(data.university);
-		this.role = m.prop(data.role);
+		this.roles = m.prop(data.roles);
 		this.picture = m.prop(data.picture);
 		this.connectionType = m.prop(data.connectionType);
 		return this;

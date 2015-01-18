@@ -31,23 +31,6 @@ var FormBuilder = (function () {
 					])
 				];
 			},
-			multiCheckbox: function (fields, bind) {
-				var multi = {};
-
-				var vm =
-				multi.vm = {
-				};
-
-				multi.view = function () {
-					return [
-						fields.map(function (field) {
-							formBuilder.inputs.checkbox(field, {});
-						})
-					];
-				};
-
-				return multi;
-			},
 			dropzone: function (id, settings, stream) {
 				var config = function (element, isInitialized) {
 					if (!isInitialized) {

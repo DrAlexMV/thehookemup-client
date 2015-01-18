@@ -21,7 +21,9 @@ var HorizontalEntityListSegment = function (title, linkBase, entitiesFunction, m
 					src={model.getPicture(entity)} />
 				<div className="content">
 					<div className="header">{model.getName(entity)}</div>
-					{entity.role()}
+					{entity.roles().map(function (role) {
+						return role
+					})}
 				</div>
 			</a>
 		);
