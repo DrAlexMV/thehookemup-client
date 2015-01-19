@@ -48,7 +48,7 @@ search.vm = {
 		vm.search(vm.fields);
 
 		StreamCommon.on(search.stream, 'RecommendationSelected::SearchRecommendations', function (message) {
-			vm.query_string = message.parameters.recommendations.join(' ');
+			vm.query_string = message.parameters.recommendations.join(', ');
 			var query = { query_string: vm.query_string };
 			m.route(SearchResults.buildURL(query));
 		});
@@ -77,10 +77,10 @@ search.view = function () {
 				m('div.four.wide.column', [
 					m('div.ui.grid', [
 						m('div.row', [
-							m('div.column', vm.skillRecommendations.view(vm.skills(), vm.query_string.split(' ')))
+							m('div.column', vm.skillRecommendations.view(vm.skills(), vm.query_string.split(', ')))
 						]),
 						m('div.row', [
-							m('div.column', vm.roleRecommendations.view(vm.roles(), vm.query_string.split(' ')))
+							m('div.column', vm.roleRecommendations.view(vm.roles(), vm.query_string.split(', ')))
 						])
 					])
 				]),
