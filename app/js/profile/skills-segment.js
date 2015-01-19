@@ -20,6 +20,7 @@ var SkillsSegment = function (skills, canEdit, userID) {
 
 	function addSkill() {
 		var s = m.prop(segment.vm.skillInput());
+		if (_.find(skills, s)) return;
 		skills.push(s);
 		segment.vm.skillInput('');
 	}
