@@ -17,6 +17,9 @@ var Edges = function(API) {
 			}
 		));
 
+    this.pendingConnectionsMessages = m.prop(data.pendingConnectionsMessages);
+
+
 		this.suggestedConnections = m.prop(data.suggestedConnections.map(
 			function(suggestedConnection) {
 				return new User.UserModel(suggestedConnection);

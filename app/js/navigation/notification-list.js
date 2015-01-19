@@ -5,7 +5,8 @@ var StreamCommon = require('common/stream-common');
 var User = require('model/user');
 var UserEdges = require('model/user-edges');
 var UtilsGeneral = require('common/utils-general');
-
+var ConnectMessage = require('navigation/connect-message');
+var ModalMixin = require('common/modal-mixin');
 
 /*
   Notification can be a request to connect
@@ -15,7 +16,32 @@ var NotificationList = function (edges) { // edges is an m.prop
 	var notificationList = {};
 
 	//currently unused
-	notificationList.stream = new Bacon.Bus();
+	notificationList.stream = m.prop(new Bacon.Bus());
+
+  var messageModal = m.prop({
+    view: function(){}
+  });
+
+  function viewMessage(user,userIndex) {
+
+    /*notificationList.stream.push(
+      new StreamCommon.Message('NotificationList::ViewMessage', { user: user })
+    );*/
+
+    var message = edges().pendingConnectionsMessages()[user._id()];
+
+    messageModal(new ModalMixin(new ConnectMessage(m.prop(user),message)));
+    messageModal().vm.open();
+    //not sure why this is necessary, but for some reason all user info disappears from the list without it,
+    //but the list still displays (just with empty names) and checking the data in the console verifies it is still there.
+    m.redraw.strategy("all");
+    notificationList.stream(Bacon.mergeAll(messageModal().vm.body.stream));
+
+    //For some reason, this message is generated whenever the modal is opened, and not when the button on the modal is clicked.
+    //I can't figure out why this would be the case.
+    StreamCommon.on(notificationList.stream(), 'ConnectMessageModal::Connect', console.log('heard message from connect message modal'))//respond("Connect", user._id(), userIndex ));
+
+  }
 
 	function respond(response, userId, userIndex) {
 		/*response is yes or no whether the request was accepted*/
@@ -34,7 +60,7 @@ var NotificationList = function (edges) { // edges is an m.prop
 
 				Context.setCurrentUserEdges(es);
 
-				notificationList.stream.push(
+				notificationList.stream().push(
 					new StreamCommon.Message('NotificationList::Connect', { user: user })
 				);
 			});
@@ -47,7 +73,7 @@ var NotificationList = function (edges) { // edges is an m.prop
 
 				Context.setCurrentUserEdges(es);
 
-				notificationList.stream.push(
+				notificationList.stream().push(
 					new StreamCommon.Message('NotificationList::NoConnect', { user: user })
 				);
 			});
@@ -63,6 +89,17 @@ var NotificationList = function (edges) { // edges is an m.prop
 
 		if (edges().pendingConnections()) {
 			list = edges().pendingConnections().map(function (user, idx) {
+
+        viewMessageButton = {};
+
+        //Did this user send a message?
+        if(edges().pendingConnectionsMessages()[user._id()] && edges().pendingConnectionsMessages()[user._id()]!='')
+        {
+          viewMessageButton = [m('br'),
+                               m('div.fluid.ui.button',{onclick: viewMessage.bind(viewMessage,user,idx)},"View message")]
+        }
+
+
 				return [
 					m('div.item', [
 						m('div.ui.card', [
@@ -71,15 +108,17 @@ var NotificationList = function (edges) { // edges is an m.prop
 									m('img.ui.avatar.image', { src: User.getPicture(user) }),
 										m('a', {href: '/profile/' + user._id() }, {config: m.route}, [
 											'Request from ' + truncate(User.getName(user),14)
-										]),
-									m('p',[
-										m('div.description', 'Would you like to connect?')
-									]),
+										])
+                  ]),
+                  m('div.ui.center.aligned.segment',[
+								  m('div.description', 'Would you like to connect?'),
+                  viewMessageButton,
+                  m('br'),
 									m('div.ui.two.bottom.attached.buttons', [
-										m('div.ui.green.button', {onclick: respond.bind(respond, 'Connect', user._id(), idx)}, 'Yes'),
-										m('div.ui.red.button', {onclick: respond.bind(respond, 'NoConnect', user._id(), idx)}, 'No')
+								  m('div.ui.green.button', {onclick: respond.bind(respond, 'Connect', user._id(), idx)}, 'Yes'),
+									m('div.ui.red.button', {onclick: respond.bind(respond, 'NoConnect', user._id(), idx)}, 'No')
 									])
-								])
+                ])
 							])
 						])
 					])
@@ -102,7 +141,12 @@ var NotificationList = function (edges) { // edges is an m.prop
 				])
 			];
 		}
-		return [ m('i.alarm.icon'), numPending, m('div.menu', [list]) ];
+    {style: {border: "1px solid red"}}
+		return [ messageModal().view(),
+      m('i.alarm.icon'), numPending,
+      m("div.menu[style='overflow:auto;max-height:500px;']",
+        [list])
+    ]
 	};
 
 	return notificationList;
