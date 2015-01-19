@@ -39,7 +39,7 @@ var SkillsSegment = function (skills, canEdit, userID) {
 			var skillList = null;
 			if (skills.length) {
 				skillsList = (
-					<div className="ui segment virtual-resume-segment"> {
+					<div className="ui segment skill-tags"> {
 						skills.map(function(skill, index) {
 							return (
 								<div className="ui label">
@@ -72,7 +72,7 @@ var SkillsSegment = function (skills, canEdit, userID) {
 			var skillsList = null;
 			if (skills.length) {
 				skillsList = (
-					<div className="ui segment virtual-resume-segment"> {
+					<div className="ui segment skill-tags"> {
 						skills.map(function(skill) {
 							return <div className="ui label">{ skill() }</div>;
 						})
