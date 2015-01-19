@@ -18,6 +18,7 @@ var NotificationList = function (edges) { // edges is an m.prop
 	//currently unused
 	notificationList.stream = m.prop(new Bacon.Bus());
 
+  //need an empty modal at first, since we don't know which modal we need until the user actually clicks the button
   var messageModal = m.prop({
     view: function(){}
   });
@@ -39,7 +40,7 @@ var NotificationList = function (edges) { // edges is an m.prop
 
     //For some reason, this message is generated whenever the modal is opened, and not when the button on the modal is clicked.
     //I can't figure out why this would be the case.
-    StreamCommon.on(notificationList.stream(), 'ConnectMessageModal::Connect', console.log('heard message from connect message modal'))//respond("Connect", user._id(), userIndex ));
+    //StreamCommon.on(notificationList.stream(), 'ConnectMessageModal::Connect', console.log('heard message from connect message modal'))//respond("Connect", user._id(), userIndex ));
 
   }
 
