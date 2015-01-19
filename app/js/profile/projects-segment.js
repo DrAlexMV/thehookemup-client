@@ -32,7 +32,7 @@ var ProjectsSegment = function (projects, canEdit, userID) {
 			date: ''
 		});
 		projects.push(newProject);
-		segment.vm.editables.push(buildProjectDetailEditor(newProject));
+		segment.vm.editables.push(buildProjectEditor(newProject));
 	}
 
 	function addDetail(projectIndex) {
