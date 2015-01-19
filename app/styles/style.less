@@ -128,4 +128,61 @@ main {
 	.first-level-item {
 		margin: 20px 0px;
 	}
+
+	.label {
+		background-color: #E3904B;
+	}
+}
+
+.editable-text {
+	display: block;
+	input {
+		width: 85%;
+	}
+	i {
+		float: right;
+	}
+}
+
+.editable-text:hover {
+	cursor: pointer;
+	background-color: rgba(227, 144, 75, 0.3);
+}
+
+.editable-item {
+	position: relative;
+	.editables .editable-text {
+		padding-right: 40px;
+	}
+
+	.item-remove {
+		display: none;
+		position: absolute;
+		right: 0px;
+		top: 0px;
+	}
+
+	.item-remove:hover {
+		cursor: pointer;
+	}
+}
+
+.editable-item:hover {
+	background-color: rgba(227, 144, 75, 0.3);
+
+	.item-remove {
+		display: inline;
+		position: absolute;
+		right: 0px;
+		top: 0px;
+	}
+}
+
+.project-detail {
+	width: 100%;
+}
+
+.project-date {
+	margin: 4px 0px;
+	color: gray;
 }

@@ -2,8 +2,8 @@
  * @jsx m
  */
 
-var Editable = require('common/form-builder').inputs.editable;
 var EditableSegment = require('profile/editable-segment');
+var EditableText = require('common/editable-text');
 var UserDetail = require('model/user-details');
 
 var InterestsSegment = function (interests, canEdit, userID) {
@@ -19,31 +19,43 @@ var InterestsSegment = function (interests, canEdit, userID) {
 		});
 	}
 
+	segment.onRevert = function() {
+		segment.vm.editables = interests.map(buildInterestEditor);
+	};
+
+	function buildInterestEditor(interest)  {
+		return {
+			title: EditableText.buildConfig(interest.title),
+			description: EditableText.buildConfig(interest.description)
+		};
+	}
+
 	function addInterest() {
-		interests.push({title: m.prop(null), description: m.prop(null)});
-		m.redraw(); // Otherwise x-editable gets angry and starts bugging out
+		var interest = {title: m.prop('Add a title'), description: m.prop('Add a description')};
+		interests.push(interest);
+		segment.vm.editables.push(buildInterestEditor(interest));
+	}
+
+	function removeInterest(index) {
+		interests.splice(index, 1);
+		segment.vm.editables.splice(index, 1);
 	}
 
 	segment.viewContent = function () {
 		if (canEdit && segment.vm.editing()) {
-			interestsList = interests.map(function(interest) {
+			interestsList = interests.map(function(interest, index) {
 				return (
-					<div className="item">
-						<div className="header"
-							config={Editable(interest.title, {
-								placeholder: 'Add a title',
-								showbuttons: false,
-								onblur: 'submit'
-							})}>
-							{interest.title()}
+					<div className="item editable-item">
+						<div className="editables">
+							<div className="header">
+								{EditableText.view(segment.vm.editables[index].title)}
+							</div>
+							<div className="content">
+								{EditableText.view(segment.vm.editables[index].description)}
+							</div>
 						</div>
-						<div className="content"
-							config={Editable(interest.description, {
-							placeholder: 'Add a description',
-							showbuttons: false,
-							onblur: 'submit'
-							})}>
-							{interest.description()}
+						<div className="item-remove">
+							<i onclick={removeInterest.bind(this, index)} className="delete icon"></i>
 						</div>
 					</div>
 				);
@@ -71,6 +83,8 @@ var InterestsSegment = function (interests, canEdit, userID) {
 	};
 
 	_.extend(segment, new EditableSegment(segment, 'interests', interests, canEdit, userID));
+
+	segment.vm.editables = interests.map(buildInterestEditor);
 
 	return segment;
 };

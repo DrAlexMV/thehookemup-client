@@ -15,6 +15,9 @@ var EditableSegment = function (child, segmentName, contentData, canEdit, userID
 	function revert() {
 		contentData.length = 0;
 		Array.prototype.push.apply(contentData, segment.vm.originalContent());
+		if (child.onRevert) {
+			child.onRevert();
+		}
 
 		segment.vm.editing(false);
 		segment.vm.originalContent(undefined);
