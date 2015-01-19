@@ -240,6 +240,7 @@ var ProjectsSegment = function (projects, canEdit, userID) {
 							project.people.map(function(person) {
 								return (
 									<a href={'/profile/' + person._id()} 
+										config={m.route}
 										className="ui image label">
 										<img src={User.getPicture(person)} />
 										{User.getName(person)}
