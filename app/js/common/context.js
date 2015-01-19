@@ -58,7 +58,7 @@ var Context = (function () {
 					context.setCurrentUserEdges(response, true);
 					deferred.resolve(currentUserEdges)
 				},
-				function(error){
+				function(error) {
 					currentUserEdges(null);
 					deferred.reject(error);
 				}

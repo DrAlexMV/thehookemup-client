@@ -8,7 +8,9 @@ var ContactCard = require('profile/contact-card');
 var Editable = require('common/form-builder').inputs.editable;
 var EntityList = require('profile/entity-list');
 var Error = require('common/error');
-var InfoSegment = require('profile/info-segment');
+var InterestsSegment = require('profile/interests-segment');
+var SkillsSegment = require('profile/skills-segment');
+var ProjectsSegment = require('profile/projects-segment');
 var User = require('model/user');
 var UserDetails = require('model/user-details');
 var UserEdges = require('model/user-edges');
@@ -26,7 +28,9 @@ profile.vm = {
 
 		this.basicInfo = null;
 		this.contactCard = null;
-		this.infoSegments = [];
+		this.skillsSegment = null;
+		this.interestsSegment = null;
+		this.projectsSegment = null;
 		this.editing = m.prop(false);
 
 		profile.stream = null;
@@ -61,13 +65,13 @@ profile.vm = {
 			}, Error.handle);
 		}
 
-		this.details = [];
+		this.details = null;
 		UserDetails.getByID(userid).then(
 			function(response) {
 				profile.vm.details = response;
-				profile.vm.infoSegments = profile.vm.details.map(function(entry) {
-					return new InfoSegment(entry, profile.vm.userid == 'me', userid);
-				});
+				profile.vm.skillsSegment = new SkillsSegment(response.skills, profile.vm.userid == 'me', userid);
+				profile.vm.interestsSegment = new InterestsSegment(response.interests, profile.vm.userid == 'me', userid);
+				profile.vm.projectsSegment = new ProjectsSegment(response.projects, profile.vm.userid == 'me', userid);
 
 			}, Error.handle);
 
@@ -137,13 +141,6 @@ profile.controller = function () {
 profile.view = function () {
 	var vm = profile.vm;
 	var basicInfo = profile.vm.basicInfo();
-
-	var segments = vm.infoSegments.map(function(infoSegment) {
-		return infoSegment.view({});
-	});
-
-	var associations = null;
-
 	var university_insignia = (basicInfo.university() === 'University of Texas') ? 
 		<img src="/img/bevo_icon.jpg" id="bevo_icon" />
 		: null;
@@ -293,7 +290,13 @@ profile.view = function () {
 
 					{university_info}
 					{description}
-					{segments}
+
+					{profile.vm.skillsSegment ? profile.vm.skillsSegment.view({}) : null}
+					{profile.vm.interestsSegment ? profile.vm.interestsSegment.view({}) : null}
+					{profile.vm.projectsSegment ? profile.vm.projectsSegment.view({
+						connections: profile.vm.edges.connections()
+					}) : null}
+
 				</div>
 				<div className="four wide column">
 					{connections.view({})}

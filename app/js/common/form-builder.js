@@ -68,6 +68,13 @@ var FormBuilder = (function () {
 					}
 				};
 				return config;
+			},
+			localSearch: function(settings) {
+				return function(element, isInitialized) {
+					if (!isInitialized) {
+						$(element).search(settings);
+					}
+				};
 			}
 		},
 		validate: function (rules, onSuccess, onFailure) {
