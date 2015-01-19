@@ -10,6 +10,7 @@ var User = require('model/user');
 var UserListBig = require('search/user-list-big');
 var Pagination = require('common/ui-core/pagination');
 var SearchRecommendations = require('search/search-recommendations');
+var SkillRecommendations = require('model/skill-recommendations');
 
 var search = {};
 
@@ -27,7 +28,10 @@ search.vm = {
 		vm.roleRecommendations = SearchRecommendations('Roles');
 		vm.searchFilterForm = new SearchFilterForm(SearchResults.normalizeFields(vm.fields));
 
-		vm.skills = m.prop(['Java', 'Javascript', 'WebDev', 'Marketing']);
+		SkillRecommendations().fetch().then(function (skills) {
+			vm.skills = m.prop(skills);
+		});
+
 		vm.roles = m.prop(['Founder', 'Startupper', 'Investor']);
 
 		search.stream = Bacon.mergeAll(vm.searchFilterForm.stream, vm.roleRecommendations.stream,
@@ -71,7 +75,7 @@ search.view = function () {
 		m('div.base.ui.padded.stackable.page.grid', [
 			m('div.row', [
 				m('div.ten.wide.column', [
-					m('h2.ui.header', vm.query_string)
+					m('h2.ui.header', vm.query_string ? vm.query_string : 'All')
 				])
 			]),
 			m('div#search-area.ui.segment.row', [

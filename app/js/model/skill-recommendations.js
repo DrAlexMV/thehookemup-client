@@ -9,7 +9,10 @@ var SkillRecommendations = function () {
 	var skillRecommendations = {},
 			recommendations = m.prop([]);
 
-	skillRecommendations.fetch = function () {
+	skillRecommendations.fetch = function (number) {
+
+		number = number ? number : 10;
+
 		if (recommendations().length > 0) {
 			var deferred = m.deferred();
 
@@ -17,7 +20,7 @@ var SkillRecommendations = function () {
 
 			return deferred.promise;
 		} else {
-			return skillRecommendations.get('search/skills?results=10').then(function (skills) {
+			return skillRecommendations.get('/search/skills?text=&results=' + number).then(function (skills) {
 				recommendations(skills);
 			});
 		}
@@ -26,3 +29,5 @@ var SkillRecommendations = function () {
 	_.mixin(skillRecommendations, API);
 	return skillRecommendations;
 };
+
+module.exports = SkillRecommendations;
