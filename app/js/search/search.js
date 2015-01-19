@@ -37,7 +37,7 @@ search.vm = {
 		});
 
 		vm.search = function (query) {
-			var resultsPerPage = 5;
+			var resultsPerPage = 4;
 			query = _.extend(query, { results_per_page: resultsPerPage,  page: vm.currentPage() });
 			SearchResults.getResults(query).then(function(response) {
 				vm.searchResults = response;
