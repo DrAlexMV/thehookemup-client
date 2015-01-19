@@ -132,7 +132,7 @@ var ProjectsSegment = function (projects, canEdit, userID) {
 					</div>
 				);
 				return (
-					<div className="item">
+					<div className="item first-level-item">
 						<div className="header"
 							config={Editable(project.title, {
 								placeholder: 'Add a title',
@@ -165,7 +165,7 @@ var ProjectsSegment = function (projects, canEdit, userID) {
 				);
 			});
 			projectsList.push(
-				<div className="item">
+				<div className="item first-level-item">
 					<a onclick={addProject}>
 						+ Add project
 					</a>
@@ -208,7 +208,7 @@ var ProjectsSegment = function (projects, canEdit, userID) {
 					});
 				}
 				return (
-					<div className="item">
+					<div className="item first-level-item">
 						<div className="header">{project.title()}</div>
 						<div className="content">
 							<div>{project.description()}</div>
@@ -219,7 +219,7 @@ var ProjectsSegment = function (projects, canEdit, userID) {
 				);
 			});
 		}
-		return <div className="ui divided list">{projectsList}</div>;
+		return <div className="ui list">{projectsList}</div>;
 	};
 
 	_.extend(segment, new EditableSegment(segment, 'projects', projects, canEdit, userID));

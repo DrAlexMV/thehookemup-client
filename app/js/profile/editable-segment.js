@@ -52,13 +52,12 @@ var EditableSegment = function (child, segmentName, contentData, canEdit, userID
 		}
 
 		return (
-			<div className="ui segment">
+			<div className="ui segment user-details">
 				<div className="ui ribbon label">
 					<h4 className="ui header">{segmentName.toUpperCase()}</h4>
 				</div>
 				{editButton}
-				<div className="ui content">
-					<div className="ui hidden divider"></div>
+				<div className="ui content base-content">
 					{ child.viewContent(config) }
 				</div>
 			</div>

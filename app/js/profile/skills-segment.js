@@ -20,7 +20,7 @@ var SkillsSegment = function (skills, canEdit, userID) {
 
 	function addSkill() {
 		var s = m.prop(segment.vm.skillInput());
-		if (_.find(skills, function(entry) { return entry === s; })) {
+		if (!s() || _.find(skills, function(entry) { return entry() === s(); })) {
 			return;
 		}
 		skills.push(s);
@@ -81,7 +81,7 @@ var SkillsSegment = function (skills, canEdit, userID) {
 				);
 			}
 			return (
-				<div className="ui content">
+				<div className="ui content base-content">
 					{ skillsList }
 				</div>
 			);
