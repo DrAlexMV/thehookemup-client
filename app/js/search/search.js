@@ -49,7 +49,7 @@ search.vm = {
 
 		StreamCommon.on(search.stream, 'RecommendationSelected::SearchRecommendations', function (message) {
 			vm.query_string = message.parameters.recommendations.join(' ');
-			var query = { query_string: vm.query_string, page: vm.currentPage() };
+			var query = { query_string: vm.query_string };
 			m.route(SearchResults.buildURL(query));
 		});
 
