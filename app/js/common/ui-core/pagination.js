@@ -52,7 +52,7 @@ var Pagination = function () {
 
 		vm.maxPagesToDisplay(maxPagesToDisplay ? maxPagesToDisplay : 6);
 		vm.totalPages(totalPages);
-		vm.currentPage(currentPage ? currentPage : 0);
+		vm.currentPage(currentPage ? currentPage : (0 || vm.currentPage()));
 
 		var range = (function () {
 
@@ -102,6 +102,12 @@ var Pagination = function () {
 				])
 			])
 		];
+	};
+
+	pagination.utils = {
+		numberOfPages: function (resultsPerPage, totalNumberOfResults) {
+			return Math.ceil(totalNumberOfResults / resultsPerPage);
+		}
 	};
 
 	return pagination;

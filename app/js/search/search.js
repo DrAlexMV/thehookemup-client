@@ -21,46 +21,41 @@ search.vm = {
 
 		vm.fields = SearchResults.extractFields(m.route);
 		vm.query_string = m.route.param('query_string');
-		vm.currentPage = m.prop(_.parseInt(m.route.param('page')));
+		vm.currentPage = m.prop(_.parseInt(m.route.param('page')) || 0);
 
 		vm.pagination = Pagination();
+		vm.numberOfPages = m.prop();
 		vm.skillRecommendations = SearchRecommendations('Skills');
 		vm.roleRecommendations = SearchRecommendations('Roles');
-		vm.searchFilterForm = new SearchFilterForm(SearchResults.normalizeFields(vm.fields));
+
+		vm.roles = m.prop(['Founder', 'Startupper', 'Investor']);
+
+		search.stream = Bacon.mergeAll(vm.roleRecommendations.stream, vm.skillRecommendations.stream, vm.pagination.stream);
 
 		SkillRecommendations().fetch().then(function (skills) {
 			vm.skills = m.prop(_.pluck(skills, 'name'));
 		});
 
-		vm.roles = m.prop(['Founder', 'Startupper', 'Investor']);
-
-		search.stream = Bacon.mergeAll(vm.searchFilterForm.stream, vm.roleRecommendations.stream,
-			vm.skillRecommendations.stream);
-
 		vm.search = function (query) {
+			var resultsPerPage = 5;
+			query = _.extend(query, { results_per_page: resultsPerPage,  page: vm.currentPage() });
 			SearchResults.getResults(query).then(function(response) {
 				vm.searchResults = response;
+				vm.numberOfPages(vm.pagination.utils.numberOfPages(resultsPerPage, response.metadata().numberResults));
 			}, Error.handle);
 		};
 
 		vm.search(vm.fields);
 
-		StreamCommon.on(search.stream, 'SearchFilterForm::Search', function (message) {
-			var params = message.parameters;
-			// Clean parameters
-			var nonEmptyFields = {}; // ugly and not functional-style
-			Object.keys(params)
-				.filter(function(key) { return params[key]; })
-				.forEach(function(key) { nonEmptyFields[key] = params[key]; });
-
-			if (search.vm.query_string) { nonEmptyFields.query_string = search.vm.query_string; }
-
-			m.route(SearchResults.buildURL(nonEmptyFields));
-		});
-
 		StreamCommon.on(search.stream, 'RecommendationSelected::SearchRecommendations', function (message) {
 			vm.query_string = message.parameters.recommendations.join(' ');
-			var query = { query_string: vm.query_string };
+			var query = { query_string: vm.query_string, page: vm.currentPage() };
+			m.route(SearchResults.buildURL(query));
+		});
+
+		StreamCommon.on(search.stream, 'PageSelected::Pagination', function (message) {
+			vm.currentPage(message.parameters.page);
+			var query = { query_string: vm.query_string, page: vm.currentPage() };
 			m.route(SearchResults.buildURL(query));
 		});
 	}
@@ -74,7 +69,7 @@ search.view = function () {
 	return [
 		m('div.base.ui.padded.stackable.page.grid', [
 			m('div.row', [
-				m('div.ten.wide.column', [
+				m('div.sixteen.wide.column', [
 					m('h2.ui.header', vm.query_string ? vm.query_string : 'All')
 				])
 			]),
@@ -94,7 +89,7 @@ search.view = function () {
 						new UserListBig(vm.searchResults.results()).view({}) : m('div', 'No results found!'),
 					m('div.row', [
 						m('div.right.aligned.column', vm.searchResults.results().length ?
-							vm.pagination.view(1, vm.currentPage()) : null)
+							vm.pagination.view(vm.numberOfPages(), vm.currentPage()) : null)
 					])
 				])
 			])

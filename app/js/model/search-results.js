@@ -27,6 +27,7 @@ var SearchResults = function(API) {
 		);
 
 		this.results = m.prop(results);
+		this.metadata = m.prop(data.metadata);
 	};
 
 	searchResults.extractFields = function(mithrilRoute) {
