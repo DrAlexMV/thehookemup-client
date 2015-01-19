@@ -21,7 +21,8 @@ var SkillRecommendations = function () {
 			return deferred.promise;
 		} else {
 			return skillRecommendations.get('/search/skills?text=&results=' + number).then(function (skills) {
-				recommendations(skills);
+				recommendations(skills.results);
+				return recommendations();
 			});
 		}
 	};

@@ -29,7 +29,7 @@ search.vm = {
 		vm.searchFilterForm = new SearchFilterForm(SearchResults.normalizeFields(vm.fields));
 
 		SkillRecommendations().fetch().then(function (skills) {
-			vm.skills = m.prop(skills);
+			vm.skills = m.prop(_.pluck(skills, 'name'));
 		});
 
 		vm.roles = m.prop(['Founder', 'Startupper', 'Investor']);
