@@ -4,7 +4,7 @@ var NavbarSearchInput = function (parameters) {
 	var searchInput = {},
 		ENTER_KEY = require('common/constants').ENTER_KEY,
 		defaultParameters =  {
-			minCharacters: 3,
+			minCharacters: 0,
 			delay: 1000
 		};
 
