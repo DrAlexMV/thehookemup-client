@@ -52,11 +52,15 @@ var HorizontalEntityListSegment = function (title, linkBase, entitiesFunction, m
 
 		var search = null;
 		if (config.searchable) {
-			search = <input
-				type="text"
-				placeholder="Search name"
-				oninput={m.withAttr("value", horizontalEntityList.vm.searchInput)}
-				value={horizontalEntityList.vm.searchInput()}/>;
+			search = (
+				<div className="ui input small filter-search-input">
+					<input
+						type="text"
+						placeholder="Search name"
+						oninput={m.withAttr("value", horizontalEntityList.vm.searchInput)}
+						value={horizontalEntityList.vm.searchInput()} />
+				</div>
+			);
 		}
 
 		var showToggle = null;
@@ -78,9 +82,7 @@ var HorizontalEntityListSegment = function (title, linkBase, entitiesFunction, m
 			<div className="ui segment">
 				<h4 className="ui header">
 					{title}
-					<div className="ui input small">
-						{search}
-					</div>
+					{search}
 				</h4>
 				<div className="ui list horizontal-list">
 					{items}
