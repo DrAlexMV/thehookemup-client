@@ -2,6 +2,8 @@
  * Created by austinstone on 1/9/15.
  */
 
+//TODO: Rate limit clicking somehow
+
 var DropdownMixin = function (body, dropdownDivType) {
 
 	var dropdownMixin = {};
