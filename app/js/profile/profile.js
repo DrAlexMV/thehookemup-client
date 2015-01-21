@@ -95,9 +95,9 @@ profile.vm = {
 };
 
 // Serves as both request and confirmation
-profile.connectMe = function(isConfirmation) {
+profile.connectMe = function(isConfirmation,message) {
 	return function() {
-		UserEdges.connectMe(m.route.param('userid')).then(
+		UserEdges.connectMe(m.route.param('userid'), message).then(
 			function () {
 				if (isConfirmation) {
 					// Get user's email, along with correct connections list, etc.
@@ -128,12 +128,15 @@ profile.deleteConnection = function() {
 
 profile.connectDialog = function(otherUserID) {
 	profile.vm.connectWithModal.vm.open();
-	StreamCommon.on(profile.stream, 'ConnectWithModal::Connect', profile.connectMe());
+	StreamCommon.on(profile.stream, 'ConnectWithModal::Connect', function(message) {
+    profile.connectMe(false, message.parameters.message)();
+    })
+  };
 
 	//listen to input from the modal. An input of 'ConnectWithModal::NoConnect' means the user clicked the the button on
 	//the modal to close the window without connecting.
 	//StreamCommon.on(profile.stream, 'ConnectWithModal::NoConnect', function() {});
-};
+
 
 profile.saveDetail = function() {
 	User.putByID(

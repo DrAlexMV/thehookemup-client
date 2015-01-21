@@ -35,8 +35,8 @@ var Edges = function(API) {
 		return this.get('/user/' + userID + '/edges', edges.EdgesModel);
 	};
 
-	edges.connectMe = function(otherUserID) {
-		return this.post('/user/me/edges/connections', {user: otherUserID});
+	edges.connectMe = function(otherUserID, message) {
+		return this.post('/user/me/edges/connections', {user: otherUserID, message: message});
 	};
 
 	edges.deleteConnection = function(otherUserID) {
