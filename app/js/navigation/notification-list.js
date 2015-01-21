@@ -89,7 +89,7 @@ var NotificationList = function (edges) { // edges is an m.prop
               m('div.content', [
                 m('div.header', [
                   m('img.ui.avatar.image', { src: User.getPicture(user) }),
-                  m('a', {href: '/profile/' + user._id() }, {config: m.route}, [
+                  m('a', {href: '/profile/' + user._id(), config: m.route}, [
                       'Request from ' + truncate(User.getName(user), 14)
                   ])
                 ]),
@@ -137,7 +137,7 @@ var NotificationList = function (edges) { // edges is an m.prop
         ]),
         m("div.item", [
           m("div.ui.center.aligned.segment[style=border: 1px solid Gainsboro;]", [
-            m('a', {href: '/?/notifications/'}, {config: m.route}, 'See all')
+            m('a', { href: '/notifications/', config: m.route }, 'See all')
           ])
         ])
       ])
