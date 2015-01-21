@@ -6,7 +6,7 @@ var User = require('model/user');
 var UserModel = User.UserModel;
 var Image = require('model/image');
 var NotificationList = require('navigation/notification-list');
-var DropdownMixin = require('common/dropdown-mixin')
+var DropdownMixin = require('common/dropdown-mixin');
 var UserEdges = require('model/user-edges');
 
 var Navbar = function () {

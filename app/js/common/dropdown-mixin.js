@@ -2,7 +2,7 @@
  * Created by austinstone on 1/9/15.
  */
 
-var DropdownMixin = function (body, buttonType) {
+var DropdownMixin = function (body, dropdownDivType) {
 
 	var dropdownMixin = {};
 
@@ -17,7 +17,7 @@ var DropdownMixin = function (body, buttonType) {
 
 	dropdownMixin.view = function () {
 		return [
-			m(buttonType, {config:config},[
+			m(dropdownDivType, {config:config},[
 				body.view()
 			])
 		];
