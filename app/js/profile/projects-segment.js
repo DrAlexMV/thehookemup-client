@@ -25,20 +25,24 @@ var ProjectsSegment = function (projects, canEdit, userID) {
 
 	function addProject() {
 		var newProject = UserDetails.ProjectModel({
-			title: 'Add Project Title',
-			description: 'Add project description.',
+			title: '',
+			description: '',
 			people: [],
 			details: [],
 			date: ''
 		});
 		projects.push(newProject);
-		segment.vm.editables.push(buildProjectEditor(newProject));
+		segment.vm.editables.push(buildProjectEditor(newProject,
+			{title: 'Add a title', description: 'Add a description'}
+		));
 	}
 
 	function addDetail(projectIndex) {
-		var newDetail = {title: m.prop('Add Title'), description: m.prop('Add description.')};
+		var newDetail = {title: m.prop(''), description: m.prop('')};
 		projects[projectIndex].details.push(newDetail);
-		segment.vm.editables[projectIndex].details.push(buildProjectDetailEditor(newDetail));
+		segment.vm.editables[projectIndex].details.push(buildProjectDetailEditor(newDetail,
+			{title: 'Add a title', description: 'Add a description'}
+		));
 	}
 
 	function addCollaborator(projectIndex, possibleChoices) {
@@ -65,17 +69,17 @@ var ProjectsSegment = function (projects, canEdit, userID) {
 		segment.vm.editables[projectIndex].details.splice(detailIndex, 1);
 	}
 
-	function buildProjectDetailEditor(projectDetail) {
+	function buildProjectDetailEditor(projectDetail, placeholders) {
 		return {
-			title: EditableText.buildConfig(projectDetail.title),
-			description: EditableText.buildConfig(projectDetail.description)
+			title: EditableText.buildConfig(projectDetail.title,  placeholders.title),
+			description: EditableText.buildConfig(projectDetail.description, placeholders.description)
 		};
 	}
 
-	function buildProjectEditor(project) {
+	function buildProjectEditor(project, placeholders) {
 		return {
-			title: EditableText.buildConfig(project.title),
-			description: EditableText.buildConfig(project.description),
+			title: EditableText.buildConfig(project.title, placeholders.title),
+			description: EditableText.buildConfig(project.description, placeholders.description),
 			date: EditableText.buildConfig(project.date),
 			details: project.details.map(buildProjectDetailEditor)
 		};

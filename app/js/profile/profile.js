@@ -5,7 +5,7 @@
 
 var PopupLabel = require('common/ui-core/popup-label');
 var ContactCard = require('profile/contact-card');
-var Editable = require('common/form-builder').inputs.editable;
+var EditableText = require('common/editable-text');
 var EntityList = require('profile/entity-list');
 var Error = require('common/error');
 var InterestsSegment = require('profile/interests-segment');
@@ -32,13 +32,18 @@ profile.vm = {
 		this.interestsSegment = null;
 		this.projectsSegment = null;
 		this.editing = m.prop(false);
+		this.editables = {description: null};
 
 		profile.stream = null;
 
 		function handleLoadUser(response) {
 			profile.vm.basicInfo = response;
-			profile.vm.contactCard = new ContactCard(profile.vm.basicInfo, userid == 'me');
+			profile.vm.editables.description = EditableText.buildConfig(
+				profile.vm.basicInfo().description,
+				'Add a description of yourself.'
+			);
 
+			profile.vm.contactCard = new ContactCard(profile.vm.basicInfo, userid == 'me');
 
 			profile.vm.connectWithModal = new ModalMixin(new ConnectWith(profile.vm.basicInfo));
 
@@ -146,26 +151,26 @@ profile.view = function () {
 		: null;
 
 	var connectionButtons = null;
+	var isConnectedIcon = null;
 
 	// Connected
 	if (basicInfo.connectionType() == 'c') {
 		connectionButtons =	(
-			<div className="ui buttons right floated">
-				<div className="ui icon positive button"
+			<a className="ui button blue right floated contact-button"
+				href={'mailto:' + basicInfo.email()}>
+				<i className="mail icon"></i>
+				Contact
+			</a>
+		);
+
+		isConnectedIcon = (
+				<i className="share alternate icon connected-icon"
 					data-variation="inverted"
 					data-content="Connected"
 					data-position="bottom center"
 					config={PopupLabel}>
-					<i className="share alternate icon"></i>
-				</div>
-
-				<a className="ui button blue"
-					href={'mailto:' + basicInfo.email()}>
-					<i className="mail icon"></i>Mail
-				</a>
-			</div>
+				</i>
 		);
-
 	// Sent
 	} else if (basicInfo.connectionType() == 's') {
 		connectionButtons =	(
@@ -223,16 +228,7 @@ profile.view = function () {
 	}
 
 	var description = profile.vm.editing() ?
-		<div className="description"
-			data-type="textarea"
-			config={Editable(basicInfo.description, {
-				placeholder: 'Add a description of yourself',
-				showbuttons: false,
-				rows: 3,
-				onblur: 'submit'
-		})}>
-			{basicInfo.description()}
-		</div> :
+		EditableText.view(profile.vm.editables.description) :
 		<div className="description">
 			{basicInfo.description()}
 		</div>;
@@ -283,6 +279,7 @@ profile.view = function () {
 				</div>
 				<div className="eight wide column">
 					<h1 className="ui header">
+						{isConnectedIcon}
 						{User.getName(basicInfo)}
 						{connectionButtons}
 					</h1>

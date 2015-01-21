@@ -24,6 +24,7 @@
 			return (
 				<span className="fluid editable-text">
 					<input type="text" autofocus
+						placeholder={config.placeholder}
 						value={config.intermediate()}
 						onblur={onCloseEdit(config)}
 						onchange={m.withAttr('value', config.intermediate)}
@@ -40,7 +41,7 @@
 			return (
 				<span className="fluid editable-text">
 					<span onclick={onOpenEdit(config)}>
-						{config.prop()}
+						{config.prop() ? config.prop() : config.placeholder}
 						<i className="write icon"></i>
 					</span>
 				</span>
@@ -48,8 +49,8 @@
 		}
 	};
 
-	editableText.buildConfig = function(prop) {
-		return {prop: prop, intermediate: m.prop(), isEditing: false};
+	editableText.buildConfig = function(prop, placeholder) {
+		return {prop: prop, intermediate: m.prop(), isEditing: false, placeholder: placeholder};
 	};
 
 	return editableText;

@@ -23,17 +23,17 @@ var InterestsSegment = function (interests, canEdit, userID) {
 		segment.vm.editables = interests.map(buildInterestEditor);
 	};
 
-	function buildInterestEditor(interest)  {
+	function buildInterestEditor(interest, placeholders)  {
 		return {
-			title: EditableText.buildConfig(interest.title),
-			description: EditableText.buildConfig(interest.description)
+			title: EditableText.buildConfig(interest.title, placeholders.title),
+			description: EditableText.buildConfig(interest.description, placeholders.description)
 		};
 	}
 
 	function addInterest() {
-		var interest = {title: m.prop('Add a title'), description: m.prop('Add a description')};
+		var interest = {title: m.prop(''), description: m.prop('')};
 		interests.push(interest);
-		segment.vm.editables.push(buildInterestEditor(interest));
+		segment.vm.editables.push(buildInterestEditor(interest, {title: 'Add a title', description: 'Add a description'}));
 	}
 
 	function removeInterest(index) {
