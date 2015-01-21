@@ -66,6 +66,12 @@ profile.vm = {
 			Context.getCurrentUser().then(handleLoadUser); // Use Auth's singleton prop
 		} else {
 			User.getByID(userid).then(function(userObject) {
+				Context.getCurrentUser().then(function(loggedInUser) { // Should already be locally loaded.
+					if (loggedInUser()._id() === userObject._id()) {
+						m.route('/profile/me'); // Redirect if we're on our own page.
+					}
+				});
+
 				handleLoadUser(m.prop(userObject)); // Make a new prop
 			}, Error.handle);
 		}
