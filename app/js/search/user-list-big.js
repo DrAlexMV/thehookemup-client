@@ -1,42 +1,41 @@
-/**
- * @jsx m
- */
-
 var User = require('model/user');
+var FollowCount = require('gamification/follows/follow-count');
 
 var UserListBig = function (users) {
 	var userList = {};
 
+	var vm = {
+		followCount: FollowCount()
+	};
+
 	userList.view = function () {
-		return (
-			<div className="search-list">{
-				users.map(function(item) {
-					return (
-						<div className="item">
-							<div className="ui card">
-								<div className="ui tiny image">
-									<img src={User.getPicture(item)} />
-								</div>
-								<div className="content">
-									<div className="name-header">
-										<a href={'/profile/' + item._id()} 
-											config={m.route} className="ui header">
-											{User.getName(item)}
-										</a>
-										<div className="ui meta">
-											{ item.roles().join(", ") }
-										</div>
-									</div>
-									<div className="description">
-										{item.description()}
-									</div>
-								</div>
-							</div>
-						</div>
-					);
-				})
-			}</div>
-		);
+		var card = function (user) {
+			return [
+				m('div.item', [
+					m('div.ui.card', [
+						m('div.ui.tiny.image', [
+							m('img', { src: User.getPicture(user) })
+						]),
+						m('div.content', [
+							m('div.name-header', [
+								m('a.ui.header', { href: '/profile/' + user._id(), config: m.route }, [
+									User.getName(user),
+									m('div.ui.label.right.floated', vm.followCount.view())
+								]),
+								m('div.ui.meta', user.roles().join(", "))
+							])
+						]),
+						m('div.description', user.description())
+					])
+				])
+			];
+		};
+
+		return [
+			m('div.search-list', [
+				users.map(function (user) { return card(user); })
+			])
+		]
 	};
 
 	return userList;

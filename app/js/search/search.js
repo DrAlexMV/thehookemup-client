@@ -25,7 +25,7 @@ search.vm = {
 
 		vm.pagination = Pagination();
 		vm.numberOfPages = m.prop();
-		vm.skillRecommendations = SearchRecommendations('Skills');
+		vm.skillRecommendations = SearchRecommendations('Trending Skills');
 		vm.roleRecommendations = SearchRecommendations('Roles');
 
 		vm.roles = m.prop(['Founder', 'Startupper', 'Investor']);
