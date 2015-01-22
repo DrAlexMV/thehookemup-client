@@ -9,6 +9,7 @@ var Startup = function(API) {
 		this.name = m.prop(data.name);
 		this.description = m.prop(data.description);
 		this.picture = m.prop(data.picture);
+		this.isOwner = m.prop(data.isOwner);
 		this.owners = data.owners.map(function(ids) {
 			return m.prop(ids);
 		});
