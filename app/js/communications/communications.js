@@ -30,7 +30,7 @@ var vm =
           function (message) {
             //find the entry in the list that made the response
             var idx = _.findIndex(communications.vm.connectionRequestCommunications(), function (crm) {
-              return crm.vm.userId === message.parameters.userId;
+              return crm.userId === message.parameters.userId;
             });
             //remove the entry from the list
             communications.vm.connectionRequestCommunications().splice(idx, idx + 1);
@@ -76,7 +76,7 @@ var vm =
           function (message) {
             //find the entry in the list that made the response
             var idx = _.findIndex(communications.vm.connectionRequestCommunications(), function (crm) {
-              return crm.vm.userId === message.parameters.userId;
+              return crm.userId === message.parameters.userId;
             });
 
             communications.vm.connectionRequestCommunications().splice(idx, idx + 1);

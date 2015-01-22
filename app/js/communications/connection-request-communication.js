@@ -11,9 +11,8 @@ var ConnectionRequestCommunication = function (user, message) {
   var connectionRequestCommunication = {};
 
   //need this to save the userId so we can know to remove this item when a response button is clicked
-  connectionRequestCommunication.vm = {
-    userId: user._id()
-  };
+  connectionRequestCommunication.userId =  user._id();
+
 
   connectionRequestCommunication.stream = new Bacon.Bus();
 
