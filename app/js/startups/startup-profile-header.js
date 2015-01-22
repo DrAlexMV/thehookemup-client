@@ -2,20 +2,41 @@ var StartupProfileHeader = function () {
 	var startupProfileHeader = {};
 
 	startupProfileHeader.view = function () {
-		var tabs = [
-			{ name: 'Overview', icon: '' },
-			{ name: 'Followers', icon: 'thumbs outline up' },
-			{ name: 'Q&A', icon: 'comments outline' }
-		];
+		var tabs = function () {
+			var availableTabs = [
+				{ name: 'Overview', icon: '' },
+				{ name: 'Followers', icon: 'thumbs outline up' },
+				{ name: 'Q&A', icon: 'comments outline' }
+			];
+
+			return [
+				m('div', [
+					m('div.ui.secondary.pointing.menu', [
+						availableTabs.map(function (tab) {
+							return m('a.item', [
+								m('i.icon', { class: tab.icon }),
+								tab.name
+							]);
+						})
+					])
+				])
+			];
+		};
 
 		var companyDetails = function () {
 
-			function handles() {
+			var handles = function () {
 				var availableHandles = [
 					{ name: 'Blog', icon: '' },
-					{ name: 'Twitter', icon: '' }
+					{ name: 'Twitter', icon: 'twitter' }
 				];
-			}
+
+				return [
+					handles.map(function (handle) {
+						return m('a', m('i.icon', { class: handle.icon }));
+					})
+				];
+			};
 
 			return [
 				m('div#startup-description', [
@@ -42,10 +63,8 @@ var StartupProfileHeader = function () {
 							])
 						])
 					]),
-					m('div#startup-handles.ui.bottom.attached.right.aligned.segment', [
-						m('a', [
-							m('i.twitter.icon')
-						])
+					m('div#startup-handles.ui.bottom.attached.left.aligned.segment', [
+						tabs(),
 					])
 				])
 			];
@@ -54,23 +73,11 @@ var StartupProfileHeader = function () {
 		return [
 			m('div.ui.grid', [
 				m('div.row', [
-					m('div.three.wide.column', [
-						m('img.ui.image', { src: '../img/image.png' }),
-					]),
-					m('div.thirteen.wide.column', [
+//					m('div.three.wide.column', [
+//						m('img.ui.image', { src: '../img/image.png' }),
+//					]),
+					m('div.sixteen.wide.column', [
 						companyDetails()
-					])
-				])
-			]),
-			m('div', { style: 'margin-top: 10px' } , [
-				m('div.ui.segment', [
-					m('div.ui.secondary.pointing.menu', [
-						tabs.map(function (tab) {
-							return m('a.item', [
-								m('i.icon', { class: tab.icon }),
-								tab.name
-							]);
-						})
 					])
 				])
 			])
