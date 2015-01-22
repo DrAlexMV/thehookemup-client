@@ -127,7 +127,6 @@ var NotificationList = function (edges) { // edges is an m.prop
     }
 
     return [
-      //TODO: add see all button?
       m('i.alarm.icon'), numPending,
       m("div.menu", [
         m("div", [
@@ -135,9 +134,12 @@ var NotificationList = function (edges) { // edges is an m.prop
             list
           ])
         ]),
+
         m("div.item", [
-          m("div.ui.center.aligned.segment[style=border: 1px solid Gainsboro;]", [
-            m('a', { href: '/notifications/', config: m.route }, 'See all')
+          m('a', { href: '/notifications/', config: m.route }, [
+            m("div.ui.center.aligned.segment[style=border: 1px solid Gainsboro;]", [
+              m("div.content", "See all")
+            ])
           ])
         ])
       ])
