@@ -6,7 +6,9 @@ var StartupProfileHeader = function () {
 			var availableTabs = [
 				{ name: 'Overview', icon: '' },
 				{ name: 'Followers', icon: 'thumbs outline up' },
-				{ name: 'Q&A', icon: 'comments outline' }
+				{ name: 'Q&A', icon: 'comments outline' },
+				{ name: 'Funding', icon: 'money' },
+				{ name: 'Jobs', icon: 'suitcase' }
 			];
 
 			return [
@@ -27,12 +29,12 @@ var StartupProfileHeader = function () {
 
 			var handles = function () {
 				var availableHandles = [
-					{ name: 'Blog', icon: '' },
+					{ name: 'Blog', icon: 'feed' },
 					{ name: 'Twitter', icon: 'twitter' }
 				];
 
 				return [
-					handles.map(function (handle) {
+					availableHandles.map(function (handle) {
 						return m('a', m('i.icon', { class: handle.icon }));
 					})
 				];
@@ -42,29 +44,43 @@ var StartupProfileHeader = function () {
 				m('div#startup-description', [
 					m('div.ui.attached.segment', [
 						m('div.ui.content', [
-							m('div.ui.header', [
-								'Startup Name'
-							]),
-							m('div.meta', [
-								'Conquering the world'
-							]),
-							m('div.ui.two.column.stackable.grid', [
-								m('div.column', [
-									m('div', [
-										m('div.ui.label', 'User Research'),
-										m('div.ui.label', 'Marketing'),
-									])
+							m('div.ui.stackable.grid', [
+								m('div.three.wide.center.aligned.column', [
+									m('img#startup-logo.ui.small.image', { src: '../img/image.png' })
 								]),
-								m('div.column', [
-									m('div.ui.right.floated', [
-										m('div.ui.button', 'Hello')
+								m('div.thirteen.wide.column', [
+									m('div.ui.header', [
+										'Startup Name'
+									]),
+									m('div.meta', [
+										'Conquering the world'
+									]),
+									m('div.ui.two.column.stackable.grid', [
+										m('div.column', [
+											m('div', [
+												m('div.ui.label', 'User Research'),
+												m('div.ui.label', 'Marketing')
+											])
+										]),
+										m('div.right.aligned.column', [
+											m('div.ui', [
+												m('div.ui.button', 'Hello')
+											])
+										])
 									])
 								])
 							])
 						])
 					]),
 					m('div#startup-handles.ui.bottom.attached.left.aligned.segment', [
-						tabs(),
+						m('div.ui.stackable.grid', [
+							m('div.thirteen.wide.column', [
+								tabs()
+							]),
+							m('div.three.wide.right.aligned.column', [
+								handles()
+							])
+						])
 					])
 				])
 			];
@@ -73,9 +89,6 @@ var StartupProfileHeader = function () {
 		return [
 			m('div.ui.grid', [
 				m('div.row', [
-//					m('div.three.wide.column', [
-//						m('img.ui.image', { src: '../img/image.png' }),
-//					]),
 					m('div.sixteen.wide.column', [
 						companyDetails()
 					])

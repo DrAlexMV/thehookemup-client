@@ -1,5 +1,5 @@
 var User = require('model/user');
-var FollowCount = require('gamification/follows/follow-count');
+var FollowCount = require('engagement/follows/follow-count');
 
 var UserListBig = function (users) {
 	var userList = {};

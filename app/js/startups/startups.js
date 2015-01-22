@@ -1,6 +1,7 @@
 var MessageFeed = require('startups/message-feed');
 var StartupProfileHeader = require('startups/startup-profile-header');
 var StartupOverview = require('startups/startup-overview');
+var StartupFounders = require('startups/startup-founders');
 
 var startups = {};
 
@@ -10,6 +11,7 @@ startups.vm = {
 		vm.header = StartupProfileHeader();
 		vm.messageFeed = MessageFeed();
 		vm.overview = StartupOverview();
+		vm.founders = StartupFounders();
 	}
 };
 
@@ -27,7 +29,8 @@ startups.view = function () {
 					m('div.ui.stackable.grid', [
 						m('div.row', [
 							m('div.eleven.wide.column', [
-								vm.overview.view()
+								vm.overview.view(),
+								vm.founders.view()
 							]),
 							m('div.five.wide.column', [
 								vm.messageFeed.view()
