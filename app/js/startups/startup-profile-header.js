@@ -1,7 +1,15 @@
-var StartupProfileHeader = function () {
+var EditableImage = require('common/editable-image');
+
+var StartupProfileHeader = function (isEditable) {
 	var startupProfileHeader = {};
 
-	startupProfileHeader.view = function () {
+	startupProfileHeader.vm = {
+		profilePicture: new EditableImage()
+	};
+
+	startupProfileHeader.view = function (props) {
+		startupBasic = props.startupBasic;
+
 		var tabs = function () {
 			var availableTabs = [
 				{ name: 'Overview', icon: '' },
@@ -46,20 +54,24 @@ var StartupProfileHeader = function () {
 						m('div.ui.content', [
 							m('div.ui.stackable.grid', [
 								m('div.three.wide.center.aligned.column', [
-									m('img#startup-logo.ui.small.image', { src: '../img/image.png' })
+									startupProfileHeader.vm.profilePicture.view({
+										editable: props.editable,
+										userImageURL: startupBasic.picture()
+									})
 								]),
 								m('div.thirteen.wide.column', [
 									m('div.ui.header', [
-										'Startup Name'
+										startupBasic.name()
 									]),
 									m('div.meta', [
-										'Conquering the world'
+										startupBasic.description()
 									]),
 									m('div.ui.two.column.stackable.grid', [
 										m('div.column', [
 											m('div', [
-												m('div.ui.label', 'User Research'),
-												m('div.ui.label', 'Marketing')
+												startupBasic.categories.map(function(category) {
+													return m('div.ui.label', category());
+												})
 											])
 										]),
 										m('div.right.aligned.column', [

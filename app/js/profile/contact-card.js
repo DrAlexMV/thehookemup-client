@@ -9,13 +9,16 @@ var ContactCard = function (basicUserInfo, editable) {
 	var card = {};
 
 	card.vm = {
-		profilePicture: new EditableImage(editable)
+		profilePicture: new EditableImage()
 	};
 
-	card.view = function () {
+	card.view = function (props) {
 		return (
 			<div className="ui card">
-				{card.vm.profilePicture.view({userImageURL: basicUserInfo().picture()})}
+				{card.vm.profilePicture.view({
+					editable: editable,
+					userImageURL: basicUserInfo().picture()
+				})}
 				<div className="content">
 					<h4 className="ui header">{basicUserInfo().roles().join(', ')}</h4>
 					<div className="ui divider"></div>

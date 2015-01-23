@@ -22,8 +22,14 @@ var StartupDetails = function(API) {
 	};
 
 	startupDetails.StartupDetailsModel = function(data) {
-		this.qa = new StartupDetails.QuestionAnswerModel(data.qa);
-		this.wall = new StartupDetails.WallPostModel(data.wall);
+		this.qa = data.qa.map(function(questionAnswer) {
+			return new startupDetails.QuestionAnswerModel(questionAnswer);
+		});
+
+		this.wall = data.wall.map(function(wallPost) {
+			return new startupDetails.WallPostModel(wallPost);
+		});
+
 		this.people = data.people.map(function(person) {
 			return new User.UserModel(person);
 		});
@@ -31,7 +37,7 @@ var StartupDetails = function(API) {
 	};
 
 	startupDetails.getByID = function(startupID) {
-		return this.get('/startup/' + startupID + '/details', startup.StartupDetailsModel);
+		return this.get('/startup/' + startupID + '/details', startupDetails.StartupDetailsModel);
 	};
 
 	startupDetails.updatePeople = function(startupID, personIDs) {

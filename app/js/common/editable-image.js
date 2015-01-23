@@ -6,7 +6,7 @@ var Dropzone = require('common/form-builder').inputs.dropzone;
 var ImageModel = require('model/image');
 var StreamCommon = require('common/stream-common');
 
-var EditableImage = function (editable) {
+var EditableImage = function () {
 	var editableImage = {};
 	
 	var vm =
@@ -64,19 +64,19 @@ var EditableImage = function (editable) {
 			);
 		}
 
-		if (editable) {
+		if (props.editable) {
 			return (
 				<div className={((vm.step() == 'display') ? 'cssDimmer' : '') + ' image'}>
 					<div className="ui active dimmer">
 						{stepView}
 					</div>
-					<img src={photoUrl} />
+					<img className="editable-image" src={photoUrl} />
 				</div>
 			);
 		} else {
 			return (
 				<div className="image">
-					<img src={photoUrl} />
+					<img className="editable-image" src={photoUrl} />
 				</div>
 			);
 		}
