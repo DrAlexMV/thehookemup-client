@@ -54,7 +54,7 @@ startups.view = function () {
 			m('div.ui.centered.row', [
 				m('div.fourteen.wide.column', [
 					vm.header.view({
-						startupBasic: startups.vm.startupBasic,
+						startupBasic: vm.startupBasic,
 						editable: vm.editable
 					}),
 					m('div.ui.hidden.divider'),
