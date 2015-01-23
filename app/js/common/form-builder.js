@@ -5,14 +5,14 @@ var FormBuilder = (function () {
 
 	var formBuilder = {
 		inputs: {
-			formField: function (parameters, name, width) {
+			formField: function (parameters, name, width, type) {
 				var defaultName = name ? name.toLowerCase() : null;
 				parameters.name = parameters.name ? parameters.name : defaultName;
 
 				return [
 					m('div.required.field', { class: width ? width + ' wide' : '' }, [
 						name ? m('label', name) : null,
-						m('input', parameters)
+						m(type ? type : 'input', parameters)
 					])
 				];
 			},

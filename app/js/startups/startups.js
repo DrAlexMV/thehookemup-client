@@ -30,7 +30,22 @@ startups.vm = {
 			vm.startupDetails = response;
 		}, Error.handle);
 
-		startups.stream = Bacon.mergeAll(vm.header.vm.profilePicture.stream);
+		startups.stream = Bacon.mergeAll(vm.header.vm.profilePicture.stream, vm.header.stream);
+		StreamCommon.on(vm.header.stream,
+			'StartupProfileHeader::Update',
+			function (message) {
+				var vals = message.parameters;
+				StartupModel.putByID(vm.startupID, vals);
+				vm.startupBasic.name(vals.name);
+				vm.startupBasic.website(vals.website);
+				vm.startupBasic.description(vals.description);
+				vm.startupBasic.categories(vals.categories);
+				vm.startupBasic.handles(vals.handles.map(function(handle) {
+					return {type: handle.type, url: handle.url};
+				}));
+			}
+		);
+
 		StreamCommon.on(vm.header.vm.profilePicture.stream,
 			'EditableImage::ReplaceImageURL',
 			function (message) {
