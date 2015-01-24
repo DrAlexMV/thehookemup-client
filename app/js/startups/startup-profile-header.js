@@ -206,14 +206,15 @@ var StartupProfileHeader = function (isEditable) {
 				return [
 					m('div.ui.header', [
 						startupBasic.name(),
-						m('a.startup-header-edit', {
-							onclick: function() {
-								fillForm(startupBasic);
-								vm.isEditing(true);
-							}}, [
-								m('i.write.icon')
-							]
-						)
+						props.editable ?
+							m('a.startup-header-edit', {
+								onclick: function() {
+									fillForm(startupBasic);
+									vm.isEditing(true);
+								}}, [
+									m('i.write.icon')
+								]
+							) : null
 					]),
 					m('div.meta', [
 						startupBasic.website() ? m('a', {href: startupBasic.website()}, startupBasic.website()) : null,
