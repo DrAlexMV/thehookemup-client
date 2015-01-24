@@ -1,3 +1,7 @@
+/**
+ * @jsx m
+ */
+
 var QuestionAnswer = function () {
 	var questionAnswer = {};
 
@@ -6,10 +10,15 @@ var QuestionAnswer = function () {
 	};
 
 	questionAnswer.view = function () {
-		return [
-
-		];
+		return (
+			<div className="ui segment">
+				<div className="ui header">Questions and Answers</div>
+				<div className="ui divider"></div>
+			</div>
+		);
 	};
 
 	return questionAnswer;
 };
+
+module.exports = QuestionAnswer;

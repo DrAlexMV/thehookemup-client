@@ -1,3 +1,4 @@
+var Context = require('common/context');
 var Error = require('common/error');
 var ImageModel = require('model/image');
 var MessageFeed = require('startups/message-feed');
@@ -6,6 +7,7 @@ var StartupDetailsModel = require('model/startup-details');
 var StartupProfileHeader = require('startups/startup-profile-header');
 var StartupOverview = require('startups/startup-overview');
 var StartupFounders = require('startups/startup-founders');
+var QuestionAnswer = require('startups/question-answer');
 var StreamCommon = require('common/stream-common');
 
 var startups = {};
@@ -18,6 +20,7 @@ startups.vm = {
 		vm.header = new StartupProfileHeader();
 		vm.messageFeed = new MessageFeed();
 		vm.overview = new StartupOverview();
+		vm.questionAnswer = new QuestionAnswer();
 		vm.founders = new StartupFounders();
 
 		StartupModel.getByID(vm.startupID).then(function(response) {
@@ -30,7 +33,16 @@ startups.vm = {
 			vm.startupDetails = response;
 		}, Error.handle);
 
-		startups.stream = Bacon.mergeAll(vm.header.vm.profilePicture.stream, vm.header.stream);
+		Context.getCurrentUser().then(function(currentUser) {
+			vm.currentUser = currentUser;
+		});
+
+		startups.stream = Bacon.mergeAll(
+			vm.header.vm.profilePicture.stream,
+			vm.header.stream,
+			vm.messageFeed.stream
+		);
+
 		StreamCommon.on(vm.header.stream,
 			'StartupProfileHeader::Update',
 			function (message) {
@@ -56,6 +68,16 @@ startups.vm = {
 				StartupModel.putByID(vm.startupID, {picture: vm.startupBasic.picture()});
 			}
 		);
+
+		StreamCommon.on(vm.messageFeed.stream,
+			'MessageFeed::Post',
+			function (message) {
+				StartupDetailsModel.addWallPost(vm.startupID, message.parameters.message).then(function(response) {
+					var newMessage = new StartupDetailsModel.WallPostModel(response);
+					vm.startupDetails.wall.splice(0, 0, newMessage);
+				});
+			}
+		);
 	}
 };
 
@@ -77,10 +99,17 @@ startups.view = function () {
 						m('div.row', [
 							m('div.eleven.wide.column', [
 								vm.overview.view(),
-								vm.founders.view()
+								vm.founders.view(),
+								vm.questionAnswer.view()
+
 							]),
 							m('div.five.wide.column', [
-								vm.messageFeed.view()
+								vm.messageFeed.view({
+									messages: vm.startupDetails.wall,
+									currentUser: vm.currentUser(),
+									startupName: vm.startupBasic.name(),
+									isOwner: vm.startupBasic.isOwner()
+								})
 							])
 						])
 					])

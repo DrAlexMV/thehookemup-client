@@ -1,23 +1,26 @@
-var testMessages = [
-	{ user: { name: 'Alexander Ventura' }, text: 'Think differently.' },
-	{ user: { name: 'Austin Stone' }, text: 'Poop.' },
-	{ user: { name: 'Austin Stone' }, text: 'Poop.' },
-];
+/**
+ * @jsx m
+ */
 
-var Message = function (user, text) {
-	return [
-		m('div.ui.card', [
-			m('div.content', [
-				m('div.description', text),
-			]),
-			m('div.extra.content', [
-				m('img.ui.avatar.image', { src: '' }),
-				m('div.right.floated.author', [
-					m('div', user.name)
-				])
-			])
-		])
-	]
+var Pagination = require('common/ui-core/pagination');
+var StreamCommon = require('common/stream-common');
+var UserModel = require('model/user');
+
+var Message = function (post) {
+	return (
+		<div className="ui card">
+			<div className="content">
+				<div className="description">{post.message()}</div>
+			</div>
+			<div className="extra content">
+				<img className="ui avatar image" src={UserModel.getPicture(post.user)} />
+				<div className="right floated author">
+					<div>{UserModel.getName(post.user)}</div>
+					<div>{post.date()}</div>
+				</div>
+			</div>
+		</div>
+	);
 };
 
 var MessageFeed = function () {
@@ -25,21 +28,66 @@ var MessageFeed = function () {
 
 	var vm =
 	messageFeed.vm = {
-
+		pagination: Pagination(),
+		messageToPost: m.prop(''),
+		currentPage: m.prop(0)
 	};
 
-	messageFeed.stream = new Bacon.Bus();
+	// Needed because can't push to Bacon.mergeAll returned stream directly.
+	var privateStream = new Bacon.Bus();
+	
+	messageFeed.stream = Bacon.mergeAll(vm.pagination.stream, privateStream);
 
-	messageFeed.view = function () {
-		return [
-			m('div#message-feed', [
-				testMessages.map(function (message) {
-					return Message(message.user, message.text)
-				})
-			])
-		];
+	StreamCommon.on(messageFeed.stream, 'PageSelected::Pagination', function (message) {
+		vm.currentPage(message.parameters.page);
+	});
+
+	var submitNew = function () {
+		privateStream.push(new StreamCommon.Message(
+			'MessageFeed::Post',
+			{message: vm.messageToPost()}
+		));
+		vm.messageToPost('');
 	};
 
+	messageFeed.view = function (props) {
+		// Local pagination for now. Not worth server side pagination at this point.
+		// Not _that_ much wasted bandwidth even with a lot of messages.
+		var messagesPerPage = 4;
+		var page_start = vm.currentPage() * messagesPerPage;
+		var page = props.messages.slice(page_start, page_start + messagesPerPage);
+
+		var postAMessage = props.isOwner  ?
+			<div className="ui card">
+				<div className="content">
+					<div className="description">
+						<textarea
+							value={vm.messageToPost()}
+							onchange={m.withAttr('value', vm.messageToPost)}
+							placeholder={'What\'s new at ' + props.startupName + '?'}
+							rows="4" />
+						<div className="ui button tiny blue right floated" onclick={submitNew}>
+							Submit
+						</div>
+					</div>
+				</div>
+				<div className="extra content">
+					<img className="ui avatar image" src={UserModel.getPicture(props.currentUser)} />
+					<div className="right floated author">
+						<div>{UserModel.getName(props.currentUser)}</div>
+					</div>
+				</div>
+			</div> : null;
+		return (
+			<div id="message-feed">
+				{ postAMessage }
+				{ page.map(Message.bind(this)) }
+				{ vm.pagination.view(
+					vm.pagination.utils.numberOfPages(messagesPerPage, props.messages.length),
+					vm.currentPage()) }
+			</div>
+		);
+	};
 	return messageFeed;
 };
 

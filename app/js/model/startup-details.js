@@ -8,6 +8,7 @@ var StartupDetails = function(API) {
 		this.id = m.prop(data.id);
 		this.date = m.prop(data.date);
 		this.message = m.prop(data.message);
+		this.user = new User.UserModel(data.user);
 		return this;
 	};
 
@@ -44,8 +45,8 @@ var StartupDetails = function(API) {
 		return this.put('/startup/' + startupID + '/details/people', {people: personIDs});
 	};
 
-	startupDetails.addWallPost = function(startupID, newWallPost) {
-		return this.post('/startup/' + startupID + '/details/wall', newWallPost);
+	startupDetails.addWallPost = function(startupID, message) {
+		return this.post('/startup/' + startupID + '/details/wall', {message: message});
 	};
 
 	startupDetails.deleteWallPost = function(startupID, postID, newWallPost) {
