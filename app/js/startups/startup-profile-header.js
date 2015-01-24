@@ -244,7 +244,8 @@ var StartupProfileHeader = function (isEditable) {
 								m('div.three.wide.center.aligned.column', [
 									startupProfileHeader.vm.profilePicture.view({
 										editable: props.editable,
-										userImageURL: startupBasic.picture()
+										userImageURL: startupBasic.picture(),
+										imageClasses: 'startup-logo'
 									})
 								]),
 								m('div.thirteen.wide.column', [

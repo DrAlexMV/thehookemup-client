@@ -26,8 +26,8 @@ var EditableImage = function () {
 	});
 
 	editableImage.view = function (props) {
-		var userImageURL = props.userImageURL;
-		var photoUrl = userImageURL ? ImageModel.getURL(userImageURL) : '/img/square-image.png';
+		var userImageURL = props.userImageURL,
+				photoUrl = userImageURL ? ImageModel.getURL(userImageURL) : '/img/square-image.png';
 
 		var stepView = null;
 		if (vm.step() == 'display') {
@@ -70,13 +70,13 @@ var EditableImage = function () {
 					<div className="ui active dimmer">
 						{stepView}
 					</div>
-					<img className="editable-image" src={photoUrl} />
+					<img className={ "ui image " + props.imageClasses } src={photoUrl} />
 				</div>
 			);
 		} else {
 			return (
 				<div className="image">
-					<img className="editable-image" src={photoUrl} />
+					<img className={ "ui image " + props.imageClasses } src={photoUrl} />
 				</div>
 			);
 		}
