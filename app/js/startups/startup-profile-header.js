@@ -177,7 +177,7 @@ var StartupProfileHeader = function (isEditable) {
 												vm.headerForm.categories.map(function(category, index) {
 													return m('div.ui.label', [
 														category,
-														m('i.delete.icon', {onclick: deleteCategory.bind(this, index)})
+														m('i.delete.icon', { onclick: deleteCategory.bind(this, index) })
 													]);
 												})
 											])
@@ -197,9 +197,7 @@ var StartupProfileHeader = function (isEditable) {
 				m('div.ui.hidden.divider'),
 				m('div.ui.small.buttons', [
 					m('div.ui.positive.button', {onclick: saveForm}, 'Save'),
-					m('div.ui.button', {onclick: function() {
-						vm.isEditing(false);
-					}}, 'Cancel')
+					m('div.ui.button', { onclick:  vm.isEditing.bind(this, false) }, 'Cancel')
 				])
 			];
 		};
