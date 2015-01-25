@@ -17,6 +17,7 @@ var StartupProfileHeader = function (isEditable) {
 		profilePicture: new EditableImage(),
 		isEditing: m.prop(false),
 		categoryName: m.prop(''),
+		currentPage: m.prop(''),
 		headerForm: {
 			name: m.prop(''),
 			website: m.prop(''),
@@ -26,6 +27,14 @@ var StartupProfileHeader = function (isEditable) {
 				return {type: key, url: m.prop('')};
 			})
 		}
+	};
+
+	var changePage = function(pageName) {
+		vm.currentPage(pageName);
+		startupProfileHeader.stream.push(new StreamCommon.Message(
+			'StartupProfileHeader::ChangePage',
+			{currentPage: vm.currentPage()}
+		));
 	};
 
 	var addCategory = function () {
@@ -74,18 +83,23 @@ var StartupProfileHeader = function (isEditable) {
 
 		var tabs = function () {
 			var availableTabs = [
-				{ name: 'Overview', icon: '' },
-				{ name: 'Followers', icon: 'thumbs outline up' },
-				{ name: 'Q&A', icon: 'comments outline' },
-				{ name: 'Funding', icon: 'money' },
-				{ name: 'Jobs', icon: 'suitcase' }
+				{ name: 'Overview', icon: '', key: 'overview' },
+				{ name: 'Followers', icon: 'thumbs outline up', key: 'followers' },
+				{ name: 'Q&A', icon: 'comments outline', key: 'qa' },
+				{ name: 'Funding', icon: 'money', key: 'funding' },
+				{ name: 'Jobs', icon: 'suitcase', key: 'jobs' }
 			];
+
+			if (!vm.currentPage()) {
+				vm.currentPage(availableTabs[0].key);
+			}
 
 			return [
 				m('div', [
 					m('div.ui.secondary.pointing.menu', [
 						availableTabs.map(function (tab) {
-							return m('a.item', [
+							return m(tab.key === vm.currentPage() ? 'a.active.item' : 'a.item',
+								{ onclick: changePage.bind(this, tab.key) }, [
 								m('i.icon', { class: tab.icon }),
 								tab.name
 							]);

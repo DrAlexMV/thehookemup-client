@@ -23,6 +23,16 @@ startups.vm = {
 		vm.questionAnswer = new QuestionAnswer();
 		vm.founders = new StartupFounders();
 
+		vm.currentPage = m.prop('overview');
+
+		vm.pages = {
+			overview: function() { return [vm.overview.view(), vm.founders.view()]; },
+			followers: function() { return null; },
+			qa: function() { return vm.questionAnswer.view({ qa: vm.startupDetails.qa }); },
+			funding: function() { return null; },
+			jobs: function() { return null; }
+		};
+
 		StartupModel.getByID(vm.startupID).then(function(response) {
 			vm.startupBasic = response;
 			vm.editable = response.isOwner();
@@ -40,7 +50,8 @@ startups.vm = {
 		startups.stream = Bacon.mergeAll(
 			vm.header.vm.profilePicture.stream,
 			vm.header.stream,
-			vm.messageFeed.stream
+			vm.messageFeed.stream,
+			vm.questionAnswer.stream
 		);
 
 		StreamCommon.on(vm.header.stream,
@@ -55,6 +66,13 @@ startups.vm = {
 				vm.startupBasic.handles(vals.handles.map(function(handle) {
 					return {type: handle.type, url: handle.url};
 				}));
+			}
+		);
+
+		StreamCommon.on(vm.header.stream,
+			'StartupProfileHeader::ChangePage',
+			function (message) {
+				vm.currentPage(message.parameters.currentPage);
 			}
 		);
 
@@ -78,6 +96,16 @@ startups.vm = {
 				});
 			}
 		);
+
+		StreamCommon.on(vm.questionAnswer.stream,
+			'QuestionAnswer::Answer',
+			function (message) {
+				StartupDetailsModel.answerQuestion(vm.startupID, message.parameters.id, message.parameters.answer).then(function(response) {
+					vm.startupDetails.qa[message.parameters.index].answer(message.parameters.answer);
+				});
+			},
+			true
+		);
 	}
 };
 
@@ -98,10 +126,7 @@ startups.view = function () {
 					m('div.ui.stackable.grid', [
 						m('div.row', [
 							m('div.eleven.wide.column', [
-								vm.overview.view(),
-								vm.founders.view(),
-								vm.questionAnswer.view()
-
+								vm.pages[vm.currentPage()]()
 							]),
 							m('div.five.wide.column', [
 								vm.messageFeed.view({
