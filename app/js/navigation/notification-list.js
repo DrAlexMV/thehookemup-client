@@ -98,9 +98,14 @@ var NotificationList = function (edges) { // edges is an m.prop
                   m('div.description', 'Would you like to connect?'),
                   m("br"),
 
-                  m('div.ui.two.bottom.attached.buttons', [
-                    m('div.ui.green.button', {onclick: respond.bind(respond, 'Connect', user._id(), idx)}, 'Yes'),
-                    m('div.ui.red.button', {onclick: respond.bind(respond, 'NoConnect', user._id(), idx)}, 'No')
+                  m('div.ui.padded.grid', [
+                    m('div.ui.center.aligned.one.column.row',[
+                    m("div.ui.black.button", {onclick: respond.bind(respond, 'NoConnect', user._id())}, "Not Now"),
+                    m("div.ui.positive.right.labeled.icon.button", {onclick: respond.bind(respond, 'Connect', user._id())}, "Connect", [
+                      m("i.checkmark.icon")])
+                   // m('div.ui.green.button', {onclick: respond.bind(respond, 'Connect', user._id(), idx)}, 'Yes'),
+                      // m('div.ui.red.button', {onclick: respond.bind(respond, 'NoConnect', user._id(), idx)}, 'No')
+                      ])
                   ])
                 ])
               ])

@@ -42,7 +42,7 @@ var ConnectWith = function (basicUserInfo) {
 
 
           m("div.content", [
-            m("form.ui.form", [
+            m("div.ui.form", [
               m("div.field", [
                 m("br"),
                 m("textarea[placeholder=Please enter a message to " + basicUserInfo().firstName() + " about why you want to connect.]", {onchange: m.withAttr('value', vm.message)})

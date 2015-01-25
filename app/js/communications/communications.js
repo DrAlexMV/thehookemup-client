@@ -2,10 +2,16 @@ var CommunicationsMenu = require('communications/communications-menu');
 var CommunicationsFeed = require('communications/communications-feed');
 var Context = require('common/context');
 var StreamCommon = require('common/stream-common');
-var ConnectionRequestCommunication = require('communications/connection-request-communication');
+var ConnectionRequest = require('communications/connection-request');
 var UserEdges = require('model/user-edges');
+var ConversationPreview = require('communications/conversation-preview');
+var ConversationDisplay = require('communications/conversation-display');
+var MessageDisplay = require('communications/message-display');
 
 
+
+//TODO: In general this file is a mess. Since a huge part of its functionality is dependent on exactly how we implement messaging,
+//TODO: I'm going to wait until then to clean it up.
 var communications = {};
 
 communications.stream = Bacon.mergeAll(Context.stream);
@@ -14,30 +20,39 @@ var vm =
   communications.vm = {
     init: function () {
       var vm = this;
-
+      vm.conversationPreviews = m.prop([]);
+      vm.conversationDisplay = m.prop(ConversationDisplay());
       vm.menu = CommunicationsMenu();
       vm.feed = CommunicationsFeed();
-      vm.connectionRequestCommunications = m.prop([]);
+      vm.connectionRequests = m.prop([]);
+
+      //messages should probably be like edges, with an array of sent incoming objects with a field of users and messages
+      vm.messages = m.prop(["Hey what is up ma nigga? How u been son?", "I know that such a planet can be interesting because there is probably water and life could evolve. But to me it seems a bit worthless to make a hype about finding new earth-like planets.", "know that such a planet can be interesting because there is probably water and life could evolve. But to me it seems a bit worthless to make a hype about finding new earth-like planets."]);
       vm.selected = m.prop('Requests');
       vm.currentUserEdges = m.prop([]);
 
       function listenToStreams() {
 
-        //These only work when placed here or somehow forced to be declared after the callback which gets the
-        //currentUserEdges
         StreamCommon.on(communications.stream,
-          'ConnectionRequestCommunication::Connect',
+          'CommunicationsMenu::Tab', function (message) {
+            vm.selected(message.parameters.tab);
+          }
+        );
+
+        //TODO: refactor this complex logic (which also happens into notifications list) into a method somewhere
+        StreamCommon.on(communications.stream,
+          'ConnectionRequest::Connect',
           function (message) {
             //find the entry in the list that made the response
-            var idx = _.findIndex(communications.vm.connectionRequestCommunications(), function (crm) {
+            var idx = _.findIndex(communications.vm.connectionRequests(), function (crm) {
               return crm.userId === message.parameters.userId;
             });
             //remove the entry from the list
-            communications.vm.connectionRequestCommunications().splice(idx, idx + 1);
+            communications.vm.connectionRequests().splice(idx, idx + 1);
 
 
-            //the items index in communications.vm.connectionRequestCommunications could be in a different order from
-            //the index in currentUserEdges, since we keep connectionRequestCommunications sorted by date. Theoretically
+            //the items index in communications.vm.connectionRequests could be in a different order from
+            //the index in currentUserEdges, since we keep connectionRequests sorted by date. Theoretically
             //they should be in the same order, but just wanted to play it safe.
             var userToAdd = _.find(vm.currentUserEdges().pendingConnections(), function (user) {
                 return (user._id() === message.parameters.userId)
@@ -72,14 +87,14 @@ var vm =
         );
 
         StreamCommon.on(communications.stream,
-          'ConnectionRequestCommunication::NoConnect',
+          'ConnectionRequest::NoConnect',
           function (message) {
             //find the entry in the list that made the response
-            var idx = _.findIndex(communications.vm.connectionRequestCommunications(), function (crm) {
+            var idx = _.findIndex(communications.vm.connectionRequests(), function (crm) {
               return crm.userId === message.parameters.userId;
             });
 
-            communications.vm.connectionRequestCommunications().splice(idx, idx + 1);
+            communications.vm.connectionRequests().splice(idx, idx + 1);
 
 
             //rewrite idx to be the idx in pendingConnections, same reasoning as above
@@ -109,20 +124,29 @@ var vm =
         function (edgesProp) {
           if (edgesProp != null && edgesProp != undefined) {
             vm.currentUserEdges = edgesProp;
-            vm.connectionRequestCommunications(
+            vm.connectionRequests(
               vm.currentUserEdges().pendingConnections().map(function (user) {
                 message = vm.currentUserEdges().pendingConnectionsMessages()[user._id()];
-                return ConnectionRequestCommunication(user, message);
+                return ConnectionRequest(user, message);
               }));
 
-            //merge the streams of all entries in the list
+            /*vm.conversationDisplays(
+             vm.messages().map(function(message){
+             return vm.conversationDisplaymessage
+             }));*/
+
+            //get all the streams from the connection requests
+            var streamArray = (_.range(0, communications.vm.connectionRequests().length, 1).map(
+              function (idx) {
+                return communications.vm.connectionRequests()[idx].stream
+              })
+              );
+
+            //add stream from menu (tab selection)
+            streamArray.push(vm.menu.stream);
+
             communications.stream = Bacon.mergeAll(
-              (_.range(0, communications.vm.connectionRequestCommunications().length, 1).map(
-                function (idx) {
-                  return communications.vm.connectionRequestCommunications()[idx].stream
-                }
-              )
-                )
+              streamArray
             );
             listenToStreams();
           }
@@ -141,16 +165,50 @@ communications.controller = function () {
 };
 
 communications.view = function () {
-  return [
-    m('div.ui.stackable.page.grid', [
-      m('div.three.wide.column', [
-        vm.menu.view()
-      ]),
-      m('div.thirteen.wide.column', [
-        vm.feed.view(vm.selected(), vm.connectionRequestCommunications())
+
+  //TODO: replace ifs with m.prop()
+
+  if (vm.selected() === 'Requests') {
+    return [
+      m('div.ui.stackable.page.grid', [
+        m('div.four.wide.column', [
+          vm.menu.view()
+        ]),
+        m('div.twelve.wide.column', [
+          vm.feed.view(vm.selected(), vm.connectionRequests())
+        ])
       ])
-    ])
-  ];
+    ];
+  }
+  if (vm.selected() === 'Messages') {
+    //TODO: this will be put in the vm when we have actual data
+    vm.conversationPreviews(vm.messages().map(function (message) {
+
+      return ConversationPreview(message, vm.currentUserEdges().pendingConnections()[0])
+    }));
+
+    var messagesSideScroll = vm.feed.view(vm.selected(), vm.conversationPreviews());
+
+    return [
+      m('div.ui.stackable.page.grid', [
+        m('div.row', [
+          m('div.seven.wide.column', [
+            vm.menu.view()
+          ])
+        ]),
+        m('div.seven.wide.column', [
+          messagesSideScroll
+        ]),
+        m('div.nine.wide.column', [
+          //TODO: put this in vm init when we have data
+          vm.conversationDisplay().view(vm.selected(), [MessageDisplay("Some message!!!!", vm.currentUserEdges().pendingConnections()[0]),
+              MessageDisplay("Some response word word word word word nable a background sending mode that is optimized for bulk sending. In async mode, messages/send will immediately return a status of for every recipient. To handle rejections when sending in async mode, set up a webhook for the 'reject' event. Defaults to false for messages with no more than 10 recipients; messages with more than 10 recipients are always sent asynchronously, regardless of the value of async.!!!!", vm.currentUserEdges().pendingConnections()[0]),
+              MessageDisplay("Some message!!!!", vm.currentUserEdges().pendingConnections()[0])]
+          )
+        ])
+      ])
+    ];
+  }
 };
 
 module.exports = communications;
