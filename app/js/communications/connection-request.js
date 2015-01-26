@@ -62,7 +62,7 @@ var ConnectionRequest = function (user, message) {
             m("div.thirteen.wide.column", [
               m("div.field[style=height:60px;]", [
                 m("div.center.aligned.ui", [
-                  truncate(message, 200)
+                  truncate(message, 205)
                 ])
               ]),
               m("div.ui.padded.grid[style=height:35px;]", [

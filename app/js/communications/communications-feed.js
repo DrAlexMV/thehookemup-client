@@ -19,15 +19,15 @@ var CommunicationsFeed = function () {
 
   StreamCommon.on(communicationsFeed.stream, 'PageSelected::Pagination', function (message) {
     vm.currentPage(message.parameters.page);
-    m.route('/notifications?page='+message.parameters.page);
+    m.route('/notifications?page=' + message.parameters.page);
   });
 
 
   communicationsFeed.view = function (selected, communications) {
-   var messageSearchBar = [];
+    var messageSearchBar = [];
 
     //TODO: This probably isn't a good way of doing this
-    if (selected==='Messages') {
+    if (selected === 'Messages') {
       messageSearchBar = [
         m('div.ui.fluid.action.input', [
           m('input[type="text"]', { placeholder: 'Search Messages' }),
@@ -62,7 +62,7 @@ var CommunicationsFeed = function () {
           communications.length > 0 ? contents() : m('h4.ui.centered.header', 'Nothing to see here!'),
         m("div.ui.padded.grid", [
           m("div.right.aligned.one.column.row", [
-            vm.pagination.view(Math.ceil(numItems / vm.resultsPerPage), vm.currentPage, Math.ceil(numItems / vm.resultsPerPage))
+            vm.pagination.view(Math.ceil(numItems / vm.resultsPerPage), vm.currentPage(), Math.ceil(numItems / vm.resultsPerPage))
           ])
         ])
       ])

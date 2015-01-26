@@ -33,9 +33,6 @@ var ConversationDisplay = function () {
   conversationDisplay.view = function (users, messageDisplays) {
 
 
-    var numItems = messageDisplays.length;
-    messageDisplays = messageDisplays.slice(vm.currentPage() * vm.resultsPerPage, vm.currentPage() * vm.resultsPerPage + vm.resultsPerPage);
-
     var contents = function () {
 
       return messageDisplays.map(function (messageDisplay) {
@@ -47,18 +44,27 @@ var ConversationDisplay = function () {
       })
     };
 
+    if (typeof users == 'undefined' || typeof messageDisplays == 'undefined') {
+      return [ m('div.ui.stacked.segment', [
+        m('h3.ui.centered.header', "Nothing Selected")])
+      ]
+    }
+    else {
+      var numItems = messageDisplays.length;
+      messageDisplays = messageDisplays.slice(vm.currentPage() * vm.resultsPerPage, vm.currentPage() * vm.resultsPerPage + vm.resultsPerPage);
 
-    return [
-      m('div.ui.stacked.segment', [
-        m('h3.ui.centered.header', "Conversation between some user names"),
-        m('div.ui.divider'),
-          messageDisplays.length > 0 ? [
+      return [
+        m('div.ui.stacked.segment', [
+          m('h3.ui.centered.header', "Conversation between some user names"),
+          m('div.ui.divider'),
+            messageDisplays.length > 0 ? [
             contents(),
             m("br"),
             WriteMessage().view(users)
           ] : m('h4.ui.centered.header', 'Nothing to see here!')
-      ])
-    ];
+        ])
+      ];
+    }
   };
 
   return conversationDisplay;

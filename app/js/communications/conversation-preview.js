@@ -17,11 +17,11 @@ var ConversationPreview = function (message, user) {
   conversationPreview.stream = new Bacon.Bus();
 
   /*var respond = function (response, userId) {
-    console.log('ConnectionRequestCommunication::' + response);
-    connectionRequestCommunication.stream.push(
-      new StreamCommon.Message('ConnectionRequestCommunication::' + response, { userId: userId })
-    );
-  };*/
+   console.log('ConnectionRequestCommunication::' + response);
+   connectionRequestCommunication.stream.push(
+   new StreamCommon.Message('ConnectionRequestCommunication::' + response, { userId: userId })
+   );
+   };*/
 
   conversationPreview.view = function () {
 
@@ -41,32 +41,38 @@ var ConversationPreview = function (message, user) {
       ]
     }
 
-    return [
-      m('a', {href: '/profile/' + user._id(), config: m.route}, [
-        m("div.ui.center.aligned.header", user.firstName() + " " + user.lastName() + "")
-      ]),
-      m("div.ui.padded.grid", [
-        m("div.row", [
-          m("div.three.wide.column", [
-            m("div.content", [
-              m('a', {href: '/profile/' + user._id(), config: m.route}, [
-                m("div.ui.tiny.bordered.image", [
-                  m('img.ui.tiny.image', { src: User.getPicture(user) })
+    if (user === 'undefined' || message === 'undefined') {
+      return [m("div.center.aligned.header", "No messages to display.")]
+
+    }
+    else {
+      return [
+        m('a', {href: '/profile/' + user._id(), config: m.route}, [
+          m("div.ui.center.aligned.header", user.firstName() + " " + user.lastName() + "")
+        ]),
+        m("div.ui.padded.grid", [
+          m("div.row", [
+            m("div.three.wide.column", [
+              m("div.content", [
+                m('a', {href: '/profile/' + user._id(), config: m.route}, [
+                  m("div.ui.tiny.bordered.image", [
+                    m('img.ui.tiny.image', { src: User.getPicture(user) })
+                  ])
                 ])
               ])
-            ])
-          ]),
-          m("div.thirteen.wide.column", [
-            m("div.field[style=height:50px;]", [
-              m("div.center.aligned.ui", [
-                truncate(message, 90)
+            ]),
+            m("div.thirteen.wide.column", [
+              m("div.field[style=height:50px;]", [
+                m("div.center.aligned.ui", [
+                  truncate(message, 90)
+                ])
               ])
             ])
           ])
         ])
-      ])
 
-    ]
+      ]
+    }
   };
 
   return conversationPreview;

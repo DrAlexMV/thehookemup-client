@@ -10,7 +10,7 @@ var MessageDisplay = require('communications/message-display');
 
 
 
-//TODO: In general this file is a mess. Since a huge part of its functionality is dependent on exactly how we implement messaging,
+//TODO: In general this file is kinda messy. Since a huge part of its functionality is dependent on exactly how we implement messaging,
 //TODO: I'm going to wait until then to clean it up.
 var communications = {};
 
@@ -27,7 +27,7 @@ var vm =
       vm.connectionRequests = m.prop([]);
 
       //messages should probably be like edges, with an array of sent incoming objects with a field of users and messages
-      vm.messages = m.prop(["Hey what is up ma nigga? How u been son?", "I know that such a planet can be interesting because there is probably water and life could evolve. But to me it seems a bit worthless to make a hype about finding new earth-like planets.", "know that such a planet can be interesting because there is probably water and life could evolve. But to me it seems a bit worthless to make a hype about finding new earth-like planets."]);
+      vm.messages = m.prop([])//"Hey what is up How u been?", "I know that such a planet can be interesting because there is probably water and life could evolve. But to me it seems a bit worthless to make a hype about finding new earth-like planets.", "know that such a planet can be interesting because there is probably water and life could evolve. But to me it seems a bit worthless to make a hype about finding new earth-like planets."]);
       vm.selected = m.prop('Requests');
       vm.currentUserEdges = m.prop([]);
 
@@ -184,7 +184,7 @@ communications.view = function () {
     //TODO: this will be put in the vm when we have actual data
     vm.conversationPreviews(vm.messages().map(function (message) {
 
-      return ConversationPreview(message, vm.currentUserEdges().pendingConnections()[0])
+      return ConversationPreview();//message, vm.currentUserEdges().pendingConnections()[0])
     }));
 
     var messagesSideScroll = vm.feed.view(vm.selected(), vm.conversationPreviews());
@@ -201,10 +201,9 @@ communications.view = function () {
         ]),
         m('div.nine.wide.column', [
           //TODO: put this in vm init when we have data
-          vm.conversationDisplay().view(vm.selected(), [MessageDisplay("Some message!!!!", vm.currentUserEdges().pendingConnections()[0]),
+          vm.conversationDisplay().view()/*MessageDisplay("Some message!!!!", vm.currentUserEdges().pendingConnections()[0]),
               MessageDisplay("Some response word word word word word nable a background sending mode that is optimized for bulk sending. In async mode, messages/send will immediately return a status of for every recipient. To handle rejections when sending in async mode, set up a webhook for the 'reject' event. Defaults to false for messages with no more than 10 recipients; messages with more than 10 recipients are always sent asynchronously, regardless of the value of async.!!!!", vm.currentUserEdges().pendingConnections()[0]),
-              MessageDisplay("Some message!!!!", vm.currentUserEdges().pendingConnections()[0])]
-          )
+              MessageDisplay("Some message!!!!", vm.currentUserEdges().pendingConnections()[0])]*/
         ])
       ])
     ];
