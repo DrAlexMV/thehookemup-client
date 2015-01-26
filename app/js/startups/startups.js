@@ -28,9 +28,9 @@ startups.vm = {
 		vm.pages = {
 			overview: function() { return [vm.overview.view(), vm.founders.view()]; },
 			followers: function() { return null; },
-			qa: function() { return vm.questionAnswer.view({ qa: vm.startupDetails.qa }); },
-			funding: function() { return null; },
-			jobs: function() { return null; }
+			qa: function() { return vm.questionAnswer.view({ qa: vm.startupDetails.qa, startupName: vm.startupBasic.name() }); },
+			funding: function() { return m('div', 'Coming Soon'); },
+			jobs: function() { return m('div', 'Coming Soon'); }
 		};
 
 		StartupModel.getByID(vm.startupID).then(function(response) {
@@ -102,6 +102,16 @@ startups.vm = {
 			function (message) {
 				StartupDetailsModel.answerQuestion(vm.startupID, message.parameters.id, message.parameters.answer).then(function(response) {
 					vm.startupDetails.qa[message.parameters.index].answer(message.parameters.answer);
+				});
+			},
+			true
+		);
+
+		StreamCommon.on(vm.questionAnswer.stream,
+			'QuestionAnswer::Ask',
+			function (message) {
+				StartupDetailsModel.askQuestion(vm.startupID, message.parameters.ask).then(function(response) {
+					//vm.startupDetails.qa.push(newQuestion);
 				});
 			},
 			true

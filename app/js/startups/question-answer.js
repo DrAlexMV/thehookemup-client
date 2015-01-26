@@ -2,6 +2,7 @@
  * @jsx m
  */
 
+var CloseableMessage = require('common/ui-core/closeable-message');
 var UserModel = require('model/user');
 var StreamCommon = require('common/stream-common');
 
@@ -71,11 +72,21 @@ var QuestionAnswer = function () {
 
 	var vm = 
 	questionAnswer.vm = {
-		textInputs: {}
+		textInputs: {},
+		questionBox: m.prop(''),
+		hasPosted: m.prop(false)
 	};
 
-
 	questionAnswer.stream = new Bacon.Bus();
+
+	questionAnswer.ask = function() {
+		questionAnswer.stream.push(new StreamCommon.Message(
+			'QuestionAnswer::Ask',
+			{ ask: questionAnswer.vm.questionBox() }
+		));
+		questionAnswer.vm.questionBox('');
+		questionAnswer.vm.hasPosted(true);
+	};
 
 	questionAnswer.answer = function(id, index) {
 		questionAnswer.stream.push(new StreamCommon.Message(
@@ -90,6 +101,22 @@ var QuestionAnswer = function () {
 			<div className="ui segment">
 				<div className="ui header">Questions and Answers</div>
 				<div className="ui divider"></div>
+				<div className="ui tertiary segment qa-segment">
+					<div className="ui content ask-question">
+						<textarea placeholder={'Ask ' + props.startupName + ' a question'}
+							value={vm.questionBox()}
+							onchange={m.withAttr('value', vm.questionBox)}
+							rows="3" />
+						<div className="ui button tiny blue right floated" onclick={questionAnswer.ask}>
+							Ask
+						</div>
+					</div>
+				</div>
+				{ vm.hasPosted() ?
+					<div className="ui success message" config={CloseableMessage}>
+						<i className="close icon"></i>
+						Question successfully posted. Hidden pending answer.
+					</div> : null }
 				{ props.qa.map(QuestionAnswerItem.bind(questionAnswer)) }
 			</div>
 		);
