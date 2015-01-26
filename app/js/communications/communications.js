@@ -27,7 +27,7 @@ var vm =
       vm.connectionRequests = m.prop([]);
 
       //messages should probably be like edges, with an array of sent incoming objects with a field of users and messages
-      vm.messages = m.prop([])//"Hey what is up How u been?", "I know that such a planet can be interesting because there is probably water and life could evolve. But to me it seems a bit worthless to make a hype about finding new earth-like planets.", "know that such a planet can be interesting because there is probably water and life could evolve. But to me it seems a bit worthless to make a hype about finding new earth-like planets."]);
+      vm.messages = m.prop([]);//"Hey what is up How u been?", "I know that such a planet can be interesting because there is probably water and life could evolve. But to me it seems a bit worthless to make a hype about finding new earth-like planets.", "know that such a planet can be interesting because there is probably water and life could evolve. But to me it seems a bit worthless to make a hype about finding new earth-like planets."]);
       vm.selected = m.prop('Requests');
       vm.currentUserEdges = m.prop([]);
 
