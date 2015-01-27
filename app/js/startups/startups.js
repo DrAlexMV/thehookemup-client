@@ -26,7 +26,12 @@ startups.vm = {
 		vm.currentPage = m.prop('overview');
 
 		vm.pages = {
-			overview: function() { return [vm.overview.view({ overview: vm.startupDetails.overview() }), vm.founders.view()]; },
+			overview: function() { 
+				return [
+					vm.overview.view({ overview: vm.startupDetails.overview() }),
+					vm.founders.view({ people: vm.startupDetails.people })
+				];
+			},
 			followers: function() { return null; },
 			qa: function() { return vm.questionAnswer.view({ qa: vm.startupDetails.qa, startupName: vm.startupBasic.name() }); },
 			funding: function() { return m('div', 'Coming Soon'); },
