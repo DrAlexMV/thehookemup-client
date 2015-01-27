@@ -7,6 +7,9 @@
 
 	function onCloseEdit(config) {
 		return function() {
+			if (config.saveCallback) {
+				config.saveCallback(config.intermediate());
+			}
 			config.prop(config.intermediate());
 			config.isEditing = false;
 		};
@@ -23,17 +26,22 @@
 		if (config.isEditing) {
 			return (
 				<span className="fluid editable-text">
-					<input type="text" autofocus
-						placeholder={config.placeholder}
-						value={config.intermediate()}
-						onblur={onCloseEdit(config)}
-						onchange={m.withAttr('value', config.intermediate)}
-						config={function(element, isInitialized) {
-							if (!isInitialized) {
-								element.focus();
+					{
+						m(config.type ? config.type : 'input', {
+							type:"text",
+							rows: 4,
+							autofocus: true,
+							placeholder: config.placeholder,
+							value: config.intermediate(),
+							onblur: onCloseEdit(config),
+							onchange: m.withAttr('value', config.intermediate),
+							config: function(element, isInitialized) {
+								if (!isInitialized) {
+									element.focus();
+								}
 							}
-						}}
-						/>
+						})
+					}
 					<i onclick={onCloseEdit(config)} className="checkmark icon"></i>
 				</span>
 			);
@@ -49,8 +57,8 @@
 		}
 	};
 
-	editableText.buildConfig = function(prop, placeholder) {
-		return {prop: prop, intermediate: m.prop(), isEditing: false, placeholder: placeholder};
+	editableText.buildConfig = function(prop, placeholder, saveCallback) {
+		return {prop: prop, intermediate: m.prop(), isEditing: false, placeholder: placeholder, saveCallback: saveCallback};
 	};
 
 	return editableText;

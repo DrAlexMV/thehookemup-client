@@ -34,6 +34,8 @@ var StartupDetails = function(API) {
 		this.people = data.people.map(function(person) {
 			return new User.UserModel(person);
 		});
+
+		this.overview = m.prop(data.overview);
 		return this;
 	};
 
@@ -43,6 +45,10 @@ var StartupDetails = function(API) {
 
 	startupDetails.updatePeople = function(startupID, personIDs) {
 		return this.put('/startup/' + startupID + '/details/people', {people: personIDs});
+	};
+
+	startupDetails.updateOverview = function(startupID, newOverview) {
+		return this.put('/startup/' + startupID + '/details/overview', {overview: newOverview});
 	};
 
 	startupDetails.addWallPost = function(startupID, message) {

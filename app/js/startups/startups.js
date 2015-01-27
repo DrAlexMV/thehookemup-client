@@ -26,7 +26,7 @@ startups.vm = {
 		vm.currentPage = m.prop('overview');
 
 		vm.pages = {
-			overview: function() { return [vm.overview.view(), vm.founders.view()]; },
+			overview: function() { return [vm.overview.view({ overview: vm.startupDetails.overview() }), vm.founders.view()]; },
 			followers: function() { return null; },
 			qa: function() { return vm.questionAnswer.view({ qa: vm.startupDetails.qa, startupName: vm.startupBasic.name() }); },
 			funding: function() { return m('div', 'Coming Soon'); },
@@ -50,6 +50,7 @@ startups.vm = {
 		startups.stream = Bacon.mergeAll(
 			vm.header.vm.profilePicture.stream,
 			vm.header.stream,
+			vm.overview.stream,
 			vm.messageFeed.stream,
 			vm.questionAnswer.stream
 		);
@@ -112,6 +113,17 @@ startups.vm = {
 			function (message) {
 				StartupDetailsModel.askQuestion(vm.startupID, message.parameters.ask).then(function(response) {
 					//vm.startupDetails.qa.push(newQuestion);
+				});
+			},
+			true
+		);
+
+		StreamCommon.on(vm.overview.stream,
+			'StartupOverview::Update',
+			function (message) {
+				vm.startupDetails.overview(message.parameters.overview); // Be Eager
+				StartupDetailsModel.updateOverview(vm.startupID, message.parameters.overview).then(function(response) {
+					console.log('Overview saved');
 				});
 			},
 			true
