@@ -1,12 +1,8 @@
 var User = require('model/user');
-var FollowCount = require('engagement/follows/follow-count');
+var EndorsementCount = require('engagement/endorsements/endorsement-count');
 
 var UserListBig = function (users) {
 	var userList = {};
-
-	var vm = {
-		followCount: FollowCount()
-	};
 
 	userList.view = function () {
 		var card = function (user) {
@@ -20,7 +16,7 @@ var UserListBig = function (users) {
 							m('div.name-header', [
 								m('a.ui.header', { href: '/profile/' + user._id(), config: m.route }, [
 									User.getName(user),
-									m('div.ui.label.right.floated', vm.followCount.view())
+									m('div.ui.right.floated', EndorsementCount(null, user.endorsementCount).view())
 								]),
 								m('div.ui.meta', user.roles().join(", "))
 							])
@@ -33,7 +29,7 @@ var UserListBig = function (users) {
 
 		return [
 			m('div.search-list', [
-				users.map(function (user) { return card(user); })
+				users.map(card)
 			])
 		]
 	};

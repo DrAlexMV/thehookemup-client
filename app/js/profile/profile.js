@@ -19,6 +19,8 @@ var StreamCommon = require('common/stream-common');
 var Context = require('common/context');
 var ModalMixin = require('common/modal-mixin');
 var ConnectWith = require('profile/connect-with');
+var EndorsementButton = require('engagement/endorsements/endorsement-button');
+
 var profile = {};
 
 profile.vm = {
@@ -43,9 +45,11 @@ profile.vm = {
 				'Add a description of yourself.'
 			);
 
-			profile.vm.contactCard = new ContactCard(profile.vm.basicInfo, userid == 'me');
+			profile.vm.contactCard = new ContactCard(profile.vm.basicInfo, userid === 'me');
 
 			profile.vm.connectWithModal = new ModalMixin(new ConnectWith(profile.vm.basicInfo));
+
+			profile.vm.endorsementButton = EndorsementButton(userid, 'user');
 
 			profile.stream = Bacon.mergeAll(profile.vm.contactCard.vm.profilePicture.stream, profile.vm.connectWithModal.vm.body.stream);
 			StreamCommon.on(profile.stream,
@@ -212,11 +216,14 @@ profile.view = function () {
 	// not connected/other
 	} else {
 		connectionButtons =	(
-			<div className="ui positive button right floated" onclick={profile.connectDialog}>
-				{vm.connectWithModal.view()}
-				<i className="share alternate icon"></i>
-				Connect
-			</div>
+			<span>
+				<div className="ui positive button right floated" onclick={profile.connectDialog}>
+					{vm.connectWithModal.view()}
+					<i className="share alternate icon"></i>
+					Connect
+				</div>
+				{ vm.endorsementButton.view() }
+			</span>
 		);
 	}
 
