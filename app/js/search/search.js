@@ -85,8 +85,7 @@ search.view = function () {
 					])
 				]),
 				m('div#search-results.twelve.wide.column', [
-					vm.searchResults.results().length ?
-						new UserListBig(vm.searchResults.results()).view({}) : m('div', 'No results found!'),
+					vm.searchResults.results().length ? UserListBig(vm.searchResults.results()).view() : m('div', 'No results found!'),
 					m('div.row', [
 						m('div.right.aligned.column', vm.searchResults.results().length ?
 							vm.pagination.view(vm.numberOfPages(), vm.currentPage()) : null)
