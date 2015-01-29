@@ -18,6 +18,8 @@ var User = function(API) {
 		this.roles = m.prop(data.roles);
 		this.picture = m.prop(data.picture);
 		this.connectionType = m.prop(data.connectionType);
+		this.endorsementCount = m.prop(data.endorsementCount);
+
 		return this;
 	};
 
