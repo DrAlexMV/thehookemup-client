@@ -55,8 +55,8 @@ var StartupDetails = function(API) {
 		return this.post('/startup/' + startupID + '/details/wall', {message: message});
 	};
 
-	startupDetails.deleteWallPost = function(startupID, postID, newWallPost) {
-		return this.delete('/startup/' + startupID + '/details/wall/' + postID, newWallPost);
+	startupDetails.deleteWallPost = function(startupID, postID) {
+		return this.delete('/startup/' + startupID + '/details/wall/' + postID);
 	};
 
 	startupDetails.askQuestion = function(startupID, questionText) {
