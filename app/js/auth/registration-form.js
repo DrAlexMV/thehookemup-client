@@ -49,34 +49,34 @@ var RegistrationForm = function () {
 		password: {
 			identifier: 'password',
 			rules: [
-				{ type: 'empty', prompt: 'Please enter a password' },
-				{ type: 'length[8]', prompt: 'Your password must be at least 8 characters' }
+				{ type: 'empty', prompt: 'please enter a password' },
+				{ type: 'length[8]', prompt: 'your password must be at least 8 characters' }
 			]
 		},
 		confirm: {
 			identifier: 'confirm-password',
 			rules: [
-				{ type: 'empty', prompt: 'Please confirm your password' },
-				{ type: 'match[password]', prompt: 'Your passwords do not match' }
+				{ type: 'empty', prompt: 'please confirm your password' },
+				{ type: 'match[password]', prompt: 'your passwords do not match' }
 			]
 		},
 		'first-name': {
 			identifier: 'first-name',
 			rules: [
-				{ type: 'empty', prompt: 'Please enter your first name' }
+				{ type: 'empty', prompt: 'please enter your first name' }
 			]
 		},
 		'last-name': {
 			identifier: 'last-name',
 			rules: [
-				{ type: 'empty', prompt: 'Please enter your last name' }
+				{ type: 'empty', prompt: 'please enter your last name' }
 			]
 		},
 		'email': {
 			identifier: 'email',
 			rules: [
-				{ type: 'empty', prompt: 'Please enter your email' },
-				{ type: 'email', prompt: 'Please enter a valid email' }
+				{ type: 'empty', prompt: 'please enter your email' },
+				{ type: 'email', prompt: 'please enter a valid email' }
 			]
 		}
 	};
