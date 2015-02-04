@@ -26,15 +26,15 @@ var Startup = function(API) {
 	};
 
 	startup.create = function(startup) {
-		return this.post('/startup', startup.StartupModel);
+		return this.post('/startups', startup.StartupModel);
 	};
 
 	startup.getByID = function(startupID) {
-		return this.get('/startup/' + startupID, startup.StartupModel);
+		return this.get('/startups/' + startupID, startup.StartupModel);
 	};
 
 	startup.putByID = function(startupID, startup) {
-		return this.put('/startup/' + startupID, startup);
+		return this.put('/startups/' + startupID, startup);
 	};
 
 	_.mixin(startup, API);

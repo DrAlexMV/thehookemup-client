@@ -41,15 +41,15 @@ var Details = function(API) {
 	};
 
 	details.getByID = function(userID) {
-		return this.get('/user/' + userID + '/details', details.DetailsModel);
+		return this.get('/users/' + userID + '/details', details.DetailsModel);
 	};
 
 	details.putSkillsByID = function(userID, skills) {
-		return this.put('/user/' + userID + '/details/skills', { skills: skills });
+		return this.put('/users/' + userID + '/details/skills', { skills: skills });
 	};
 
 	details.putInterestsByID = function(userID, interests) {
-		return this.put('/user/' + userID + '/details/interests', { interests: interests });
+		return this.put('/users/' + userID + '/details/interests', { interests: interests });
 	};
 
 	details.putProjectsByID = function(userID, projects) {
@@ -62,7 +62,7 @@ var Details = function(API) {
 			return projCopy;
 		});
 
-		return this.put('/user/' + userID + '/details/projects', { projects: projects });
+		return this.put('/users/' + userID + '/details/projects', { projects: projects });
 	};
 
 	_.mixin(details, API);
