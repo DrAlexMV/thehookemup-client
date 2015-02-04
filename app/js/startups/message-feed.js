@@ -2,6 +2,7 @@
  * @jsx m
  */
 
+var DateUtils = require('common/date-utils');
 var Pagination = require('common/ui-core/pagination');
 var StreamCommon = require('common/stream-common');
 var UserModel = require('model/user');
@@ -22,7 +23,7 @@ var Message = function (isOwner, post, postIndex) {
 				<img className="ui avatar image" src={UserModel.getPicture(post.user)} />
 				<div className="right floated author">
 					<div>{UserModel.getName(post.user)}</div>
-					<div>{post.date()}</div>
+					<div className="right floated">{DateUtils.format(post.date())}</div>
 				</div>
 			</div>
 		</div>

@@ -5,6 +5,7 @@
 var CloseableMessage = require('common/ui-core/closeable-message');
 var UserModel = require('model/user');
 var StreamCommon = require('common/stream-common');
+var DateUtils = require('common/date-utils');
 
 var QuestionAnswerItem = function(isOwner, itemData, index) {
 	var answer;
@@ -39,7 +40,7 @@ var QuestionAnswerItem = function(isOwner, itemData, index) {
 					</div> : null }
 				<img className="ui avatar image" src={UserModel.getPicture(itemData.asker)} />
 				<div className="author username">{UserModel.getName(itemData.asker)} asked</div>
-				<div className="date">{itemData.date()}</div>
+				<div className="date">{DateUtils.format(itemData.date())}</div>
 			
 				<div className="message">
 					<div className="ui internally celled grid">
