@@ -162,7 +162,7 @@ dashboard.view = function () {
 										<div className="label">
 											<div className="ui list">
 												<a className="item">
-													{handlePlural('Follows', numFollows)}
+													{handlePlural('Follow', numFollows)}
 												</a>
 											</div>
 										</div>
