@@ -67,7 +67,7 @@ var StartupDetails = function(API) {
 		return this.put('/startup/' + startupID + '/details/qa/' + questionID, {answer: answerText});
 	};
 
-	startupDetails.deleteQuestion = function(startupID, questionID, newWallPost) {
+	startupDetails.deleteQuestion = function(startupID, questionID) {
 		return this.delete('/startup/' + startupID + '/details/qa/' + questionID, {});
 	};
 
