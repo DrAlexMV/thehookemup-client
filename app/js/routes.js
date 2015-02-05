@@ -5,6 +5,7 @@ var profile = require('profile/profile');
 var dashboard = require('dashboard/dashboard');
 var search = require('search/search');
 var startups = require('startups/startups');
+var startupWizard = require('startups/wizard/create-startup-wizard');
 var communications = require('communications/communications');
 var SimplePageLayoutMixin = require('navigation/simple-page-layout-mixin');
 var Logger = require('common/logger');
@@ -17,6 +18,7 @@ m.route(document.getElementById('app'), '/', {
 	'/login': auth,
 	'/profile/:userid': layout(profile),
 	'/search': layout(search),
-	'/startups/:startupid': layout(startups),
+	'/startup/:startupid': layout(startups),
+	'/startup-wizard': layout(startupWizard),
 	'/notifications': layout(communications)
 });
