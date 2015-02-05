@@ -9,7 +9,10 @@ var Error = require('common/error');
 var HorizontalEntityListSegment = require('dashboard/horizontal-entity-list-segment');
 var User = require('model/user');
 var UserEdges = require('model/user-edges');
+var Invites = require('model/invites');
 var StreamCommon = require('common/stream-common');
+var DropdownMixin = require('common/dropdown-mixin');
+var InvitesDropdown = require('dashboard/invites-dropdown');
 
 var handlePlural = require('common/utils-general').handlePlural;
 
@@ -33,9 +36,14 @@ dashboard.vm = {
 	init: function () {
 		this.pendingRequestsSegment = null;
 		this.connectionsSegment = null;
-
+    this.invites = m.prop([]);
 		this.basicInfo = null;
 		this.edges = null;
+
+    Invites.getInvites().then(function(response) {
+      dashboard.vm.invites(response.invites());
+      console.log(dashboard.vm.invites())
+    });
 
 		Context.getCurrentUser().then(function(response) {
 			dashboard.vm.basicInfo = response;
@@ -63,6 +71,8 @@ dashboard.vm = {
 					{showAll: true}
 				);
 			}, Error.handle);
+
+    //navbar.vm.dropdownMixin(DropdownMixin(NotificationList(edgesProp), 'div.ui.icon.top.right.pointing.dropdown.basic.button'))
 
 		dashboard.stream = null;
 		StreamCommon.on(Context.stream, 'Context::Edges', function (message) {}, true);
@@ -204,7 +214,8 @@ dashboard.view = function () {
 								<div className="ui segment">
 									<h4 className="ui header">Invite Others</h4>
 									<div className="ui content">
-										<div className="ui orange button">Create Invite</div>
+										<div className="ui orange button">See My Invite Codes</div>
+                  {DropdownMixin(InvitesDropdown(vm.invites()), 'div.ui.top.right.pointing.dropdown.basic.button').view()}
 										<div className="ui divider"></div>
 										<div className="fluid ui action input">
 											<input type="text" value="http://ww.short.url/c0opq" placeholder="Invite Link" readonly />
