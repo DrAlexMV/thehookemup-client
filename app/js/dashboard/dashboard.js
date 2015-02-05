@@ -81,7 +81,7 @@ dashboard.view = function () {
 	var numPendingRequests = [];
 	var numConnections = 0;
 	var suggestedConnections = [];
-	var numEndorsements = 2;
+	var numFollows = 5;
 
 	if (dashboard.vm.edges) {
 		numPendingRequests = dashboard.vm.edges().pendingConnections().length;
@@ -158,11 +158,11 @@ dashboard.view = function () {
 										</div>
 									</div>
 									<div className="ui statistic">
-										<div className="value">{numEndorsements}</div>
+										<div className="value">{numFollows}</div>
 										<div className="label">
 											<div className="ui list">
 												<a className="item">
-													{handlePlural('Endorsement', numEndorsements)}
+													{handlePlural('Follow', numFollows)}
 												</a>
 											</div>
 										</div>

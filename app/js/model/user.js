@@ -24,7 +24,7 @@ var User = function(API) {
 	};
 
 	user.getByID = function (userID) {
-		return this.get('/user/' + userID, user.UserModel);
+		return this.get('/users/' + userID, user.UserModel);
 	};
 
 	user.getMe = function () {
@@ -32,7 +32,7 @@ var User = function(API) {
 	};
 
 	user.putByID = function (userID, updatedProperties) {
-		return this.put('/user/' + userID, updatedProperties);
+		return this.put('/users/' + userID, updatedProperties);
 	};
 
 	user.login = function (credentials) {

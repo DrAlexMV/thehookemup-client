@@ -5,8 +5,9 @@
 var CloseableMessage = require('common/ui-core/closeable-message');
 var UserModel = require('model/user');
 var StreamCommon = require('common/stream-common');
+var DateUtils = require('common/date-utils');
 
-var QuestionAnswerItem = function(itemData, index) {
+var QuestionAnswerItem = function(isOwner, itemData, index) {
 	var answer;
 
 	if (!this.vm.textInputs[itemData.id()]) {
@@ -33,9 +34,13 @@ var QuestionAnswerItem = function(itemData, index) {
 	return (
 		<div className="ui tertiary segment qa-segment">
 			<div className="ui content">
+				{ isOwner ?
+					<div className="remove">
+						<i className="delete icon" onclick={this.remove.bind(this, itemData.id(), index)}></i>
+					</div> : null }
 				<img className="ui avatar image" src={UserModel.getPicture(itemData.asker)} />
 				<div className="author username">{UserModel.getName(itemData.asker)} asked</div>
-				<div className="date">{itemData.date()}</div>
+				<div className="date">{DateUtils.format(itemData.date())}</div>
 			
 				<div className="message">
 					<div className="ui internally celled grid">
@@ -96,11 +101,25 @@ var QuestionAnswer = function () {
 		delete questionAnswer.vm.textInputs[id];
 	};
 
+	questionAnswer.remove = function(id, index) {
+		questionAnswer.stream.push(new StreamCommon.Message(
+			'QuestionAnswer::Remove',
+			{ id: id, index: index }
+		));
+	};
+
 	questionAnswer.view = function (props) {
 		return (
 			<div className="ui segment">
 				<div className="ui header">Questions and Answers</div>
 				<div className="ui divider"></div>
+				{ props.qa.map(QuestionAnswerItem.bind(questionAnswer, props.isOwner)) }
+				{ vm.hasPosted() ?
+					<div className="ui success message" config={CloseableMessage}>
+						<i className="close icon"></i>
+						Your question successfully sent to the { props.startupName } team.
+						You'll see it here as soon as they answer it.
+					</div> : null }
 				<div className="ui tertiary segment qa-segment">
 					<div className="ui content ask-question">
 						<textarea placeholder={'Ask ' + props.startupName + ' a question'}
@@ -112,12 +131,6 @@ var QuestionAnswer = function () {
 						</div>
 					</div>
 				</div>
-				{ vm.hasPosted() ?
-					<div className="ui success message" config={CloseableMessage}>
-						<i className="close icon"></i>
-						Question successfully posted. Hidden pending answer.
-					</div> : null }
-				{ props.qa.map(QuestionAnswerItem.bind(questionAnswer)) }
 			</div>
 		);
 	};

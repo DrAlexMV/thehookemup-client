@@ -2,21 +2,28 @@
  * @jsx m
  */
 
+var DateUtils = require('common/date-utils');
 var Pagination = require('common/ui-core/pagination');
 var StreamCommon = require('common/stream-common');
 var UserModel = require('model/user');
 
-var Message = function (post) {
+var Message = function (isOwner, post, postIndex) {
 	return (
 		<div className="ui card">
 			<div className="content">
+				{ isOwner ?
+					<div className="ui right floated">
+						<i className="delete icon" onclick={
+							this.removeMessage.bind(this, postIndex, post.id())
+						}></i>
+					</div> : null }
 				<div className="description">{post.message()}</div>
 			</div>
 			<div className="extra content">
 				<img className="ui avatar image" src={UserModel.getPicture(post.user)} />
 				<div className="right floated author">
 					<div>{UserModel.getName(post.user)}</div>
-					<div>{post.date()}</div>
+					<div className="right floated">{DateUtils.format(post.date())}</div>
 				</div>
 			</div>
 		</div>
@@ -57,7 +64,17 @@ var MessageFeed = function () {
 		var page_start = vm.currentPage() * messagesPerPage;
 		var page = props.messages.slice(page_start, page_start + messagesPerPage);
 
-		var postAMessage = props.isOwner  ?
+		this.removeMessage = function (index, id) {
+			privateStream.push(new StreamCommon.Message(
+				'MessageFeed::Remove',
+				{
+					index: index,
+					id: id
+				}
+			));
+		};
+
+		var postAMessage = props.isOwner ?
 			<div className="ui card">
 				<div className="content">
 					<div className="description">
@@ -81,7 +98,7 @@ var MessageFeed = function () {
 		return (
 			<div id="message-feed">
 				{ postAMessage }
-				{ page.map(Message.bind(this)) }
+				{ page.map(Message.bind(this, props.isOwner)) }
 				{ vm.pagination.view(
 					vm.pagination.utils.numberOfPages(messagesPerPage, props.messages.length),
 					vm.currentPage()) }

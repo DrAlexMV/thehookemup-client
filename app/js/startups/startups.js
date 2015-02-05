@@ -33,7 +33,11 @@ startups.vm = {
 				];
 			},
 			followers: function() { return null; },
-			qa: function() { return vm.questionAnswer.view({ qa: vm.startupDetails.qa, startupName: vm.startupBasic.name() }); },
+			qa: function() { return vm.questionAnswer.view({
+				isOwner: vm.startupBasic.isOwner(),
+				qa: vm.startupDetails.qa,
+				startupName: vm.startupBasic.name()
+			}); },
 			funding: function() { return m('div', 'Coming Soon'); },
 			jobs: function() { return m('div', 'Coming Soon'); }
 		};
@@ -103,6 +107,15 @@ startups.vm = {
 			}
 		);
 
+		StreamCommon.on(vm.messageFeed.stream,
+			'MessageFeed::Remove',
+			function (message) {
+				StartupDetailsModel.deleteWallPost(vm.startupID, message.parameters.id).then(function(response) {
+					vm.startupDetails.wall.splice(message.parameters.index, 1);
+				});
+			}
+		);
+
 		StreamCommon.on(vm.questionAnswer.stream,
 			'QuestionAnswer::Answer',
 			function (message) {
@@ -117,7 +130,19 @@ startups.vm = {
 			'QuestionAnswer::Ask',
 			function (message) {
 				StartupDetailsModel.askQuestion(vm.startupID, message.parameters.ask).then(function(response) {
+					// TODO: allow owners to post questions and answer their own questions without refreshing
+					//var newQuestion = new StartupDetailsModel.QuestionAnswerModel(response);
 					//vm.startupDetails.qa.push(newQuestion);
+				});
+			},
+			true
+		);
+
+		StreamCommon.on(vm.questionAnswer.stream,
+			'QuestionAnswer::Remove',
+			function (message) {
+				StartupDetailsModel.deleteQuestion(vm.startupID, message.parameters.id).then(function(response) {
+					vm.startupDetails.qa.splice(message.parameters.index, 1);
 				});
 			},
 			true

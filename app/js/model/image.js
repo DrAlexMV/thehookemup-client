@@ -4,15 +4,15 @@ var Image = function(API) {
 	var image = {};
 
 	image.postURL = function() {
-		return API.calcAddress('/image');
+		return API.calcAddress('/images');
 	};
 
 	image.getURL = function(imageName) {
-		return API.calcAddress('/image/' + imageName);
+		return API.calcAddress('/images/' + imageName);
 	};
 
 	image.deleteImage = function(imageName) {
-		return this.delete('/image/' + imageName);
+		return this.delete('/images/' + imageName);
 	};
 
 	// Function provides fallback in event of null image path

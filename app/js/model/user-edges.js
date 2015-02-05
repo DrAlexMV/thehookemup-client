@@ -32,15 +32,15 @@ var Edges = function(API) {
 	};
 
 	edges.getByID = function(userID) {
-		return this.get('/user/' + userID + '/edges', edges.EdgesModel);
+		return this.get('/users/' + userID + '/edges', edges.EdgesModel);
 	};
 
 	edges.connectMe = function(otherUserID, message) {
-		return this.post('/user/me/edges/connections', {user: otherUserID, message: message});
+		return this.post('/users/me/edges/connections', {user: otherUserID, message: message});
 	};
 
 	edges.deleteConnection = function(otherUserID) {
-		return this.delete('/user/me/edges/connections/' + otherUserID);
+		return this.delete('/users/me/edges/connections/' + otherUserID);
 	};
 
 	_.mixin(edges, API);

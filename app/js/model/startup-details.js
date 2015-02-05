@@ -40,35 +40,35 @@ var StartupDetails = function(API) {
 	};
 
 	startupDetails.getByID = function(startupID) {
-		return this.get('/startup/' + startupID + '/details', startupDetails.StartupDetailsModel);
+		return this.get('/startups/' + startupID + '/details', startupDetails.StartupDetailsModel);
 	};
 
 	startupDetails.updatePeople = function(startupID, personIDs) {
-		return this.put('/startup/' + startupID + '/details/people', {people: personIDs});
+		return this.put('/startups/' + startupID + '/details/people', {people: personIDs});
 	};
 
 	startupDetails.updateOverview = function(startupID, newOverview) {
-		return this.put('/startup/' + startupID + '/details/overview', {overview: newOverview});
+		return this.put('/startups/' + startupID + '/details/overview', {overview: newOverview});
 	};
 
 	startupDetails.addWallPost = function(startupID, message) {
-		return this.post('/startup/' + startupID + '/details/wall', {message: message});
+		return this.post('/startups/' + startupID + '/details/wall', {message: message});
 	};
 
-	startupDetails.deleteWallPost = function(startupID, postID, newWallPost) {
-		return this.delete('/startup/' + startupID + '/details/wall/' + postID, newWallPost);
+	startupDetails.deleteWallPost = function(startupID, postID) {
+		return this.delete('/startups/' + startupID + '/details/wall/' + postID);
 	};
 
 	startupDetails.askQuestion = function(startupID, questionText) {
-		return this.post('/startup/' + startupID + '/details/qa', {question: questionText});
+		return this.post('/startups/' + startupID + '/details/qa', {question: questionText});
 	};
 
 	startupDetails.answerQuestion = function(startupID, questionID, answerText) {
-		return this.put('/startup/' + startupID + '/details/qa/' + questionID, {answer: answerText});
+		return this.put('/startups/' + startupID + '/details/qa/' + questionID, {answer: answerText});
 	};
 
-	startupDetails.deleteQuestion = function(startupID, questionID, newWallPost) {
-		return this.delete('/startup/' + startupID + '/details/qa/' + questionID, {});
+	startupDetails.deleteQuestion = function(startupID, questionID) {
+		return this.delete('/startups/' + startupID + '/details/qa/' + questionID, {});
 	};
 
 	_.mixin(startupDetails, API);
