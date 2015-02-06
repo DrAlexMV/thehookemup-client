@@ -65,46 +65,37 @@ var NotificationList = function (edges) { // edges is an m.prop
 		if (edges().pendingConnections()) {
 			list = edges().pendingConnections().map(function (user, idx) {
 
-				var messageView = {};
+				var messageView = null;
 
 				//Did this user send a message?
-				if (edges().pendingConnectionsMessages()[user._id()] && edges().pendingConnectionsMessages()[user._id()] != '') {
-					var message = edges().pendingConnectionsMessages()[user._id()];
+				var connectMessage = edges().pendingConnectionsMessages()[user._id()];
+				if (connectMessage) {
 					messageView = [
 						//TODO: figure out how to hyphenate the message. Standard hyphens: auto causes overflow
-						m("div.content", [
-							m("div[style=word-break: break-all; white-space: normal;]", [
-								m("i.quote.left.icon"),
-								truncate(message, 85),
-								m("i.quote.right.icon")
-							])
-						]),
-						m("div.ui.divider")
+						m('div[style=word-break: break-all; white-space: normal;]', [
+							truncate(connectMessage, 85),
+						])
 					];
 				}
 
 				return [
-					m('div.ui.segment', [
-						m('div.ui.card[style=border: 1px solid Gainsboro;]', [
-							m('div.content', [
-								m('div.header', [
-									m('img.ui.avatar.image', { src: User.getPicture(user) }),
-									m('a', {href: '/profile/' + user._id(), config: m.route}, [
-											'Request from ' + truncate(User.getName(user), 14)
-									])
-								]),
-								m('div.ui.center.aligned.segment[style=border: 1px solid Gainsboro;]', [
-									messageView,
-									m('div.description', 'Would you like to connect?'),
-									m("br"),
-
-									m('div.ui.padded.grid', [
-										m('div.ui.center.aligned.one.column.row',[
-										m("div.ui.black.button", {onclick: respond.bind(respond, 'NoConnect', user._id())}, "Not Now"),
-										m("div.ui.positive.right.labeled.icon.button", {onclick: respond.bind(respond, 'Connect', user._id())}, "Connect", [
-											m("i.checkmark.icon")])
-										])
-									])
+					m('div.event', [
+						m('div.label', m('img.profile-picture', { src: User.getPicture(user) })),
+						m('div.content', [
+							m('div.summary', [
+								m('a.user', {href: '/profile/' + user._id(), config: m.route}, [
+									truncate(User.getName(user), 18)
+								]), ' wants to connect'
+							]),
+							m('div.extra.text', messageView),
+							m('div.meta', [
+								m('div.ui.negative.small.button', {
+									onclick: respond.bind(respond, 'NoConnect', user._id(), idx)
+								}, 'Not Now'),
+								m('div.ui.positive.right.labeled.icon.small.button', {
+									onclick: respond.bind(respond, 'Connect', user._id(), idx)
+								}, 'Connect', [
+									m('i.checkmark.icon')
 								])
 							])
 						])
@@ -115,29 +106,24 @@ var NotificationList = function (edges) { // edges is an m.prop
 
 		var numPending = edges().pendingConnections().length;
 		var newNotifsBubble = null;
+		var listObject = null;
 		if (numPending == 0) {
-			list = [
-				m('div.item', [
-					m('div.ui.card', [
-						m('div.content', [
-							m('div.description', 'You don\'t have any new notifications.')
-						])
+			listObject = [
+				m('div.ui.card', [
+					m('div.content', [
+						m('div.description', 'You don\'t have any new notifications.')
 					])
 				])
 			];
 		} else {
+			listObject = m('div#nav-notifcation-list.ui.feed', list);
 			newNotifsBubble = m('div.floating.ui.red.mini.label', numPending);
 		}
 
 		return [
 			m('i.alarm.outline.icon'), newNotifsBubble,
 			m('div.menu', [
-				m('div', [
-					m('div#nav-notification-list', [
-						list
-					])
-				]),
-
+				listObject,
 				m('div.ui.right.aligned.item', [
 					m('a', { href: '/notifications/', config: m.route }, [
 						'See all'
