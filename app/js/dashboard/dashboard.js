@@ -178,7 +178,7 @@ dashboard.view = function () {
 									</div>
 								</div>
 								<div className="ui segment">
-									<h4 className="ui header">Find</h4>
+									<h4 className="ui header">Browse</h4>
 									<div className="ui content">
 										<div className="3 fluid ui orange buttons">
 											<a href="/search?query_string=Startupper" config={m.route} className="ui button">
