@@ -49,26 +49,44 @@ var InviteSegment = function () {
 				</div>;
 		}
 
-		var showNumber = inviteSegment.vm.showMore() ? props.invites.length : SMALL_MAX_ELEMENTS;
-		var listUnused = props.invites
-			.filter(function (invite) { return !invite.consumerObjectId; })
-			.sort(function(a, b) { return a.scratchedOut; })
-			.slice(0, showNumber)
-			.map(function (invite, idx) {
-				var inviteStyle = invite.scratchedOut ? ' scratched-out' : '';
-				var inviteTip = invite.scratchedOut ? 'We think you emailed this invite but nobody has used it yet. Click the mail icon to send this invite again.' : 'Click the mail icon to email a friend this invite.';
+		var listUnused = props.invites.filter(function (invite) { return !invite.consumerObjectId; });
+
+		if (!inviteSegment.vm.showMore()) {
+			listUnused = listUnused
+				.sort(function(a, b) { return a.scratchedOut; })
+				.slice(0, SMALL_MAX_ELEMENTS);
+		}
+
+		listUnused = listUnused.map(function (invite, idx) {
+				var mailButton = invite.scratchedOut ? null :
+					<a href={ buildMailto(invite.inviteCode) }
+						onclick={scratch.bind(this, invite, true)}
+						data-variation="inverted"
+						data-content="Mail to a friend (Marks as used)"
+						data-position="bottom center"
+						config={PopupLabel}>
+						<i className="envelope icon"></i>
+					</a>;
+				var markButton = invite.scratchedOut ? null :
+					<a onclick={scratch.bind(this, invite, true)}
+						data-variation="inverted"
+						data-content="Mark invite as used."
+						data-position="bottom center"
+						config={PopupLabel}>
+						<i className="delete icon"></i>
+					</a>;
 
 				return (
 					<div className="item">
-						<div className={'content' + inviteStyle}
-							data-variation="inverted"
-							data-content={inviteTip}
-							data-position="bottom center"
-							config={PopupLabel}>
-							{ invite.inviteCode }
-							<a href={ buildMailto(invite.inviteCode) } onclick={scratch.bind(this, invite, true)}>
-								<i className="envelope icon"></i>
-							</a>
+						<div className={'content' + (invite.scratchedOut ? ' scratched-out' : '')}>
+							<span data-variation="inverted"
+								data-content={invite.scratchedOut ? 'This invite is marked as having been sent to someone, but nobody has used it yet.' : 'Click the mail icon to email a friend this invite.'}
+								data-position="bottom center"
+								config={PopupLabel}>
+								{ invite.inviteCode }
+							</span>
+							{mailButton}
+							{markButton}
 						</div>
 					</div>
 				);
