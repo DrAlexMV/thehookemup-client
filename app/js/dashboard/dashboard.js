@@ -4,12 +4,15 @@
  */
 
 var Context = require('common/context');
+var DropdownMixin = require('common/dropdown-mixin');
 var EntityList = require('profile/entity-list');
 var Error = require('common/error');
 var HorizontalEntityListSegment = require('dashboard/horizontal-entity-list-segment');
+var Invites = require('model/invites');
+var InviteSegment = require('dashboard/invite-segment');
+var StreamCommon = require('common/stream-common');
 var User = require('model/user');
 var UserEdges = require('model/user-edges');
-var StreamCommon = require('common/stream-common');
 
 var handlePlural = require('common/utils-general').handlePlural;
 
@@ -33,9 +36,15 @@ dashboard.vm = {
 	init: function () {
 		this.pendingRequestsSegment = null;
 		this.connectionsSegment = null;
-
 		this.basicInfo = null;
 		this.edges = null;
+		this.invites = null;
+
+		this.inviteSegment = new InviteSegment();
+
+		Invites.getInvites().then(function(response) {
+			dashboard.vm.invites = response;
+		});
 
 		Context.getCurrentUser().then(function(response) {
 			dashboard.vm.basicInfo = response;
@@ -169,7 +178,7 @@ dashboard.view = function () {
 									</div>
 								</div>
 								<div className="ui segment">
-									<h4 className="ui header">Find</h4>
+									<h4 className="ui header">Browse</h4>
 									<div className="ui content">
 										<div className="3 fluid ui orange buttons">
 											<a href="/search?query_string=Startupper" config={m.route} className="ui button">
@@ -201,20 +210,8 @@ dashboard.view = function () {
 									dashboard.vm.connectionsSegment.view({}) : null }
 							</div>
 							<div className="six wide column">
-								<div className="ui segment">
-									<h4 className="ui header">Invite Others</h4>
-									<div className="ui content">
-										<div className="ui orange button">Create Invite</div>
-										<div className="ui divider"></div>
-										<div className="fluid ui action input">
-											<input type="text" value="http://ww.short.url/c0opq" placeholder="Invite Link" readonly />
-											<div className="ui gray right icon button">
-												<i className="copy icon"></i>
-											</div>
-										</div>
-									</div>
-								</div>
 								{ suggestedConnectionsSegment }
+								{ dashboard.vm.inviteSegment.view({ invites: dashboard.vm.invites.invites }) }
 							</div>
 						</div>
 					</div>

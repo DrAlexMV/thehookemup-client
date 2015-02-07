@@ -18,7 +18,7 @@ m.route(document.getElementById('app'), '/', {
 	'/login': auth,
 	'/profile/:userid': layout(profile),
 	'/search': layout(search),
-	'/startup/:startupid': layout(startups),
+	'/startups/:startupid': layout(startups),
 	'/startup-wizard': layout(startupWizard),
 	'/notifications': layout(communications)
 });
