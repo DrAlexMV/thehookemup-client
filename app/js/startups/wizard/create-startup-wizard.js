@@ -1,4 +1,6 @@
 var StartupWizardNameDescription = require('startups/wizard/startup-wizard-name-description');
+var StartupWizardMarkets = require('startups/wizard/startup-wizard-markets');
+var StartupWizardHandles = require('startups/wizard/startup-wizard-handles');
 
 var createStartupWizard = {};
 
@@ -6,6 +8,8 @@ var vm =
 createStartupWizard.vm = {
 	init: function () {
 		this.description = StartupWizardNameDescription();
+		this.markets = StartupWizardMarkets();
+		this.handles = StartupWizardHandles();
 	}
 };
 
@@ -23,8 +27,12 @@ createStartupWizard.view = function () {
 					])
 				])
 			]),
-			m('div.column', [
-				vm.description.view()
+			m('div.row', [
+				m('div.column', [
+					vm.description.view(),
+					vm.markets.view(),
+					vm.handles.view()
+				])
 			])
 		])
 	];

@@ -1,11 +1,12 @@
-var FormBuilder = require('common/form-builder');
+var formField = require('common/form-builder').inputs.formField;
 
 var StartupWizardNameDescription = function () {
 	var startupWizardNameDescription = {};
 
 	var vm = {
-		description: m.prop(''),
-		name: m.prop('')
+		product: m.prop(''),
+		name: m.prop(''),
+		selectedField: m.prop()
 	};
 
 	var rules = {
@@ -46,16 +47,45 @@ var StartupWizardNameDescription = function () {
 
 	startupWizardNameDescription.view  = function () {
 		var fields = [
-			{ parameters: { name: 'name', placeholder: 'Company Name', onchange: m.withAttr('value', vm.name) } },
-			{ parameters: { name: 'description', placeholder: 'Description', onchange: m.withAttr('value', vm.description) } }
+			{
+				label: 'Company Name',
+				parameters: {
+					name: 'name',
+					type: 'text',
+					onchange: m.withAttr('value', vm.name)
+				},
+				type: 'input',
+				hint: "What is the company's name? Don't worry about the LLC, Inc, etc"
+			},
+			{
+				label: 'Product',
+				parameters: {
+					name: 'product',
+					type: 'text',
+					onchange: m.withAttr('value', vm.product)
+				} ,
+				type: 'textarea',
+				hint: 'Tell us about your product. What is it? What does it help the customer do? Who is the customer?'
+			}
 		];
 
 		return [
 			m('div.ui.segment', [
 				m('a.ui.ribbon.label', 'Company Info'),
-				fields.map(function (field) {
-					return m('input')
-				})
+				m('div.ui.hidden.divider'),
+				m('div.ui.stackable.grid', [
+					m('div.eight.wide.column', [
+						m('div.ui.form', [
+							fields.map(function (field, index) {
+								var parameters = _.extend(field.parameters, { onfocus: vm.selectedField.bind(this, index) });
+								return formField(parameters, field.label, null, field.type);
+							})
+						])
+					]),
+					m('div.six.wide.column', [
+						m('h5', _.isNumber(vm.selectedField()) ?  fields[vm.selectedField()].hint : null)
+					])
+				])
 			])
 		];
 	};
