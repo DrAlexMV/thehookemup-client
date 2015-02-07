@@ -20,6 +20,10 @@ var Invites = function(API) {
 		return this.put('/invites/' + inviteID, inviteObject);
 	};
 
+	invites.validate = function(inviteID) {
+		return this.get('/invites/validate/' + inviteID);
+	};
+
 	_.mixin(invites, API);
 	return invites;
 };

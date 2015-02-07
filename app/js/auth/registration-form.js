@@ -1,8 +1,9 @@
 var FormBuilder = require('common/form-builder');
+var Invites = require('model/invites');
 var StreamCommon = require('common/stream-common');
 var MultiCheckbox = require('common/ui-core/multi-checkbox');
 
-var RegistrationForm = function () {
+var RegistrationForm = function (urlInvite) {
 	var registrationForm = {};
 
 	var vm =
@@ -15,7 +16,9 @@ var RegistrationForm = function () {
 		confirmPassword: m.prop(''),
 		errorMessages: m.prop([]),
 		availableRoles: m.prop(['Founder', 'Investor', 'Startupper']),
-		rolesCheckbox: MultiCheckbox()
+		rolesCheckbox: MultiCheckbox(),
+		showForm: m.prop(false),
+		invite: m.prop(urlInvite ? urlInvite : '')
 	};
 
 	registrationForm.stream = new Bacon.Bus();
@@ -39,6 +42,14 @@ var RegistrationForm = function () {
 			password: vm.password(),
 			roles: vm.roles()
 		}));
+	}
+
+	function testInvite() {
+		Invites.validate(vm.invite()).then(function(response) {
+			if (response.status) {
+				vm.showForm(true);
+			}
+		});
 	}
 
 	function formInvalid(e) {
@@ -94,13 +105,16 @@ var RegistrationForm = function () {
 			{ parameters: { name: 'confirm-password', placeholder: 'Confirm Password', onchange: m.withAttr('value', vm.confirmPassword), type: 'password' } }
 		];
 
-		return [
+
+		var form = [
 			m('form.ui.form', { class: vm.errorMessages().length > 0 ? 'warning' : '',
 													config: FormBuilder.validate(rules, register, formInvalid) }, [
 				m('div.ui.warning.message', [
 					m('div.header', 'Oops!'),
 					m('ul', [vm.errorMessages().map(function (message) { return m('li', message); })])
 				]),
+
+				m('div.one.field', m('div.ui.input', m('input', { value: vm.invite(), disabled: true }))),
 				m('div.two.fields', [
 					nameFields.map(function (field) { return FormBuilder.inputs.formField(field.parameters, '', field.width); })
 				]),
@@ -113,7 +127,24 @@ var RegistrationForm = function () {
 					m('div.ui.positive.submit.button', 'Register')
 				])
 			])
-		]
+		];
+
+		var inviteEntry = [
+			m('div.ui.action.input', [
+				m('input', {
+					placeholder: 'Enter Invite Code',
+					onchange: m.withAttr('value', vm.invite),
+					value: vm.invite()
+				}),
+				vm.showForm() ? null : m('div.ui.button', {
+					onclick: testInvite
+				}, 'Continue')
+			])
+		];
+
+		return [
+			vm.showForm() ? form : inviteEntry
+		];
 	};
 
 	return registrationForm;

@@ -9,14 +9,16 @@ var auth = {};
 
 auth.vm = {
 	init: function () {
+		var urlInvite = m.route.param('invite');
+
 		/* Child Components */
 		this.loginForm =  new LoginForm();
 		this.socialSignInForm = new SocialSignInForm();
-		this.registrationForm = new RegistrationForm();
+		this.registrationForm = new RegistrationForm(urlInvite);
 
 		/* VM State Variables */
 		this.awaitingResponse = m.prop(false);
-		this.userRegistering = m.prop(false);
+		this.userRegistering = m.prop(urlInvite);
 
 		/* Message Passing Stream */
 		auth.stream = Bacon.mergeAll(this.loginForm.stream, this.socialSignInForm.stream, this.registrationForm.stream);
