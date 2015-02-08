@@ -28,7 +28,7 @@ var InviteSegment = function () {
 	};
 
 	var scratch = function(invite, scratchedOut) {
-		Invites.putInvite(invite.inviteCode, {scratchedOut: scratchedOut}).then(function() {
+		Invites.putInvite(invite._id, {scratchedOut: scratchedOut}).then(function() {
 			invite.scratchedOut = scratchedOut;
 		});
 	};
@@ -59,7 +59,7 @@ var InviteSegment = function () {
 
 		listUnused = listUnused.map(function (invite, idx) {
 				var mailButton = invite.scratchedOut ? null :
-					<a href={ buildMailto(invite.inviteCode) }
+					<a href={ buildMailto(invite.code) }
 						onclick={scratch.bind(this, invite, true)}
 						data-variation="inverted"
 						data-content="Mail to a friend (Marks as used)"
@@ -83,7 +83,7 @@ var InviteSegment = function () {
 								data-content={invite.scratchedOut ? 'This invite is marked as having been sent to someone, but nobody has used it yet.' : 'Click the mail icon to email a friend this invite.'}
 								data-position="bottom center"
 								config={PopupLabel}>
-								{ invite.inviteCode }
+								{ invite.code }
 							</span>
 							{mailButton}
 							{markButton}
