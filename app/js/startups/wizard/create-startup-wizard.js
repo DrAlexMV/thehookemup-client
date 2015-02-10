@@ -73,8 +73,10 @@ createStartupWizard.view = function () {
 		m('div.ui.page.grid', [
 			m('div.row', [
 				m('div.column', [
-					m('h3.ui.centered.header', [
-						'Create a Startup Profile'
+					m('div', [
+						m('h1#create-startup-header.ui.centered.header', [
+							'Create a Startup Profile'
+						])
 					])
 				])
 			]),
