@@ -25,8 +25,8 @@ var Startup = function(API) {
 		return this;
 	};
 
-	startup.create = function(startup) {
-		return this.post('/startups', startup.StartupModel);
+	startup.create = function (startupToCreate) {
+		return this.post('/startups', startupToCreate, startup.StartupModel);
 	};
 
 	startup.getByID = function(startupID) {

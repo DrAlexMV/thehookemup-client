@@ -1,4 +1,5 @@
 var formField = require('common/form-builder').inputs.formField;
+var validate = require('common/form-builder').validate;
 
 var StartupWizardNameDescription = function () {
 	var startupWizardNameDescription = {};
@@ -6,46 +7,29 @@ var StartupWizardNameDescription = function () {
 	var vm = {
 		product: m.prop(''),
 		name: m.prop(''),
-		selectedField: m.prop()
+		selectedField: m.prop(),
+		errorMessages: m.prop([])
 	};
 
-	var rules = {
-		password: {
-			identifier: 'password',
+	startupWizardNameDescription.rules = {
+		name: {
+			identifier: 'name',
 			rules: [
-				{ type: 'empty', prompt: 'please enter a password' },
-				{ type: 'length[8]', prompt: 'your password must be at least 8 characters' }
+				{ type: 'empty', prompt: "Please enter your company's name" }
 			]
 		},
-		confirm: {
-			identifier: 'confirm-password',
+		product: {
+			identifier: 'product',
 			rules: [
-				{ type: 'empty', prompt: 'please confirm your password' },
-				{ type: 'match[password]', prompt: 'your passwords do not match' }
-			]
-		},
-		'first-name': {
-			identifier: 'first-name',
-			rules: [
-				{ type: 'empty', prompt: 'please enter your first name' }
-			]
-		},
-		'last-name': {
-			identifier: 'last-name',
-			rules: [
-				{ type: 'empty', prompt: 'please enter your last name' }
-			]
-		},
-		'email': {
-			identifier: 'email',
-			rules: [
-				{ type: 'empty', prompt: 'please enter your email' },
-				{ type: 'email', prompt: 'please enter a valid email' }
+				{ type: 'empty', prompt: "Please enter your company's product description" }
 			]
 		}
 	};
 
-	startupWizardNameDescription.view  = function () {
+	startupWizardNameDescription.view  = function (parentVM) {
+
+		_.mixin(parentVM, { name: vm.name, product: vm.product });
+
 		var fields = [
 			{
 				label: 'Company Name',
@@ -75,12 +59,10 @@ var StartupWizardNameDescription = function () {
 				m('div.ui.hidden.divider'),
 				m('div.ui.stackable.grid', [
 					m('div.eight.wide.column', [
-						m('div.ui.form', [
-							fields.map(function (field, index) {
-								var parameters = _.extend(field.parameters, { onfocus: vm.selectedField.bind(this, index) });
-								return formField(parameters, field.label, null, field.type);
-							})
-						])
+						fields.map(function (field, index) {
+							var parameters = _.extend(field.parameters, { onfocus: vm.selectedField.bind(this, index) });
+							return formField(parameters, field.label, null, field.type);
+						})
 					]),
 					m('div.six.wide.column', [
 						m('h5', _.isNumber(vm.selectedField()) ?  fields[vm.selectedField()].hint : null)

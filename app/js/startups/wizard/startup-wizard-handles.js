@@ -4,15 +4,20 @@ var StartupWizardHandles = function () {
 	var handles = {};
 
 	var vm = {
+		handles: m.prop([])
 	};
 
-	handles.view = function (vm) {
+	handles.view = function (parentVM) {
+
+		_.mixin(parentVM, vm);
 
 		var desiredHandles = ['facebook', 'twitter', 'angel-list', 'website'];
 
-		var handleEditorWrap = function (handle) {
+		var handleEditorWrap = function (handle, index) {
+			vm.handles()[index] = {};
+
 			return m('div.eight.wide.field', [
-				HandleEditor(handle).view(vm)
+				HandleEditor(handle).view(vm.handles()[index])
 			]);
 		};
 

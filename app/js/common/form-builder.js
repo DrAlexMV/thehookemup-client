@@ -81,7 +81,7 @@ var FormBuilder = (function () {
 			var wrap = function (fn) {
 				return function (args) {
 					m.startComputation();
-					fn(args);
+					_.isFunction(fn) && fn(args);
 					m.endComputation();
 					return false;
 				}

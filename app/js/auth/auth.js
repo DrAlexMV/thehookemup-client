@@ -67,10 +67,10 @@ auth.view = function () {
 		return [
 			m('div.ui.two.column.stackable.grid', [
 				m('div.column', [
-					vm.socialSignInForm.view({})
+					vm.socialSignInForm.view()
 				]),
 				m('div.column', [
-					vm.loginForm.view({})
+					vm.loginForm.view()
 				])
 			])
 		]
