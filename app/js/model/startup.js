@@ -12,7 +12,7 @@ var Startup = function(API) {
 		this.picture = m.prop(data.picture);
 		this.isOwner = m.prop(data.isOwner);
 		this.owners = m.prop(data.owners);
-		this.categories = m.prop(data.categories);
+		this.markets = m.prop(data.markets);
 
 		this.handles = m.prop(data.handles);
 		/*

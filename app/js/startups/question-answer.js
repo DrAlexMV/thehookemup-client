@@ -120,7 +120,7 @@ var QuestionAnswer = function () {
 						Your question successfully sent to the { props.startupName } team.
 						You'll see it here as soon as they answer it.
 					</div> : null }
-				<div className="ui tertiary segment qa-segment">
+				<div className="ui qa-segment">
 					<div className="ui content ask-question">
 						<textarea placeholder={'Ask ' + props.startupName + ' a question'}
 							value={vm.questionBox()}

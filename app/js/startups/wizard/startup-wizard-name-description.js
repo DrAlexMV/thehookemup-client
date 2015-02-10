@@ -5,10 +5,7 @@ var StartupWizardNameDescription = function () {
 	var startupWizardNameDescription = {};
 
 	var vm = {
-		product: m.prop(''),
-		name: m.prop(''),
-		selectedField: m.prop(),
-		errorMessages: m.prop([])
+		selectedField: m.prop()
 	};
 
 	startupWizardNameDescription.rules = {
@@ -26,9 +23,7 @@ var StartupWizardNameDescription = function () {
 		}
 	};
 
-	startupWizardNameDescription.view  = function (parentVM) {
-
-		_.mixin(parentVM, { name: vm.name, product: vm.product });
+	startupWizardNameDescription.view  = function (ctrl) {
 
 		var fields = [
 			{
@@ -36,7 +31,7 @@ var StartupWizardNameDescription = function () {
 				parameters: {
 					name: 'name',
 					type: 'text',
-					onchange: m.withAttr('value', vm.name)
+					onchange: m.withAttr('value', ctrl.name)
 				},
 				type: 'input',
 				hint: "What is the company's name? Don't worry about the LLC, Inc, etc"
@@ -46,7 +41,7 @@ var StartupWizardNameDescription = function () {
 				parameters: {
 					name: 'product',
 					type: 'text',
-					onchange: m.withAttr('value', vm.product)
+					onchange: m.withAttr('value', ctrl.product)
 				} ,
 				type: 'textarea',
 				hint: 'Tell us about your product. What is it? What does it help the customer do? Who is the customer?'

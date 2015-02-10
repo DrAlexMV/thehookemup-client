@@ -1,11 +1,6 @@
 var HandleEditor = function (handleName) {
 	var handleEditor = {};
 
-	var vm = {
-		type: m.prop(handleName),
-		url: m.prop('')
-	};
-
 	var availableHandles = {
 		facebook:  { icon: 'facebook', tag: 'Facebook', tagClass: 'facebook' },
 		twitter: { icon: 'twitter', tag: 'Twitter', tagClass: 'twitter' },
@@ -15,17 +10,17 @@ var HandleEditor = function (handleName) {
 	};
 
 
-	handleEditor.view = function (parentVM) {
-
-		_.mixin(parentVM, vm);
+	handleEditor.view = function (ctrl) {
 
 		var handle = availableHandles[handleName] ? availableHandles[handleName] : availableHandles.default;
+
+		ctrl.type(handleName);
 
 		return [
 			m('div.ui.right.labeled.left.icon.input', [
 				m('i.icon', { class: handle.icon }),
-				m('input[type="text"]', { onchange: m.withAttr('value', vm.url) }),
-				m('div.ui.tag.label', { class: handle.tagClass } ,[
+				m('input[type="text"]', { onchange: m.withAttr('value', ctrl.url) }),
+				m('div.ui.tag.label', { class: handle.tagClass }, [
 					handle.tag
 				])
 			])

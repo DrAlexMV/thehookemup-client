@@ -20,9 +20,9 @@ var Tagger = function (settings) {
 		}
 	};
 
-	tagger.view = function (parentVM) {
+	tagger.view = function (ctrl) {
 
-		_.mixin(parentVM, { selectedTags: vm.selectedTags });
+		vm.selectedTags = ctrl.selectedTags ? ctrl.selectedTags : vm.selectedTags;
 
 		return [
 			m('div.fluid.ui.action.small.input.focus', [

@@ -16,13 +16,13 @@ var StartupProfileHeader = function (isEditable) {
 	startupProfileHeader.vm = {
 		profilePicture: new EditableImage(),
 		isEditing: m.prop(false),
-		categoryName: m.prop(''),
+		marketName: m.prop(''),
 		currentPage: m.prop(''),
 		headerForm: {
 			name: m.prop(''),
 			website: m.prop(''),
 			description: m.prop(''),
-			categories: [],
+			markets: [],
 			handles: _.mapValues(availableHandles, function(value, key) { // Key by type
 				return {type: key, url: m.prop('')};
 			})
@@ -38,16 +38,16 @@ var StartupProfileHeader = function (isEditable) {
 	};
 
 	var addCategory = function () {
-		var s = vm.categoryName();
-		if (!s || _.find(vm.headerForm.categories, function(entry) { return entry === s; })) {
+		var s = vm.marketName();
+		if (!s || _.find(vm.headerForm.markets, function(entry) { return entry === s; })) {
 			return;
 		}
-		vm.headerForm.categories.push(s);
-		vm.categoryName('');
+		vm.headerForm.markets.push(s);
+		vm.marketName('');
 	};
 
 	var deleteCategory = function (index) {
-		vm.headerForm.categories.splice(index, 1);
+		vm.headerForm.markets.splice(index, 1);
 	};
 
 	var fillForm = function (startupBasic) {
@@ -57,7 +57,7 @@ var StartupProfileHeader = function (isEditable) {
 		startupBasic.handles().forEach(function(handle) {
 			vm.headerForm.handles[handle.type].url(handle.url)
 		});
-		vm.headerForm.categories = startupBasic.categories().slice();
+		vm.headerForm.markets = startupBasic.markets().slice();
 	};
 
 	var saveForm = function () {
@@ -69,7 +69,7 @@ var StartupProfileHeader = function (isEditable) {
 					name: vals.name(),
 					website: vals.website(),
 					description: vals.description(),
-					categories: vals.categories.slice(),
+					markets: vals.markets.slice(),
 					handles: _.values(vals.handles).map(function(handle) {
 						return {type: handle.type, url: handle.url()};
 					})
@@ -79,7 +79,7 @@ var StartupProfileHeader = function (isEditable) {
 	};
 
 	startupProfileHeader.view = function (props) {
-		startupBasic = props.startupBasic;
+		var startupBasic = props.startupBasic;
 
 		var tabs = function () {
 			var availableTabs = [
@@ -115,6 +115,7 @@ var StartupProfileHeader = function (isEditable) {
 				return [
 					startupBasic.handles().map(function (handle) {
 						var handleInfo = availableHandles[handle.type];
+						handleInfo = handleInfo ? handleInfo : {};
 						return m('a', {href: handle.url}, m('i.icon', { class: handleInfo.icon }));
 					})
 				];
@@ -176,21 +177,21 @@ var StartupProfileHeader = function (isEditable) {
 							]),
 							m('div.fluid.ui.action.small.input.focus', [
 								m('input', {
-									placeholder: 'Add a category',
-									value: vm.categoryName(),
-									onchange: m.withAttr('value', vm.categoryName)
+									placeholder: 'Add a market',
+									value: vm.marketName(),
+									onchange: m.withAttr('value', vm.marketName)
 								}),
 								m('div.ui.right.primary.button', { onclick: addCategory }, ['Add'])
 							]),
-							vm.headerForm.categories.length ?
+							vm.headerForm.markets.length ?
 								m('div.ui.segment', [
 									m('div.header', ['Categories']),
 									m('div.ui.two.column.stackable.grid', [
 										m('div.column', [
 											m('div', [
-												vm.headerForm.categories.map(function(category, index) {
+												vm.headerForm.markets.map(function(market, index) {
 													return m('div.ui.label', [
-														category,
+														market,
 														m('i.delete.icon', { onclick: deleteCategory.bind(this, index) })
 													]);
 												})
@@ -237,8 +238,8 @@ var StartupProfileHeader = function (isEditable) {
 					m('div.ui.two.column.stackable.grid', [
 						m('div.column', [
 							m('div', [
-								startupBasic.categories().map(function(category) {
-									return m('div.ui.label', category);
+								startupBasic.markets().map(function(market) {
+									return m('div.ui.label', market);
 								})
 							])
 						]),

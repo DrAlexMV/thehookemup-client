@@ -7,12 +7,12 @@ var StartupWizardMarkets = function () {
 		tagger: Tagger({ maxCount: 4 })
 	};
 
-	markets.view = function (parentVM) {
+	markets.view = function (ctrl) {
 		return [
 			m('div.ui.segment', [
 				m('a.ui.ribbon.label', 'Markets'),
 				m('div.ui.hidden.divider'),
-				vm.tagger.view(parentVM)
+				vm.tagger.view({ selectedTags: ctrl.markets })
 			])
 		];
 	};
