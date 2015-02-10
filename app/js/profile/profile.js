@@ -3,23 +3,23 @@
  * @jsx m
  */
 
-var PopupLabel = require('common/ui-core/popup-label');
+var ConnectWith = require('profile/connect-with');
 var ContactCard = require('profile/contact-card');
+var Context = require('common/context');
 var EditableText = require('common/editable-text');
+var EndorsementButton = require('engagement/endorsements/endorsement-button');
 var EntityList = require('profile/entity-list');
 var Error = require('common/error');
+var ImageModel = require('model/image');
 var InterestsSegment = require('profile/interests-segment');
-var SkillsSegment = require('profile/skills-segment');
+var ModalMixin = require('common/modal-mixin');
+var PopupLabel = require('common/ui-core/popup-label');
 var ProjectsSegment = require('profile/projects-segment');
+var SkillsSegment = require('profile/skills-segment');
+var StreamCommon = require('common/stream-common');
 var User = require('model/user');
 var UserDetails = require('model/user-details');
 var UserEdges = require('model/user-edges');
-var ImageModel = require('model/image');
-var StreamCommon = require('common/stream-common');
-var Context = require('common/context');
-var ModalMixin = require('common/modal-mixin');
-var ConnectWith = require('profile/connect-with');
-var EndorsementButton = require('engagement/endorsements/endorsement-button');
 
 var profile = {};
 
@@ -169,7 +169,7 @@ profile.view = function () {
 	// Connected
 	if (basicInfo.connectionType() == 'c') {
 		connectionButtons =	(
-			<a className="ui button blue right floated contact-button"
+			<a className="ui button blue contact-button"
 				href={'mailto:' + basicInfo.email()}>
 				<i className="mail icon"></i>
 				Contact
@@ -187,7 +187,7 @@ profile.view = function () {
 	// Sent
 	} else if (basicInfo.connectionType() == 's') {
 		connectionButtons =	(
-			<div className="ui positive disabled button right floated">
+			<div className="ui positive disabled button">
 				<i className="share alternate icon"></i>
 				Request Sent
 			</div>
@@ -195,7 +195,7 @@ profile.view = function () {
 	// pending approval
 	} else if (basicInfo.connectionType() == 'pa') {
 		connectionButtons =	(
-			<div className="ui buttons right floated">
+			<div className="ui buttons">
 				<div className="ui negative icon button" onclick={profile.deleteConnection}
 					data-variation="inverted"
 					data-content="Dismiss request"
@@ -216,14 +216,11 @@ profile.view = function () {
 	// not connected/other
 	} else {
 		connectionButtons =	(
-			<span>
-				<div className="ui positive button right floated" onclick={profile.connectDialog}>
-					{vm.connectWithModal.view()}
-					<i className="share alternate icon"></i>
-					Connect
-				</div>
-				{ vm.endorsementButton.view() }
-			</span>
+			<div className="ui positive button" onclick={profile.connectDialog}>
+				{vm.connectWithModal.view()}
+				<i className="share alternate icon"></i>
+				Connect
+			</div>
 		);
 	}
 
@@ -294,11 +291,17 @@ profile.view = function () {
 					{vm.contactCard.view({})}
 				</div>
 				<div className="eight wide column">
-					<h1 className="ui header">
-						{isConnectedIcon}
-						{User.getName(basicInfo)}
-						{connectionButtons}
-					</h1>
+					<div className="ui grid">
+						<div className="two column row">
+							<div className="left floated column">
+								<h2 className="ui header">{isConnectedIcon} {User.getName(basicInfo)}</h2>
+								{ vm.endorsementButton.view() }
+							</div>
+							<div className="right floated right aligned column">
+								{ connectionButtons }
+							</div>
+						</div>
+					</div>
 					{editButton}
 
 					{university_info}

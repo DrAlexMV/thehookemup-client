@@ -29,10 +29,15 @@ var EndorseButton = function (entityId, entityType) {
 
 		var buttonView = function (endorseing, loading, clickAction) {
 			return [
-				m('div.ui.labeled.icon.button', { class: loading ? 'loading' : '', onclick: clickAction } , [
-					m('i.thumbs.up.icon'),
-					endorseing ? 'Endorsing' : 'Endorse'
-				])
+				endorseing ?
+					m('div.compact.ui.labeled.blue.button', { class: loading ? 'loading' : '', onclick: clickAction } , [
+						m('i.thumbs.up.icon'),
+						'Endorsed'
+					]) :
+					m('div.compact.ui.labeled.button', { class: loading ? 'loading' : '', onclick: clickAction } , [
+						m('i.thumbs.up.icon'),
+						'Endorse'
+					])
 			]
 		};
 

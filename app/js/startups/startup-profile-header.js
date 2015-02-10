@@ -1,8 +1,9 @@
 var EditableImage = require('common/editable-image');
+var EndorsementButton = require('engagement/endorsements/endorsement-button');
 var FormBuilder = require('common/form-builder');
 var StreamCommon = require('common/stream-common');
 
-var StartupProfileHeader = function (isEditable) {
+var StartupProfileHeader = function (startupId) {
 	var startupProfileHeader = {};
 
 	var availableHandles = {
@@ -18,6 +19,7 @@ var StartupProfileHeader = function (isEditable) {
 		isEditing: m.prop(false),
 		marketName: m.prop(''),
 		currentPage: m.prop(''),
+		endorsementButton: EndorsementButton(startupId, 'startup'),
 		headerForm: {
 			name: m.prop(''),
 			website: m.prop(''),
@@ -84,7 +86,7 @@ var StartupProfileHeader = function (isEditable) {
 		var tabs = function () {
 			var availableTabs = [
 				{ name: 'Overview', icon: '', key: 'overview' },
-				{ name: 'Followers', icon: 'thumbs outline up', key: 'followers' },
+				{ name: 'Endorsements', icon: 'thumbs outline up', key: 'endorsements' },
 				{ name: 'Q&A', icon: 'comments outline', key: 'qa' },
 				{ name: 'Funding', icon: 'money', key: 'funding' },
 				{ name: 'Jobs', icon: 'suitcase', key: 'jobs' }
@@ -244,9 +246,7 @@ var StartupProfileHeader = function (isEditable) {
 							])
 						]),
 						m('div.right.aligned.column', [
-							m('div.ui', [
-								m('div.ui.button', 'Hello')
-							])
+							vm.endorsementButton.view({})
 						])
 					])
 				];

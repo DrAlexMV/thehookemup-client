@@ -2,12 +2,13 @@ var Context = require('common/context');
 var Error = require('common/error');
 var ImageModel = require('model/image');
 var MessageFeed = require('startups/message-feed');
-var StartupModel = require('model/startup');
-var StartupDetailsModel = require('model/startup-details');
-var StartupProfileHeader = require('startups/startup-profile-header');
-var StartupOverview = require('startups/startup-overview');
-var StartupFounders = require('startups/startup-founders');
 var QuestionAnswer = require('startups/question-answer');
+var StartupDetailsModel = require('model/startup-details');
+var StartupEndorsements = require('startups/startup-endorsements');
+var StartupFounders = require('startups/startup-founders');
+var StartupModel = require('model/startup');
+var StartupOverview = require('startups/startup-overview');
+var StartupProfileHeader = require('startups/startup-profile-header');
 var StreamCommon = require('common/stream-common');
 
 var startups = {};
@@ -17,11 +18,12 @@ startups.vm = {
 	init: function () {
 		vm.startupID = m.route.param('startupid');
 
-		vm.header = new StartupProfileHeader();
+		vm.header = new StartupProfileHeader(vm.startupID);
 		vm.messageFeed = new MessageFeed();
 		vm.overview = new StartupOverview();
 		vm.questionAnswer = new QuestionAnswer();
 		vm.founders = new StartupFounders();
+		vm.endorsements = new StartupEndorsements(vm.startupID);
 
 		vm.currentPage = m.prop('overview');
 
@@ -32,7 +34,7 @@ startups.vm = {
 					vm.founders.view({ people: vm.startupDetails.people })
 				];
 			},
-			followers: function() { return null; },
+			endorsements: function() { return vm.endorsements.view({}) },
 			qa: function() { return vm.questionAnswer.view({
 				isOwner: vm.startupBasic.isOwner(),
 				qa: vm.startupDetails.qa,

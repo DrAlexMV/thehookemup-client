@@ -1,4 +1,5 @@
 var API = require('common/api');
+var User = require('model/user');
 
 var Endorsements = function () {
 	var endorsements = {};
@@ -22,8 +23,23 @@ var Endorsements = function () {
 		return model;
 	};
 
+	endorsements.endorsersModel = function (data) {
+		var model = {};
+		// Assume for now these are all Users
+		model.endorsers = m.prop(data.endorsers.map(
+			function(endorser) { 
+				return new User.UserModel(endorser);
+			}
+		));
+		return model;
+	};
+
 	endorsements.getEntityEndorsements = function (entityId) {
-		endorsements.get('/endorsement/' + entityId, endorsements.model);
+		return endorsements.get('/endorsement/' + entityId, endorsements.model);
+	};
+
+	endorsements.getEntityEndorsementUserEndorsers = function (entityId) {
+		return endorsements.get('/endorsement/' + entityId + '/endorsers', endorsements.endorsersModel);
 	};
 
 	endorsements.getEntityEndorsementCount = function (entityId) {
