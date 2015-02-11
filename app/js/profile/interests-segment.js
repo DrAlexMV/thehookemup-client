@@ -6,7 +6,7 @@ var EditableSegment = require('profile/editable-segment');
 var EditableText = require('common/editable-text');
 var UserDetail = require('model/user-details');
 
-var InterestsSegment = function (interests, canEdit, userID) {
+var InterestsSegment = function (interests, canEdit, userID, isWizard) {
 	var segment = {};
 
 	segment.controller = function () {
@@ -17,7 +17,7 @@ var InterestsSegment = function (interests, canEdit, userID) {
 		UserDetail.putInterestsByID(userID, interests).then(function() {
 			segment.vm.editing(false);
 		});
-	}
+	};
 
 	segment.onRevert = function() {
 		segment.vm.editables = interests.map(buildInterestEditor);

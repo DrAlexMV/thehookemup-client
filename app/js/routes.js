@@ -2,6 +2,7 @@
 
 var auth = require('auth/auth');
 var profile = require('profile/profile');
+var profileWizard = require('profile/wizard/create-profile-wizard');
 var dashboard = require('dashboard/dashboard');
 var search = require('search/search');
 var startups = require('startups/startups');
@@ -20,5 +21,6 @@ m.route(document.getElementById('app'), '/', {
 	'/search': layout(search),
 	'/startups/:startupid': layout(startups),
 	'/startup-wizard': layout(startupWizard),
-	'/notifications': layout(communications)
+	'/notifications': layout(communications),
+  '/profile-wizard': layout(profileWizard)
 });

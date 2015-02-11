@@ -27,7 +27,7 @@ var Tagger = function (settings) {
 		return [
 			m('div.fluid.ui.action.small.input.focus', [
 				m('input', {
-					placeholder: 'Add a category',
+					placeholder: ctrl.placeholder ? ctrl.placeholder : 'Add a category',
 					value: vm.tagName(),
 					onchange: m.withAttr('value', vm.tagName)
 				}),
