@@ -7,7 +7,11 @@ var ProfileWizardHandles = require('common/wizards/wizard-handles');
 var HandleModel = require('model/handle').HandleModel;
 var createProfileWizard = {};
 var FormBuilder = require('common/form-builder');
-var user = require('model/user');
+var User = require('model/user');
+var StreamCommon = require('common/stream-common');
+var ImageModel = require('model/image');
+
+createProfileWizard = {};
 
 var vm =
   createProfileWizard.vm = {
@@ -45,12 +49,6 @@ var vm =
         vm.errorMessages([]);
         vm.awaitingResponse(true);
 
-        var newProfile = {
-          description: vm.profile.description(),
-          skills: vm.profile.skills(),
-          handles: vm.startup.handles().map(function (handle) { return { type: handle.type(), url: handle.url() }; })
-        };
-
        /* var success = function (startup) {
           m.route('/startups/' + startup._id());
         }; */
@@ -69,6 +67,18 @@ var vm =
         vm.errorMessages(errors);
       };
 
+      createProfileWizard.stream = Bacon.mergeAll(vm.pictureDescriptionSegment.vm.profilePicture.stream);
+      StreamCommon.on(createProfileWizard.stream,
+        'EditableImage::ReplaceImageURL',
+        function (message) {
+
+          if (vm.profile.picture()) {
+            ImageModel.deleteImage(vm.profile.picture());
+          }
+           vm.profile.picture(message.parameters.imageID);
+           User.updatePicture('me', vm.picture());
+        }
+      );
 
     }
   };

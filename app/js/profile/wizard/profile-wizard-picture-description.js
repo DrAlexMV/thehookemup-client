@@ -6,9 +6,10 @@ var validate = require('common/form-builder').validate;
 var EditableImage = require('common/editable-image');
 
 var ProfileWizardPictureDescription = function () {
+
   var profileWizardPictureDescription = {};
 
-  var vm = {
+  var vm = profileWizardPictureDescription.vm = {
 
     profilePicture: new EditableImage(),
 

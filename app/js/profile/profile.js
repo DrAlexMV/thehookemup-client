@@ -51,7 +51,7 @@ profile.vm = {
 
 			profile.vm.endorsementButton = EndorsementButton(userid, 'user');
 
-			profile.stream = Bacon.mergeAll(profile.vm.contactCard.vm.profilePicture.stream, profile.vm.connectWithModal.vm.body.stream);
+			profile.stream = Bacon.mergeAll(profile.vm.contactCard.vm.profilePicture.stream);
 			StreamCommon.on(profile.stream,
 				'EditableImage::ReplaceImageURL',
 				function (message) {
