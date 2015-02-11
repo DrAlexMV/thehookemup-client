@@ -34,7 +34,7 @@ var vm =
         tagState: vm.profile.skills,
         ribbonLabel: 'Skills',
         maxCount: 10,
-        placeholder: 'Enter up to ten skills.'
+        placeholder: 'Add up to ten skills. After typing a skill, click add.'
       });
       vm.handlesSegment = ProfileWizardHandles();
 

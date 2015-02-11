@@ -31,7 +31,7 @@ var ProfileWizardPictureDescription = function () {
         m('div.ui.hidden.divider'),
         m('div.ui.stackable.grid', [
           m('div.eight.wide.column', [
-            m('h5','Please upload a profile picture'),
+            m('h5','Upload a profile picture.'),
             m('div.ui.card', [
               vm.profilePicture.view({
                 userImageURL:ctrl.userImageURL(),
@@ -42,7 +42,7 @@ var ProfileWizardPictureDescription = function () {
               name: 'description',
               type: 'text',
               onchange: m.withAttr('value', ctrl.description),
-              placeholder: 'Please enter a one sentence description of yourself.'
+              placeholder: 'Enter a one sentence description of yourself.'
             }, 'Description', null, 'input')
           ])
         ])
