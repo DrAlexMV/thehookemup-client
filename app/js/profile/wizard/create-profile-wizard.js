@@ -8,6 +8,7 @@ var HandleModel = require('model/handle').HandleModel;
 var createProfileWizard = {};
 var FormBuilder = require('common/form-builder');
 var User = require('model/user');
+var UserDetails = require('model/user-details');
 var StreamCommon = require('common/stream-common');
 var ImageModel = require('model/image');
 
@@ -22,20 +23,19 @@ var vm =
       vm.awaitingResponse = m.prop(false);
 
       vm.profile = {
-        picture: m.prop(),
+        userImageURL: m.prop(),
         description: m.prop(''),
         skills: m.prop([]),
-        interests: m.prop([]),
         handles: m.prop(vm.desiredHandles.map(HandleModel))
       };
 
       vm.pictureDescriptionSegment = ProfileWizardPictureDescription();
       vm.skillsSegment = TagInputSegment({
-          tagState: vm.profile.skills,
-          ribbonLabel: 'Skills',
-          maxCount: 10,
-          placeholder: 'Enter up to ten skills.'
-        });
+        tagState: vm.profile.skills,
+        ribbonLabel: 'Skills',
+        maxCount: 10,
+        placeholder: 'Enter up to ten skills.'
+      });
       vm.handlesSegment = ProfileWizardHandles();
 
       vm.rules = _.reduce(_.filter(vm, 'rules'), function (ruleSet, form) {
@@ -49,17 +49,19 @@ var vm =
         vm.errorMessages([]);
         vm.awaitingResponse(true);
 
-       /* var success = function (startup) {
-          m.route('/startups/' + startup._id());
-        }; */
-
         var failure = function (res) {
           vm.errorMessages([res.error])
         };
 
-        /*Profile.create(newStartup)
-          .then(success, failure)
-          .then(vm.awaitingResponse.bind(this, false));*/
+        //TODO: currently don't have handles in user schema. Once they are there, add handles to submit
+        var submit = function () {
+          UserDetails.putSkillsByID('me', vm.profile.skills()).then(
+            function () {User.putByID('me', {'description': vm.profile.description()}).then(
+              function () {m.route('/profile/me')},
+            failure)},
+          failure)};
+
+        submit();
       };
 
       vm.validationFailure = function (errors) {
@@ -72,14 +74,13 @@ var vm =
         'EditableImage::ReplaceImageURL',
         function (message) {
 
-          if (vm.profile.picture()) {
-            ImageModel.deleteImage(vm.profile.picture());
+          if (vm.profile.userImageURL()) {
+            ImageModel.deleteImage(vm.profile.userImageURL());
           }
-           vm.profile.picture(message.parameters.imageID);
-           User.updatePicture('me', vm.picture());
+          vm.profile.userImageURL(message.parameters.imageID);
+          User.updatePicture('me', vm.profile.userImageURL());
         }
       );
-
     }
   };
 
@@ -103,27 +104,27 @@ createProfileWizard.view = function () {
       ]),
       m('div.row', [
         m('div.column', [
-          m('div.ui.form',{
-            onsubmit: function() {
+          m('div.ui.form', {
+            //TODO: is it possible to highlight the skills input box like we do for other required fields?
+            onsubmit: function () {
               if (vm.profile.skills().length == 0) {
                 vm.errorMessages().push("Please enter some skills.");
               }
             },
             class: vm.errorMessages().length ? 'warning' : null,
-            config: FormBuilder.validate(vm.rules, vm.validationSuccess, vm.validationFailure) },
-            [
+            config: FormBuilder.validate(vm.rules, vm.validationSuccess, vm.validationFailure) }, [
             m('div.ui.warning.message', [
               m('div.header', 'Oops!'),
               m('ul', [
                 vm.errorMessages().map(function (message) {
-                return m('li', message);
+                  return m('li', message);
                 })
               ])
             ]),
             m('div.ui.grid', [
               m('div.row', [
                 m('div.column', [
-                  vm.pictureDescriptionSegment.view({ description: vm.profile.description }),
+                  vm.pictureDescriptionSegment.view({ description: vm.profile.description, userImageURL: vm.profile.userImageURL}),
                   vm.skillsSegment.view(),
                   vm.handlesSegment.view({ handles: vm.profile.handles, desiredHandles: vm.desiredHandles })
                 ])

@@ -10,9 +10,7 @@ var ProfileWizardPictureDescription = function () {
   var profileWizardPictureDescription = {};
 
   var vm = profileWizardPictureDescription.vm = {
-
     profilePicture: new EditableImage(),
-
     selectedFieldText: m.prop()
   };
 
@@ -36,6 +34,7 @@ var ProfileWizardPictureDescription = function () {
             m('h5','Please upload a profile picture'),
             m('div.ui.card', [
               vm.profilePicture.view({
+                userImageURL:ctrl.userImageURL(),
                 editable: true
               })
             ]),

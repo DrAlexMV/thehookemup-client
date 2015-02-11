@@ -48,7 +48,7 @@ auth.vm = {
 
 			User.register(message.parameters).then(function (res) {
 				Context.setCurrentUser(res);
-				m.route('/');
+				m.route('/profile-wizard');
 			}, function (res) {
 				regForm.vm.errorMessages([res.error]);
 			}).then(function () { auth.vm.awaitingResponse(false); });

@@ -16,7 +16,7 @@ var SkillsSegment = function (skills, canEdit, userID) {
 		UserDetail.putSkillsByID(userID, skills).then(function() {
 			segment.vm.editing(false);
 		});
-	}
+	};
 
 	function addSkill() {
 		var s = m.prop(segment.vm.skillInput());
