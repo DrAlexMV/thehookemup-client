@@ -22,5 +22,5 @@ m.route(document.getElementById('app'), '/', {
 	'/startups/:startupid': layout(startups),
 	'/startup-wizard': layout(startupWizard),
 	'/notifications': layout(communications),
-  '/profile-wizard': layout(profileWizard)
+	'/profile-wizard': layout(profileWizard)
 });
