@@ -40,7 +40,8 @@ var RegistrationForm = function (urlInvite) {
 			lastName: vm.lastName(),
 			email: vm.email(),
 			password: vm.password(),
-			roles: vm.roles()
+			roles: vm.roles(),
+			invite: vm.invite()
 		}));
 	}
 
