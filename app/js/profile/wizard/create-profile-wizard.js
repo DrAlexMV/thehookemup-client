@@ -85,7 +85,6 @@ var vm =
       );
     }
   };
->>>>>>> Changed appearance of the profile creation wizard
 
 createProfileWizard.controller = function () {
 	vm.init();
