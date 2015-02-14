@@ -37,6 +37,20 @@ auth.vm = {
 				}).then(function () { auth.vm.awaitingResponse(false); });
 		}, true);
 
+		StreamCommon.on(auth.stream, 'SocialSignInForm::SignIn', function (message) {
+			auth.vm.awaitingResponse(true);
+
+			var loginForm = auth.vm.loginForm;
+
+			User.socialSignIn(message.parameters)
+				.then(function (res) {
+					m.route('/');
+					Context.setCurrentUser(res);
+				}, function (res) {
+					loginForm.vm.errorMessages([res.error]);
+				}).then(function () { auth.vm.awaitingResponse(false); });
+		}, true);
+
 		StreamCommon.on(auth.stream, ['LoginForm::Register', 'RegistrationForm::Back'], function (message) {
 			auth.vm.userRegistering(message.name === 'LoginForm::Register');
 		});

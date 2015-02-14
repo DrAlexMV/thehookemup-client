@@ -51,6 +51,10 @@ var User = function(API) {
 		return this.post('/login', credentials, user.UserModel);
 	};
 
+	user.socialSignIn = function(credentials) {
+		return this.post('/login-social', credentials, user.UserModel);
+	};
+
 	user.register = function (newUser) {
 		return this.post('/signup', newUser, user.UserModel);
 	};

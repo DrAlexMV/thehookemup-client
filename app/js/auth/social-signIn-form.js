@@ -1,5 +1,6 @@
 var Config = require('config');
-
+var StreamCommon = require('common/stream-common');
+	
 var SocialSignInForm = function () {
 	var socialSignInForm = {};
 
@@ -8,6 +9,14 @@ var SocialSignInForm = function () {
 	};
 
 	socialSignInForm.stream = new Bacon.Bus();
+
+	function signIn(social_type, token) {
+		socialSignInForm.stream.push(
+			new StreamCommon.Message('SocialSignInForm::SignIn',
+				{ social_type: social_type, token: token }
+			)
+		);
+	}
 
 	var facebookLogin = function() {
         FB.init({
@@ -18,7 +27,7 @@ var SocialSignInForm = function () {
 
 		FB.login(function(response) {
 			if (response.authResponse) {
-				console.log(response.authResponse);
+				signIn('facebook', response.authResponse.accessToken);
 			}
 		});
 	};
