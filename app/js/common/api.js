@@ -1,8 +1,10 @@
+var Config = require('config')
+
 var API = (function () {
 	var api = {};
 
-	api.URL = 'http://127.0.0.1:5000';
-	api.API_BASE = '/api/v1';
+	api.URL = Config['API_URL'];
+	api.API_BASE = Config['API_BASE'];
 	
 	api[401] = function () {
 		m.route('/login');

@@ -1,3 +1,5 @@
+var Config = require('config');
+
 var SocialSignInForm = function () {
 	var socialSignInForm = {};
 
@@ -7,16 +9,33 @@ var SocialSignInForm = function () {
 
 	socialSignInForm.stream = new Bacon.Bus();
 
+	var facebookLogin = function() {
+        FB.init({
+            appId      : Config['FACEBOOK_APP_ID'],
+            xfbml      : true,
+            version    : 'v2.1'
+        });
+
+		FB.login(function(response) {
+			if (response.authResponse) {
+				console.log(response.authResponse);
+			}
+		});
+	};
+
 	socialSignInForm.view = function () {
 		return [
 			m('form.socialSignInForm.ui.form', [
 				m('div.ui.one.column.grid', [
 					m('div.column', [
 						m('div.grouped.fields', [
-							m('div.ui.facebook.button', [
-								m('i.facebook.icon'),
-								'Sign up with Facebook'
-							])
+							m('div.ui.facebook.button', {
+									onclick: facebookLogin
+								},[
+									m('i.facebook.icon'),
+									'Sign up with Facebook'
+								]
+							)
 						]),
 						m('div.grouped.fields', [
 							m('div.ui.twitter.button', [
