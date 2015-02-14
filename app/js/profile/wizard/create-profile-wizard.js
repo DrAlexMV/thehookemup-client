@@ -12,74 +12,80 @@ var ImageModel = require('model/image');
 createProfileWizard = {};
 
 var vm =
-	createProfileWizard.vm = {
-		init: function () {
-			var vm = this;
+  createProfileWizard.vm = {
+    init: function () {
+      var vm = this;
 
-			vm.desiredHandles = ['facebook', 'twitter', 'angel-list', 'website'];
-			vm.awaitingResponse = m.prop(false);
+      vm.desiredHandles = ['facebook', 'twitter', 'angel-list', 'website'];
+      vm.awaitingResponse = m.prop(false);
 
-			vm.profile = {
-				userImageURL: m.prop(),
-				description: m.prop(''),
-				skills: m.prop([]),
-				handles: m.prop(vm.desiredHandles.map(HandleModel))
-			};
+      vm.profile = {
+        userImageURL: m.prop(),
+        description: m.prop(''),
+        skills: m.prop([]),
+        handles: m.prop(vm.desiredHandles.map(HandleModel))
+      };
 
-			vm.pictureDescriptionSegment = ProfileWizardPictureDescription();
-			vm.skillsSegment = TagInputSegment({
-				tagState: vm.profile.skills,
-				ribbonLabel: 'Skills',
-				maxCount: 10,
-				placeholder: 'Add up to ten skills. After typing a skill, click add.'
-			});
-			vm.handlesSegment = ProfileWizardHandles();
+      vm.pictureDescriptionSegment = ProfileWizardPictureDescription();
+      vm.skillsSegment = TagInputSegment({
+        tagState: vm.profile.skills,
+        ribbonLabel: 'Skills',
+        maxCount: 10,
+        placeholder: 'Add up to ten skills. After typing a skill, click add.'
+      });
+      vm.handlesSegment = ProfileWizardHandles();
 
-			vm.rules = _.reduce(_.filter(vm, 'rules'), function (ruleSet, form) {
-				ruleSet = _.extend(ruleSet, form.rules);
-				return ruleSet;
-			}, {});
+      vm.rules = _.reduce(_.filter(vm, 'rules'), function (ruleSet, form) {
+        ruleSet = _.extend(ruleSet, form.rules);
+        return ruleSet;
+      }, {});
 
-			vm.errorMessages = m.prop([]);
+      vm.errorMessages = m.prop([]);
 
-			vm.validationSuccess = function () {
-				vm.errorMessages([]);
-				vm.awaitingResponse(true);
+      vm.validationSuccess = function () {
+        vm.errorMessages([]);
+        vm.awaitingResponse(true);
 
-				var failure = function (res) {
-					vm.errorMessages([res.error])
-				};
+        var failure = function (res) {
+          vm.errorMessages([res.error])
+        };
 
-				//TODO: currently don't have handles in user schema. Once they are there, add handles to submit
-				var submit = function () {
-					UserDetails.putSkillsByID('me', vm.profile.skills()).then(
-						function () {User.putByID('me', {'description': vm.profile.description()}).then(
-							function () {m.route('/profile/me')},
-						failure)},
-					failure)};
+        //TODO: currently don't have handles in user schema. Once they are there, add handles to submit
+        var submit = function () {
+          UserDetails.putSkillsByID('me', vm.profile.skills()).then(
+            function () {
+              User.putByID('me', {'description': vm.profile.description()}).then(
+                function () {
+                  m.route('/profile/me')
+                },
+                failure)
+            },
+            failure)
+        };
 
-				submit();
-			};
+        submit();
+      };
 
-			vm.validationFailure = function (errors) {
-				console.log(errors);
-				vm.errorMessages(errors);
-			};
+      vm.validationFailure = function (errors) {
+        console.log(errors);
+        vm.errorMessages(errors);
+      };
 
-			createProfileWizard.stream = Bacon.mergeAll(vm.pictureDescriptionSegment.vm.profilePicture.stream);
-			StreamCommon.on(createProfileWizard.stream,
-				'EditableImage::ReplaceImageURL',
-				function (message) {
+      createProfileWizard.stream = Bacon.mergeAll(vm.pictureDescriptionSegment.vm.profilePicture.stream);
+      StreamCommon.on(createProfileWizard.stream,
+        'EditableImage::ReplaceImageURL',
+        function (message) {
 
-					if (vm.profile.userImageURL()) {
-						ImageModel.deleteImage(vm.profile.userImageURL());
-					}
-					vm.profile.userImageURL(message.parameters.imageID);
-					User.updatePicture('me', vm.profile.userImageURL());
-				}
-			);
-		}
-	};
+          if (vm.profile.userImageURL()) {
+            ImageModel.deleteImage(vm.profile.userImageURL());
+          }
+          vm.profile.userImageURL(message.parameters.imageID);
+          User.updatePicture('me', vm.profile.userImageURL());
+        }
+      );
+    }
+  };
+>>>>>>> Changed appearance of the profile creation wizard
 
 createProfileWizard.controller = function () {
 	vm.init();

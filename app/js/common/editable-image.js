@@ -7,82 +7,88 @@ var ImageModel = require('model/image');
 var StreamCommon = require('common/stream-common');
 
 var EditableImage = function () {
-	var editableImage = {};
-	
-	var vm =
-	editableImage.vm = {
-		step : m.prop('display')
-	};
+    var editableImage = {};
 
-	editableImage.stream = new Bacon.Bus();
+    var vm =
+        editableImage.vm = {
+            step: m.prop('display')
+        };
 
-	StreamCommon.on(editableImage.stream, 'Dropzone::Success', function (message) {
-		editableImage.stream.push(
-			new StreamCommon.Message(
-				'EditableImage::ReplaceImageURL',
-				message.parameters)
-		);
-		vm.step('display');
-	});
+    editableImage.stream = new Bacon.Bus();
 
-	editableImage.view = function (props) {
-		var userImageURL = props.userImageURL,
-				photoUrl = userImageURL ? ImageModel.getURL(userImageURL) : '/img/square-image.png';
+    StreamCommon.on(editableImage.stream, 'Dropzone::Success', function (message) {
+        editableImage.stream.push(
+            new StreamCommon.Message(
+                'EditableImage::ReplaceImageURL',
+                message.parameters)
+        );
+        vm.step('display');
+    });
 
-		var stepView = null;
-		if (vm.step() == 'display') {
-			stepView = (
-				<div className="content">
+    editableImage.view = function (props) {
+        var userImageURL = props.userImageURL,
+            photoUrl = userImageURL ? ImageModel.getURL(userImageURL) : '/img/square-image.png';
+
+        var stepView = null;
+        if (vm.step() == 'display') {
+            stepView = (
+                <div className="content">
 					{userImageURL ?
-						<a className="ui right corner label" onclick={
-							function() {console.log('remove photo', userImageURL)}}>
-							<i className="close icon"></i>
-						</a>
-						: null
-					}
-					<div className="center">
-						<div className="ui inverted button" onclick={
-							function() {vm.step('upload')}}>
+                        <a className="ui right corner label" onclick={
+                            function () {
+                                console.log('remove photo', userImageURL)
+                            }}>
+                            <i className="close icon"></i>
+                        </a>
+                        : null
+                        }
+                    <div className="center">
+                        <div className="ui inverted button" onclick={
+                            function () {
+                                vm.step('upload')
+                            }}>
 							{userImageURL ? 'Change Photo' : 'Add Photo'}
-						</div>
-					</div>
-				</div>
-			);
-		} else if (vm.step() == 'upload') {
-			stepView = (
-				<div className="content">
-					<a className="ui right corner label" onclick={function() {
-						vm.step('display');
-						console.log('display');
-					}}>
-						<i className="close icon"></i>
-					</a>
-					<div className="center">
+                        </div>
+                    </div>
+                </div>
+                );
+        } else if (vm.step() == 'upload') {
+            stepView = (
+                <div className="content">
+                    <a className="ui right corner label" onclick={function () {
+                        vm.step('display');
+                        console.log('display');
+                    }}>
+                        <i className="close icon"></i>
+                    </a>
+                    <div className="center">
 						{Dropzone('myDropzone', {url: ImageModel.postURL()}, editableImage.stream)}
-					</div>
-				</div>
-			);
-		}
+                    </div>
+                </div>
+                );
+        }
 
-		if (props.editable) {
-			return (
-				<div className={((vm.step() == 'display') ? 'cssDimmer' : '') + ' image'}>
-					<div className="ui active dimmer">
+        if (props.editable) {
+            return (
+                <div className = {"ui " + props.imageClasses + " image"} >
+                    <div className={((vm.step() == 'display') ? 'cssDimmer' : '') + ' image'}>
+                        <div className="ui active dimmer">
 						{stepView}
-					</div>
-					<img className={ "ui image " + props.imageClasses } src={photoUrl} />
-				</div>
-			);
-		} else {
-			return (
-				<div className="image">
-					<img className={ "ui image " + props.imageClasses } src={photoUrl} />
-				</div>
-			);
-		}
-	};
+                        </div>
+                        <img className={ "ui " + props.imageClasses + " image" } src={photoUrl} />
+                    </div>
+                </div>
+                );
+        } else {
+            return (
+                <div className="image">
+                    <img className={ "ui " + props.imageClasses + " image" } src={photoUrl} />
+                </div>
+                );
+        }
+    };
 
-	return editableImage;
+    return editableImage;
 };
 
 module.exports = EditableImage;
