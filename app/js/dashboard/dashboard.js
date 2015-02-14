@@ -13,6 +13,7 @@ var InviteSegment = require('dashboard/invite-segment');
 var StreamCommon = require('common/stream-common');
 var User = require('model/user');
 var UserEdges = require('model/user-edges');
+var TrendingStartupsList = require('startups/trending/trending-startups-list');
 
 var handlePlural = require('common/utils-general').handlePlural;
 
@@ -34,12 +35,7 @@ var dashboard = {};
 
 dashboard.vm = {
 	init: function () {
-		this.pendingRequestsSegment = null;
-		this.connectionsSegment = null;
-		this.basicInfo = null;
-		this.edges = null;
-		this.invites = null;
-
+		this.trendingStartupsList = TrendingStartupsList();
 		this.inviteSegment = new InviteSegment();
 
 		Invites.getInvites().then(function(response) {
@@ -92,22 +88,27 @@ dashboard.view = function () {
 	var suggestedConnections = [];
 	var numFollows = 5;
 
-	if (dashboard.vm.edges) {
-		numPendingRequests = dashboard.vm.edges().pendingConnections().length;
-		numConnections = dashboard.vm.edges().connections().length;
-		suggestedConnections = dashboard.vm.edges().suggestedConnections();
+	if (vm.edges) {
+		numPendingRequests = vm.edges().pendingConnections().length;
+		numConnections = vm.edges().connections().length;
+		suggestedConnections = vm.edges().suggestedConnections();
 	}
 
-	var suggestedConnectionsSegment = new EntityList('Suggested Connections', suggestedConnections, true).view();
+	var suggestedConnectionsSegment = new EntityList('Suggested Connections', suggestedConnections, { inSegment: true });
 
 	return (
 		<div className="ui stackable padded grid">
 			<div className="row">
 				<div className="four wide column">
 					<div className="ui stackable grid">
-						<div className="row">
-							<div className="sixteen wide tablet computer only column" config={twitterIntegration}>
-								<a className="twitter-timeline" href="https://twitter.com/search?q=austin%20startup" data-widget-id="555318512722272256">Tweets about austin startup</a>
+						<div class="row">
+							<div class="sixteen wide column">
+								{ vm.trendingStartupsList.view() }
+							</div>
+						</div>
+						<div class="row">
+							<div class="sixteen wide column">
+								{ suggestedConnectionsSegment.view() }
 							</div>
 						</div>
 					</div>
@@ -136,7 +137,7 @@ dashboard.view = function () {
 								</div>
 							</div>
 						</div>
-						 <div className="row">
+						<div className="row">
 							<div className="ten wide column">
 								<div className="ui segment">
 									<h4 className="ui left floated header">Today</h4>
@@ -204,8 +205,14 @@ dashboard.view = function () {
 									dashboard.vm.connectionsSegment.view({}) : null }
 							</div>
 							<div className="six wide column">
-								{ suggestedConnectionsSegment }
 								{ dashboard.vm.inviteSegment.view({ invites: dashboard.vm.invites.invites }) }
+								<div class="ui grid">
+									<div class="row">
+										<div className="sixteen wide tablet computer only column" config={twitterIntegration}>
+											<a className="twitter-timeline" href="https://twitter.com/search?q=austin%20startup" data-widget-id="555318512722272256">Tweets about austin startup</a>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>

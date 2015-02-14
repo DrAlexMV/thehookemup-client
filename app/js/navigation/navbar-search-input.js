@@ -1,9 +1,9 @@
 var StreamCommon = require('common/stream-common');
+var ENTER_KEY = require('common/constants').ENTER_KEY;
 
 var NavbarSearchInput = function (parameters) {
 	var searchInput = {},
-		ENTER_KEY = require('common/constants').ENTER_KEY,
-		defaultParameters =  {
+		defaultParameters = {
 			minCharacters: 0,
 			delay: 1000
 		};
@@ -24,10 +24,9 @@ var NavbarSearchInput = function (parameters) {
 		}
 	};
 
-	var keyHandlers = {
-		13: function () {
-			vm.search();
-		}
+	var keyHandlers = {};
+	keyHandlers[ENTER_KEY] = function () {
+		vm.search();
 	};
 
 	function keyup(e) {

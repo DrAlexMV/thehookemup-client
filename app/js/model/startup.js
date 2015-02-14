@@ -5,30 +5,33 @@ var Startup = function(API) {
 	var startup = {};
 
 	startup.StartupModel = function(data) {
-		this._id = m.prop(data._id);
-		this.date = m.prop(data.date);
-		this.website = m.prop(data.website);
-		this.name = m.prop(data.name);
-		this.description = m.prop(data.description);
-		this.picture = m.prop(data.picture);
-		this.isOwner = m.prop(data.isOwner);
-		this.owners = m.prop(data.owners);
-		this.markets = m.prop(data.markets);
-		this.handles = m.prop(data.handles);
 
-		this.getName = function () {
-			return this.name;
+		var model = {};
+
+		model._id = m.prop(data._id);
+		model.date = m.prop(data.date);
+		model.website = m.prop(data.website);
+		model.name = m.prop(data.name);
+		model.description = m.prop(data.description);
+		model.picture = m.prop(data.picture);
+		model.isOwner = m.prop(data.isOwner);
+		model.owners = m.prop(data.owners);
+		model.markets = m.prop(data.markets);
+		model.handles = m.prop(data.handles);
+
+		model.getName = function () {
+			return model.name();
 		};
 
-		this.getPicture = function () {
-			return ImageModel.getSource(this.picture());
+		model.getPicture = function () {
+			return ImageModel.getSource(model.picture());
 		};
 		
-		this.getPath = function () {
+		model.getPath = function () {
 			return '/startups'
 		};
 
-		return this;
+		return model;
 	};
 
 	startup.create = function (startupToCreate) {
@@ -41,6 +44,12 @@ var Startup = function(API) {
 
 	startup.putByID = function(startupID, startup) {
 		return this.put('/startups/' + startupID, startup);
+	};
+
+	startup.getTrending = function () {
+		return this.get('/search/startups?rank=trending&results_per_page=10&page=0').then(function (response) {
+			return response.results.map(startup.StartupModel);
+		});
 	};
 
 	_.mixin(startup, API);

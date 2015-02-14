@@ -1,17 +1,19 @@
+var ENTER_KEY = require('common/constants').ENTER_KEY;
+
 var Tagger = function (settings) {
 	var tagger = {};
 
 	var vm = {
 		tagName: m.prop(''),
 		selectedTags: m.prop([]),
-		addTag: function (category) {
+		addTag: function () {
 			var conditions = [
-				!_.contains(vm.selectedTags(), category),
+				!_.contains(vm.selectedTags(), vm.tagName()),
 				!_.isNumber(settings.maxCount) || vm.selectedTags().length < settings.maxCount
 			];
 
 			if (_.all(conditions)) {
-				category && vm.selectedTags().push(category);
+				vm.tagName() && vm.selectedTags().push(vm.tagName());
 				vm.tagName('');
 			}
 		},
@@ -19,6 +21,22 @@ var Tagger = function (settings) {
 			vm.selectedTags().splice(index, 1);
 		}
 	};
+
+	var keyHandlers = {};
+	keyHandlers[ENTER_KEY] = function (e) {
+		vm.addTag();
+		e.preventDefault()
+	};
+
+	function keyup(e) {
+		var action = keyHandlers[e.keyCode];
+
+		if (action) {
+			action(e);
+		} else {
+			m.redraw.strategy('none');
+		}
+	}
 
 	tagger.view = function (ctrl) {
 
@@ -29,9 +47,10 @@ var Tagger = function (settings) {
 				m('input', {
 					placeholder: ctrl.placeholder ? ctrl.placeholder : 'Add a category',
 					value: vm.tagName(),
-					onchange: m.withAttr('value', vm.tagName)
+					onchange: m.withAttr('value', vm.tagName),
+					onkeyup: keyup
 				}),
-				m('div.ui.right.primary.button', { onclick: vm.addTag.bind(this, vm.tagName()) }, 'Add')
+				m('div.ui.right.primary.button', { onclick: vm.addTag }, 'Add')
 			]),
 			vm.selectedTags().length ?
 				m('div.ui.segment', [
