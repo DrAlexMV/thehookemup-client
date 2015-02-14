@@ -1,4 +1,5 @@
 var API = require('common/api');
+var ImageModel = require('model/image');
 
 var Startup = function(API) {
 	var startup = {};
@@ -13,14 +14,19 @@ var Startup = function(API) {
 		this.isOwner = m.prop(data.isOwner);
 		this.owners = m.prop(data.owners);
 		this.markets = m.prop(data.markets);
-
 		this.handles = m.prop(data.handles);
-		/*
-		[
-			{type: 'blog', url: 'www.test.com/blog'},
-			{type: 'twitter', url: 'www.twitter.com/thefounderati'},
-		]
-		*/
+
+		this.getName = function () {
+			return this.name;
+		};
+
+		this.getPicture = function () {
+			return ImageModel.getSource(this.picture());
+		};
+		
+		this.getPath = function () {
+			return '/startups'
+		};
 
 		return this;
 	};

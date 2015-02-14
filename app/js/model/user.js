@@ -20,6 +20,18 @@ var User = function(API) {
 		this.connectionType = m.prop(data.connectionType);
 		this.endorsementCount = m.prop(data.endorsementCount);
 
+		this.getName = function () {
+			return this.firstName() + ' ' + this.lastName();
+		};
+
+		this.getPicture = function () {
+			return ImageModel.getSource(this.picture());
+		};
+
+		this.getPath = function () {
+			return '/users'
+		};
+
 		return this;
 	};
 
@@ -45,14 +57,6 @@ var User = function(API) {
 
 	user.updatePicture = function (userid, picture) {
 		user.putByID(userid, {picture: picture});
-	};
-
-	user.getPicture = function(userInstance) {
-		return ImageModel.getSource(userInstance.picture());
-	};
-
-	user.getName = function(userInstance) {
-		return userInstance.firstName() + ' ' + userInstance.lastName();
 	};
 
 	_.mixin(user, API);

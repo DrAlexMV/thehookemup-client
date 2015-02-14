@@ -20,9 +20,9 @@ var Message = function (isOwner, post, postIndex) {
 				<div className="description">{post.message()}</div>
 			</div>
 			<div className="extra content">
-				<img className="ui avatar image" src={UserModel.getPicture(post.user)} />
+				<img className="ui avatar image" src={ post.user.getPicture() } />
 				<div className="right floated author">
-					<div>{UserModel.getName(post.user)}</div>
+					<div>{ post.user.getName() }</div>
 					<div className="right floated">{DateUtils.format(post.date())}</div>
 				</div>
 			</div>
@@ -89,9 +89,9 @@ var MessageFeed = function () {
 					</div>
 				</div>
 				<div className="extra content">
-					<img className="ui avatar image" src={UserModel.getPicture(props.currentUser)} />
+					<img className="ui avatar image" src={ props.currentUser.getPicture() } />
 					<div className="right floated author">
-						<div>{UserModel.getName(props.currentUser)}</div>
+						<div>{ props.currentUser.getName() }</div>
 					</div>
 				</div>
 			</div> : null;

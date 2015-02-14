@@ -80,11 +80,11 @@ var NotificationList = function (edges) { // edges is an m.prop
 
 				return [
 					m('div.event', [
-						m('div.label', m('img.profile-picture', { src: User.getPicture(user) })),
+						m('div.label', m('img.profile-picture', { src: user.getPicture() })),
 						m('div.content', [
 							m('div.summary', [
 								m('a.user', {href: '/profile/' + user._id(), config: m.route}, [
-									truncate(User.getName(user), 18)
+									truncate(user.getName(), 18)
 								]), ' wants to connect'
 							]),
 							m('div.extra.text', messageView),

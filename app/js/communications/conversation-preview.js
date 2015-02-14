@@ -47,16 +47,16 @@ var ConversationPreview = function (message, user) {
     }
     else {
       return [
-        m('a', {href: '/profile/' + user._id(), config: m.route}, [
-          m("div.ui.center.aligned.header", user.firstName() + " " + user.lastName() + "")
+        m('a', { href: '/profile/' + user._id(), config: m.route }, [
+          m("div.ui.center.aligned.header", user.getName())
         ]),
         m("div.ui.padded.grid", [
           m("div.row", [
             m("div.three.wide.column", [
               m("div.content", [
-                m('a', {href: '/profile/' + user._id(), config: m.route}, [
+                m('a', { href: '/profile/' + user._id(), config: m.route }, [
                   m("div.ui.tiny.bordered.image", [
-                    m('img.ui.tiny.image', { src: User.getPicture(user) })
+                    m('img.ui.tiny.image', { src: user.getPicture() })
                   ])
                 ])
               ])

@@ -47,8 +47,7 @@ var ProjectsSegment = function (projects, canEdit, userID) {
 
 	function addCollaborator(projectIndex, possibleChoices) {
 		var foundPerson = _.find(possibleChoices, function(person) {
-			console.log('testing', User.getName(person), '=', segment.vm.personInput());
-			return User.getName(person) === segment.vm.personInput();
+			return person.getName() === segment.vm.personInput();
 		});
 
 		if (!foundPerson) return;
@@ -98,10 +97,10 @@ var ProjectsSegment = function (projects, canEdit, userID) {
 					project.people.map(function(person, personIndex) {
 						return (
 							<div className="ui image label">
-								<img src={User.getPicture(person)} />
+								<img src={ person.getPicture() } />
 								<a href={'/profile/' + person._id()}
 									config={m.route}>
-									{User.getName(person)}
+									{ person.getName() }
 								</a>
 								<i onclick={removeCollaborator.bind(this, index, personIndex)}
 									className="delete icon">
@@ -166,7 +165,7 @@ var ProjectsSegment = function (projects, canEdit, userID) {
 												return person._id() === user._id();
 											});
 										}).map(function(user) {
-											return {title: User.getName(user)};
+											return { title: user.getName() };
 									}),
 									onSelect: function() {
 										// Evil hack
@@ -246,8 +245,8 @@ var ProjectsSegment = function (projects, canEdit, userID) {
 									<a href={'/profile/' + person._id()} 
 										config={m.route}
 										className="ui image label">
-										<img src={User.getPicture(person)} />
-										{User.getName(person)}
+										<img src={ person.getPicture() } />
+										{ person.getName() }
 									</a>
 								);
 							})

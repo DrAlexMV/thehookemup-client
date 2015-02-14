@@ -3,7 +3,7 @@
  * @jsx m
  */
 
-var EntityList = function (title, linkBase, entities, model, inSegment) {
+var EntityList = function (title, entities, inSegment) {
 	var entitylist = {};
 
 	entitylist.view = function () {
@@ -11,11 +11,11 @@ var EntityList = function (title, linkBase, entities, model, inSegment) {
 		if (entities) {
 			list = entities.map(function(entity) {
 				return (
-					<a href={linkBase + '/' + entity._id()} config={m.route} className="item">
+					<a href={ entity.getPath() + '/' + entity._id() } config={m.route} className="item">
 						<img className="ui top aligned avatar image"
-							src={model.getPicture(entity)} />
+							src={ entity.getPicture() } />
 						<div className="content">
-							<div className="header">{model.getName(entity)}</div>
+							<div className="header">{ entity.getName() }</div>
 							{ entity.roles().join(', ') }
 						</div>
 					</a>

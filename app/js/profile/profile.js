@@ -246,68 +246,53 @@ profile.view = function () {
         EditableText.view(profile.vm.editables.description) :
         <div className="description">
 			{basicInfo.description()}
-        </div>;
+		</div>;
 
-    var connections = new EntityList(
-        'Connections',
-        '/profile',
-        profile.vm.edges.connections(),
-        User
-    );
+	var connections = new EntityList('Connections', profile.vm.edges.connections());
 
-    var editButton = null;
-    if (profile.vm.userid == 'me') {
-        if (profile.vm.editing()) {
-            editButton = (
-                <div>
-                    <div className="mini ui buttons">
-                        <div className="ui blue button" onclick={profile.saveDetail}>
-                        Save
-                        </div>
-                        <div className="ui red button"
-                        onclick={function () {
-                            profile.vm.editing(false)
-                        } }>
-                        Discard
-                        </div>
-                    </div>
-                    <div className="ui hidden divider"></div>
-                </div>
+	var editButton = null;
+	if (profile.vm.userid == 'me') {
+		if (profile.vm.editing()) {
+			editButton = (
+				<div>
+					<div className="mini ui buttons">
+						<div className="ui blue button" onclick={profile.saveDetail}>
+							Save
+						</div>
+						<div className="ui red button"
+							onclick={function() {profile.vm.editing(false)} }>
+							Discard
+						</div>
+					</div>
+					<div className="ui hidden divider"></div>
+				</div>
 
-                );
-        } else {
-            editButton = (
-                <div>
-                    <div className="mini ui blue button"
-                    onclick={function () {
-                        profile.vm.editing(true)
-                    } }>
-                    Edit
-                    </div>
-                    <div className="ui hidden divider"></div>
-                </div>
-                );
-        }
-    }
+			);
+		} else {
+			editButton = (
+				<div>
+					<div className="mini ui blue button"
+						onclick={function() {profile.vm.editing(true)} }>
+						Edit
+					</div>
+					<div className="ui hidden divider"></div>
+				</div>
+			);
+		}
+	}
 
-    return (
-        <div className="ui padded stackable grid">
-            <div className="row">
-                <div className="four wide column">
+	return (
+		<div className="ui padded stackable grid">
+			<div className="row">
+				<div className="four wide column">
 					{vm.contactCard.view({})}
-                </div>
-                <div className="eight wide column">
-                    <div className="ui grid">
-                        <div className="two column row">
-                            <div className="left floated column">
-                                <h2 className="ui header">{isConnectedIcon} {User.getName(basicInfo)}</h2>
-								{ vm.endorsementButton.view() }
-                            </div>
-                            <div className="right floated right aligned column">
-								{ connectionButtons }
-                            </div>
-                        </div>
-                    </div>
+				</div>
+				<div className="eight wide column">
+					<h1 className="ui header">
+						{ isConnectedIcon }
+						{ basicInfo.getName() }
+						{ connectionButtons }
+					</h1>
 					{editButton}
 
 					{university_info}

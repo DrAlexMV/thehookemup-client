@@ -53,7 +53,7 @@ var ConnectionRequest = function (user, message) {
               m("div.content", [
                 m('a', {href: '/profile/' + user._id(), config: m.route}, [
                   m("div.ui.tiny.bordered.image", [
-                    m('img.ui.tiny.image', { src: User.getPicture(user) })
+                    m('img.ui.tiny.image', { src: user.getPicture() })
                   ])
                 ])
               ]),
@@ -88,7 +88,7 @@ var ConnectionRequest = function (user, message) {
             m("div.content", [
               m('a', {href: '/profile/' + user._id(), config: m.route}, [
                 m("div.ui.tiny.bordered.image", [
-                  m('img.ui.tiny.image', { src: User.getPicture(user) })
+                  m('img.ui.tiny.image', { src: user.getPicture() })
                 ])
               ])
             ]),

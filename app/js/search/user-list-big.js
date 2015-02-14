@@ -10,12 +10,12 @@ var UserListBig = function (users) {
 				m('div.item', [
 					m('div.ui.card', [
 						m('div.ui.tiny.image', [
-							m('img', { src: User.getPicture(user) })
+							m('img', { src: user.getPicture() })
 						]),
 						m('div.content', [
 							m('div.name-header', [
 								m('a.ui.header', { href: '/profile/' + user._id(), config: m.route }, [
-									User.getName(user),
+									user.getName(),
 									m('div.ui.right.floated', EndorsementCount(null, user.endorsementCount).view())
 								]),
 								m('div.ui.meta', user.roles().join(", "))

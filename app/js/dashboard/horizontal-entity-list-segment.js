@@ -18,9 +18,9 @@ var HorizontalEntityListSegment = function (title, linkBase, entitiesFunction, m
 		return (
 			<a href={linkBase + '/' + entity._id()} config={m.route} className="item">
 				<img className="ui top aligned avatar image"
-					src={model.getPicture(entity)} />
+					src={ entity.getPicture() } />
 				<div className="content">
-					<div className="header">{model.getName(entity)}</div>
+					<div className="header">{ entity.getName() }</div>
 					{ entity.roles().join(', ') }
 				</div>
 			</a>
@@ -36,7 +36,7 @@ var HorizontalEntityListSegment = function (title, linkBase, entitiesFunction, m
 			if (config.searchable && horizontalEntityList.vm.searchInput()) {
 				var query = horizontalEntityList.vm.searchInput();
 				filteredItems = entitiesFunction().filter(function(entity) {
-					return model.getName(entity).toLowerCase().indexOf(query.toLowerCase()) != -1;
+					return entity.getName().toLowerCase().indexOf(query.toLowerCase()) != -1;
 				});
 			} else {
 				filteredItems = entitiesFunction();

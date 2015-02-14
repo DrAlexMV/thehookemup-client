@@ -38,8 +38,8 @@ var QuestionAnswerItem = function(isOwner, itemData, index) {
 					<div className="remove">
 						<i className="delete icon" onclick={this.remove.bind(this, itemData.id(), index)}></i>
 					</div> : null }
-				<img className="ui avatar image" src={UserModel.getPicture(itemData.asker)} />
-				<div className="author username">{UserModel.getName(itemData.asker)} asked</div>
+				<img className="ui avatar image" src={ itemData.asker.getPicture() } />
+				<div className="author username">{ itemData.asker.getName() } asked</div>
 				<div className="date">{DateUtils.format(itemData.date())}</div>
 			
 				<div className="message">

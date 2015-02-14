@@ -12,14 +12,9 @@ var User = require('model/user');
 
 var MessageDisplay = function (message, user) {
 
-
   var messageDisplay = {};
 
-
-
-
   messageDisplay.stream = new Bacon.Bus();
-
 
   messageDisplay.view = function () {
 
@@ -34,7 +29,7 @@ var MessageDisplay = function (message, user) {
             m("div.content", [
               m('a', {href: '/profile/' + user._id(), config: m.route}, [
                 m("div.ui.mini.bordered.image", [
-                  m('img.ui.mini.image', { src: User.getPicture(user) })
+                  m('img.ui.mini.image', { src: user.getPicture() })
                 ])
               ])
             ])

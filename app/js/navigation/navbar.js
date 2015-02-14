@@ -57,7 +57,7 @@ var Navbar = function () {
 					m('div.six.wide.column', [
 						m('div#nav-avatar.right.item', [
 							 m('a[href="/profile/me"].ui.avatar.image', { config: m.route } ,[
-								  m('img', { src: User.getPicture(vm.currentUser()) }),
+								  m('img', { src: vm.currentUser().getPicture() })
 							])
 						]),
 						m('div.right.item', [

@@ -98,13 +98,7 @@ dashboard.view = function () {
 		suggestedConnections = dashboard.vm.edges().suggestedConnections();
 	}
 
-	var suggestedConnectionsSegment = new EntityList(
-		'Suggested Connections',
-		'/profile',
-		suggestedConnections,
-		User,
-		true
-	).view({});
+	var suggestedConnectionsSegment = new EntityList('Suggested Connections', suggestedConnections, true).view();
 
 	return (
 		<div className="ui stackable padded grid">
