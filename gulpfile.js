@@ -13,7 +13,7 @@ var webserver = require('gulp-webserver');
 var paths = {
   app_js: ['./app/js/routes.js'], // 'entry point'
   js: ['./app/js/**/*.js'],
-  less_files: ['./app/styles/*.less'],
+  less_files: ['./app/styles/**/*.less'],
   build: './app/build/',
   style: './app/styles/',
   scripts: './app/js/',
