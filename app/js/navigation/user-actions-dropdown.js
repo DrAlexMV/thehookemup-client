@@ -34,10 +34,8 @@ var UserActions = function (user) { // edges is an m.prop
 
                     m('div.eight.wide.center.aligned.column', [
                         m('div.description', truncate(user.getName(), 20)),
-                        m('br'),
+												m('br'),
                         m("img.ui.centered.tiny.rounded.image[style='height:60px;width:60px']", { src: user.getPicture() }),
-                        m('br'),
-                        m('div.description', 'Endorsements: ', user.endorsementCount())
                     ])
                 ])
             ])
@@ -45,17 +43,17 @@ var UserActions = function (user) { // edges is an m.prop
     ];
 
     userActions.view = function () {
-        return [
-            m("img.ui.small.rounded.image[style='height:20px;width:20px']", { src: user.getPicture() }),
-            m('div.menu', [
-                listObject,
-                m('div.ui.right.aligned.item', [
-                    m('a', { href: '/', config: m.route }, [
-                        'Go to main page'
-                    ])
-                ])
-            ])
-        ];
+			return [
+				m('img.ui.small.rounded.image[style="height:20px;width:20px"]', { src: user.getPicture() }),
+				m('div#user-actions.menu', [
+					listObject,
+					m('div.ui.right.aligned.item', [
+						m('a', { href: '/', config: m.route }, [
+							'Go to main page'
+						])
+					])
+				])
+			];
     };
     return userActions;
 };

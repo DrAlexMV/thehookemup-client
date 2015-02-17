@@ -17,7 +17,7 @@ var EndorseButton = function (entityId, entityType) {
 			vm.waitingForResponse(true);
 			Endorsements.removeEndorsement(entityId)
 				.then(vm.endorsing.bind(this, false))
-				.then(vm.waitingForResponse.bind(this, false))
+				.then(vm.waitingForResponse.bind(this, false));
 		},
 		init: function () {
 			Endorsements.hasUserEndorsedEntity(entityId)
