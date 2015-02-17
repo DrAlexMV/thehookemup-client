@@ -4,7 +4,7 @@
 
 //TODO: Rate limit clicking somehow
 
-var DropdownMixin = function (body, dropdownDivType) {
+var DropdownMixin = function (body, dropdownDivType, imageSource) {
 
 	var dropdownMixin = {};
 
@@ -19,7 +19,7 @@ var DropdownMixin = function (body, dropdownDivType) {
 
 	dropdownMixin.view = function () {
 		return [
-			m(dropdownDivType, {config:config},[
+			m(dropdownDivType, {src:imageSource, config:config}, [
 				body.view()
 			])
 		];

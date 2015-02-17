@@ -6,6 +6,7 @@ var User = require('model/user');
 var UserModel = User.UserModel;
 var Image = require('model/image');
 var NotificationList = require('navigation/notification-list');
+var UserActions = require('navigation/user-actions-dropdown');
 var DropdownMixin = require('common/dropdown-mixin');
 var UserEdges = require('model/user-edges');
 
@@ -16,7 +17,8 @@ var Navbar = function () {
 		navbarSearchInput: new NavbarSearchInput(),
 		currentUser: m.prop(new UserModel({})),
 		currentUserEdges: null,
-		dropdownMixin: m.prop()
+		notificationDropdown: m.prop(),
+        userActionsDropdown: m.prop()
 	};
 
 	navbar.stream = Bacon.mergeAll(Context.stream, vm.navbarSearchInput.stream);
@@ -25,7 +27,10 @@ var Navbar = function () {
 		Context.getCurrentUserEdges().then(
 			function(edgesProp) {
 				navbar.vm.currentUserEdges = edgesProp;
-				navbar.vm.dropdownMixin(DropdownMixin(NotificationList(edgesProp), 'div.ui.icon.top.right.pointing.dropdown.basic.button'));
+				navbar.vm.notificationDropdown(DropdownMixin(NotificationList(edgesProp),
+                    'div.ui.icon.top.right.pointing.dropdown.basic.button'));
+                navbar.vm.userActionsDropdown(DropdownMixin(NotificationList(edgesProp),
+                    'img', vm.currentUser().getPicture()));
 		}, Error.handle);
 	}
 
@@ -55,14 +60,15 @@ var Navbar = function () {
 						])
 					]),
 					m('div.six.wide.column', [
-						m('div#nav-avatar.right.item', [
-							 m('a[href="/profile/me"].ui.avatar.image', { config: m.route } ,[
-								  m('img', { src: vm.currentUser().getPicture() })
-							])
-						]),
+                        m('div#nav-avatar.right.item', [
+                            m('div.ui.avatar.image' ,[
+                                vm.userActionsDropdown() ? vm.userActionsDropdown().view() : null
+                                ])
+
+                        ]),
 						m('div.right.item', [
-							vm.dropdownMixin() ? vm.dropdownMixin().view() : null
-						]),
+							vm.notificationDropdown() ? vm.notificationDropdown().view() : null
+						])
 					])
 				])
 			])
