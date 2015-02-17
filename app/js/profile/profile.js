@@ -246,12 +246,7 @@ profile.view = function () {
 			{basicInfo.description()}
 		</div>;
 
-	var connections = new EntityList(
-		'Connections',
-		'/profile',
-		 profile.vm.edges.connections(),
-		 User
-	);
+	var connections = EntityList('Connections', profile.vm.edges.connections());
 
 	var editButton = null;
 	if (profile.vm.userid == 'me') {
@@ -294,7 +289,7 @@ profile.view = function () {
 					<div className="ui grid">
 						<div className="two column row">
 							<div className="left floated column">
-								<h2 className="ui header">{isConnectedIcon} {User.getName(basicInfo)}</h2>
+								<h2 className="ui header">{isConnectedIcon} {basicInfo.getName()}</h2>
 								{ vm.endorsementButton.view() }
 							</div>
 							<div className="right floated right aligned column">
