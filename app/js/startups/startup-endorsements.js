@@ -2,7 +2,7 @@
  * @jsx m
  */
 
-var EndorserList = require('engagement/Endorsements/endorser-list');
+var EndorserList = require('engagement/endorsements/endorser-list');
 
 var StartupEndorsements = function (startupId) {
 	var startupEndorsements = {};
