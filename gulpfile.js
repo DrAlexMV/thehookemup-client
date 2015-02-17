@@ -1,5 +1,4 @@
 var browserify = require('gulp-browserify');
-var browserSync = require('browser-sync');
 var gulp = require('gulp');
 var gulpif = require('gulp-if');
 var less = require('gulp-less');
