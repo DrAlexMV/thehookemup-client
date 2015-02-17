@@ -4,6 +4,6 @@ app/bower_components
 .idea
 node_modules
 app/build/bundle.js
-app/styles/*.css
+app/styles/**/*.css
 .floo
 .flooignore
