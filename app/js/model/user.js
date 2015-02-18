@@ -19,6 +19,7 @@ var User = function(API) {
 		this.picture = m.prop(data.picture);
 		this.connectionType = m.prop(data.connectionType);
 		this.endorsementCount = m.prop(data.endorsementCount);
+        this.handles = m.prop(data.handles);
 
 		this.getName = function () {
 			return this.firstName() + ' ' + this.lastName();

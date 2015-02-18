@@ -8,9 +8,22 @@ var EditableImage = require('common/editable-image');
 var ContactCard = function (basicUserInfo, editable) {
 	var card = {};
 
+    var findWebsiteUrl = function (websiteName) {
+        var url = _.filter(basicUserInfo().handles(), function(entry) { return (entry.type==websiteName); });
+        url = (url.length>0) ? url[0] : null;
+        return url;
+    };
+
 	card.vm = {
 		profilePicture: new EditableImage()
+
 	};
+
+    //TODO: finish linking handles to buttons
+    var desiredHandles = ['linkedin', 'github', 'facebook', 'twitter', 'google'];
+
+
+    findWebsiteUrl('linkedin')==null ? function(){} : m.route.bind(this, findWebsiteUrl('linkedin'))
 
 	card.view = function (props) {
 		return (
