@@ -1,7 +1,3 @@
-/**
- * Created by austinstone on 2/10/15.
- */
-
 var HandleEditor = require('common/social-handles/handle-editor');
 
 var WizardHandles = function () {

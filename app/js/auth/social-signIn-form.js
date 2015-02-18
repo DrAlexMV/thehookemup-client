@@ -10,10 +10,10 @@ var SocialSignInForm = function () {
 
 	socialSignInForm.stream = new Bacon.Bus();
 
-	function signIn(social_type, token) {
+	function signIn(socialType, token) {
 		socialSignInForm.stream.push(
 			new StreamCommon.Message('SocialSignInForm::SignIn',
-				{ social_type: social_type, token: token }
+				{ socialType: socialType, token: token }
 			)
 		);
 	}

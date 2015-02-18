@@ -1,6 +1,3 @@
-/**
- * Created by austinstone on 2/10/15.
- */
 var Tagger = require('common/ui-core/tagger');
 
 var TagInputSegment = function (props) {
