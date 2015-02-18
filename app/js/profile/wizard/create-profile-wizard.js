@@ -1,15 +1,15 @@
-var ProfileWizardPictureDescription = require('profile/wizard/profile-wizard-picture-description');
-var TagInputSegment = require('common/wizards/tag-input-segment');
-var ProfileWizardHandles = require('common/wizards/wizard-handles');
-var HandleModel = require('model/handle').HandleModel;
-var createProfileWizard = {};
+var AttachSocialSegment = require('profile/wizard/attach-social-segment');
 var FormBuilder = require('common/form-builder');
+var HandleModel = require('model/handle').HandleModel;
+var ImageModel = require('model/image');
+var ProfileWizardHandles = require('common/wizards/wizard-handles');
+var ProfileWizardPictureDescription = require('profile/wizard/profile-wizard-picture-description');
+var StreamCommon = require('common/stream-common');
+var TagInputSegment = require('common/wizards/tag-input-segment');
 var User = require('model/user');
 var UserDetails = require('model/user-details');
-var StreamCommon = require('common/stream-common');
-var ImageModel = require('model/image');
 
-createProfileWizard = {};
+var createProfileWizard = {};
 
 var vm =
     createProfileWizard.vm = {
@@ -134,12 +134,13 @@ createProfileWizard.view = function () {
                                 m('div.column', [
                                     vm.pictureDescriptionSegment.view({ description: vm.profile.description, userImageURL: vm.profile.userImageURL}),
                                     vm.skillsSegment.view(),
+                                    AttachSocialSegment().view(),
                                     vm.handlesSegment.view({ handles: vm.profile.handles, desiredHandles: vm.desiredHandles })
                                 ])
                             ]),
                             m('div.row', [
                                 m('div.center.aligned.column', [
-                                    m('div.ui.big.blue.submit.button', 'Finish')
+                                    m('div.ui.big.blue.submit.button', 'Update My Profile')
                                 ])
                             ])
                         ])

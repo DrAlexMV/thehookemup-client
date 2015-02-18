@@ -60,6 +60,10 @@ var User = function(API) {
 		return this.post('/login-social', credentials, user.UserModel);
 	};
 
+	user.attachSocialSignIn = function(socialType, token) {
+		return this.post('/attach-social-login', {socialType: socialType, token: token});
+	};
+
 	user.register = function (newUser) {
 		return this.post('/signup', newUser, user.UserModel);
 	};
