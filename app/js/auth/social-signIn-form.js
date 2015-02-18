@@ -45,18 +45,6 @@ var SocialSignInForm = function () {
 									'Sign up with Facebook'
 								]
 							)
-						]),
-						m('div.grouped.fields', [
-							m('div.ui.twitter.button', [
-								m('i.twitter.icon'),
-								'Sign up with Twitter'
-							])
-						]),
-						m('div.grouped.fields', [
-							m('div.ui.google.plus.button', [
-								m('i.google.plus.icon'),
-								'Sign up with Google Plus'
-							])
 						])
 					])
 				])
