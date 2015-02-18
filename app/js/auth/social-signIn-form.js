@@ -42,7 +42,7 @@ var SocialSignInForm = function () {
 									onclick: facebookLogin
 								},[
 									m('i.facebook.icon'),
-									'Sign up with Facebook'
+									'Sign In with Facebook'
 								]
 							)
 						])
