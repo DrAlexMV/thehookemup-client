@@ -9,6 +9,7 @@ var TagInputSegment = require('common/wizards/tag-input-segment');
 var User = require('model/user');
 var UserDetails = require('model/user-details');
 
+
 var createProfileWizard = {};
 
 var vm =
@@ -16,7 +17,7 @@ var vm =
         init: function () {
             var vm = this;
 
-            vm.desiredHandles = ['facebook', 'twitter', 'angel-list', 'website'];
+            vm.desiredHandles = ['linkedin', 'github', 'facebook', 'twitter', 'google-plus', 'angel-list', 'website'];
             vm.awaitingResponse = m.prop(false);
 
             vm.profile = {

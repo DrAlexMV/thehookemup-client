@@ -1,6 +1,8 @@
 var API = require('common/api');
 var EditableImage = require('common/editable-image');
 
+
+//TODO: Need website and angel list icons
 var ContactCard = function (basicUserInfo, editable) {
     var card = {};
 
@@ -15,16 +17,17 @@ var ContactCard = function (basicUserInfo, editable) {
         profilePicture: new EditableImage()
     };
 
-    var desiredHandles = ['linkedin', 'github', 'facebook', 'twitter', 'google plus'];
+    var desiredHandles = ['linkedin', 'github', 'facebook', 'twitter', 'google-plus', 'angel-list', 'website'];
 
     card.view = function () {
 
         var handlesView = _.map(desiredHandles, function (handle) {
             var handleUrl = findWebsiteUrl(handle);
             return handleUrl ? [
-                m('div.ui.circular.' + handle.replace(' ', '.') + '.icon.button', { onclick: function () {
-                    location.href = 'http://' + handleUrl }}, [
-                    m('i.' + handle.replace(' ', '.') + '.icon')
+                m("a.[href=" + handleUrl + "]", [
+                    m('div.ui.circular.' + handle.replace('- ', '.') + '.icon.button', [
+                        m('i.' + handle.replace(' ', '.') + '.icon')
+                    ])
                 ])
             ] : null;
         });
