@@ -12,10 +12,10 @@ var AttachSocialSegment = function () {
 	function attachFacebook() {
 		// TODO: Avoid code duplication here
 		FB.init({
-            appId      : Config['FACEBOOK_APP_ID'],
-            xfbml      : true,
-            version    : 'v2.1'
-        });
+			appId      : Config['FACEBOOK_APP_ID'],
+			xfbml      : true,
+			version    : 'v2.1'
+		});
 
 		FB.login(function(response) {
 			if (response.authResponse) {

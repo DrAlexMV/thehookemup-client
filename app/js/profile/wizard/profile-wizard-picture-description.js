@@ -25,7 +25,6 @@ var ProfileWizardPictureDescription = function () {
 		return [
 			m('div.ui.segment', [
 				m('a.ui.ribbon.label', 'Basic Info'),
-				//  m('div.ui.hidden.divider'),
 				m('div.ui.stackable.grid', [
 					m('div.four.wide.column', [
 						m('h5', 'Upload a profile picture.'),
