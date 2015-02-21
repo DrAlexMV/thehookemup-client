@@ -12,15 +12,17 @@ var SkillsSegment = function (skills, canEdit, userID) {
 		this.vm.init();
 	};
 
-	segment.save = function() {
-		UserDetail.putSkillsByID(userID, skills).then(function() {
+	segment.save = function () {
+		UserDetail.putSkillsByID(userID, skills).then(function () {
 			segment.vm.editing(false);
 		});
 	};
 
 	function addSkill() {
 		var s = m.prop(segment.vm.skillInput());
-		if (!s() || _.find(skills, function(entry) { return entry() === s(); })) {
+		if (!s() || _.find(skills, function (entry) {
+			return entry() === s();
+		})) {
 			return;
 		}
 		skills.push(s);
@@ -28,7 +30,7 @@ var SkillsSegment = function (skills, canEdit, userID) {
 	}
 
 	function deleteSkill(index) {
-		return function() {
+		return function () {
 			skills.splice(index, 1);
 			m.redraw();
 		}
@@ -40,51 +42,51 @@ var SkillsSegment = function (skills, canEdit, userID) {
 			if (skills.length) {
 				skillsList = (
 					<div className="ui segment skill-tags"> {
-						skills.map(function(skill, index) {
+						skills.map(function (skill, index) {
 							return (
 								<div className="ui label">
 									{skill()}
 									<i className="delete icon" onclick={deleteSkill(index)}></i>
 								</div>
-							);
+								);
 						})
-					}
+						}
 					</div>
-				);
+					);
 			}
 			return (
 				<div className="ui content">
 					<div className="fluid ui action input small focus">
 						<input
-							type="text"
-							placeholder="Add a skill"
-							onchange={m.withAttr("value", segment.vm.skillInput)}
-							value={segment.vm.skillInput()}
+						type="text"
+						placeholder="Add a skill"
+						onchange={m.withAttr("value", segment.vm.skillInput)}
+						value={segment.vm.skillInput()}
 						/>
 						<div className="ui right primary button" onclick={addSkill}>
-							Add
+						Add
 						</div>
 					</div>
 					{ skillsList }
 				</div>
-			);
+				);
 		} else {
 			var skillsList = null;
 			if (skills.length) {
 				skillsList = (
 					<div className="ui segment skill-tags"> {
-						skills.map(function(skill) {
+						skills.map(function (skill) {
 							return <div className="ui label">{ skill() }</div>;
 						})
-					}
+						}
 					</div>
-				);
+					);
 			}
 			return (
 				<div className="ui content base-content">
 					{ skillsList }
 				</div>
-			);
+				);
 		}
 	};
 

@@ -104,7 +104,7 @@ profile.connectMe = function(isConfirmation,message) {
 		UserEdges.connectMe(m.route.param('userid'), message).then(
 			function () {
 				if (isConfirmation) {
-					// Get user's email, along with correct connections list, etc.
+			// Get user's email, along with correct connections list, etc.
 					User.getByID(userid).then(function(userObject) {
 						profile.vm.basicInfo(userObject);
 					}, Error.handle);

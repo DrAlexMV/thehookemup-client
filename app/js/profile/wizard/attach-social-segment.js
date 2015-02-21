@@ -12,15 +12,15 @@ var AttachSocialSegment = function () {
 	function attachFacebook() {
 		// TODO: Avoid code duplication here
 		FB.init({
-			appId      : Config['FACEBOOK_APP_ID'],
-			xfbml      : true,
-			version    : 'v2.1'
+			appId: Config['FACEBOOK_APP_ID'],
+			xfbml: true,
+			version: 'v2.1'
 		});
 
-		FB.login(function(response) {
+		FB.login(function (response) {
 			if (response.authResponse) {
 				User.attachSocialSignIn('facebook', response.authResponse.userID)
-					.then(function(response) {
+					.then(function (response) {
 						if (response.error === null) {
 							console.log('Facebook Attached');
 						} else {
@@ -39,10 +39,10 @@ var AttachSocialSegment = function () {
 				<div className="ui hidden divider"></div>
 				<div className="ui facebook button" onclick={ attachFacebook }>
 					<i className="facebook icon"></i>
-					Link To Facebook
+				Link To Facebook
 				</div>
 			</div>
-		);
+			);
 	}
 
 	return attachSocialSegment;
