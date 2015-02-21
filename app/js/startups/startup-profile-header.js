@@ -8,7 +8,10 @@ var StartupProfileHeader = function (startupId) {
 
 	var availableHandles = {
 		'blog' : { name: 'Blog', icon: 'feed' },
-		'twitter': { name: 'Twitter', icon: 'twitter' }
+		'twitter': { name: 'Twitter', icon: 'twitter' },
+        'angel-list':{name: 'Angel List', icon: 'angellist'},
+        'facebook':{name: 'Facebook', icon: 'facebook'}
+
 	};
 
 	startupProfileHeader.stream = new Bacon.Bus();
@@ -160,7 +163,7 @@ var StartupProfileHeader = function (startupId) {
 					placeholder: 'Enter a URL',
 					value: vm.headerForm.website(),
 					class: 'stacked-text-input',
-					onchange: m.withAttr('value', vm.headerForm.website),
+					onchange: m.withAttr('value', vm.headerForm.website)
 				}
 			};
 
