@@ -24,13 +24,21 @@ auth.vm = {
 		auth.stream = Bacon.mergeAll(this.loginForm.stream, this.socialSignInForm.stream, this.registrationForm.stream);
 
 		StreamCommon.on(auth.stream, 'LoginForm::SignIn', function (message) {
+
+
 			auth.vm.awaitingResponse(true);
 
 			var loginForm = auth.vm.loginForm;
 
 			User.login(message.parameters)
 				.then(function (res) {
-					m.route('/');
+					//TODO: find a better way to determine if we should route the user to
+					//the profile wizard
+					if (res.description()=='' && res.picture()==null && res.handles().length==0) {
+						m.route('/profile-wizard')
+					} else {
+						m.route('/');
+					}
 					Context.setCurrentUser(res);
 				}, function (res) {
 					loginForm.vm.errorMessages([res.error]);
