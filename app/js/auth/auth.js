@@ -33,7 +33,7 @@ auth.vm = {
 			User.login(message.parameters)
 				.then(function (res) {
 					//TODO: find a better way to determine if we should route the user to
-					//the profile wizard
+					//the profile wizard. Maybe want to also check for skills. 
 					if (res.description()=='' && res.picture()==null && res.handles().length==0) {
 						m.route('/profile-wizard')
 					} else {
