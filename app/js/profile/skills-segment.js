@@ -4,6 +4,7 @@
 
 var EditableSegment = require('profile/editable-segment');
 var UserDetail = require('model/user-details');
+var Typeahead = require('common/ui-core/typeahead');
 
 var SkillsSegment = function (skills, canEdit, userID) {
 	var segment = {};
@@ -58,11 +59,69 @@ var SkillsSegment = function (skills, canEdit, userID) {
 				<div className="ui content">
 					<div className="fluid ui action input small focus">
 						<input
+						id="edValue"
 						type="text"
 						placeholder="Add a skill"
+						onkeypress={function() 
+    						{
+    							console.log("In on keydown")
+						        var edValue = document.getElementById("edValue");
+						        var s = edValue.value;
+						    
+						        console.log(s);
+						        if(s!='') {
+						    	var skills = segment.getSuggestions(
+								{text:s,
+								results:10}, 'skills',
+								segment.vm.skillSuggestions).then(function (skills) {
+									var output = document.getElementById("output");
+						    		console.log("Skills are " + segment.vm.skillSuggestions());
+
+						    		output.innerText = "The text box contains: "+segment.vm.skillSuggestions(); })
+
+								}
+						    	
+						        //var s = $("#edValue").val();
+						        //$("#lblValue").text(s);    
+						    }
+						}
+						    onkeyup={function() 
+    						{
+    							console.log("in on keyup")
+						        var edValue = document.getElementById("edValue");
+						        var s = edValue.value;
+						    
+						        console.log(s);
+						        if(s!='') {
+						    	var skills = segment.getSuggestions(
+								{text:s,
+								results:10}, 'skills',
+								segment.vm.skillSuggestions).then(function(skills) {
+								var output = document.getElementById("output");
+						    	console.log("Skills are " + segment.vm.skillSuggestions());
+
+						    	output.innerText = "The text box contains: "+segment.vm.skillSuggestions(); }
+						    	)
+
+
+						    	
+
+						        //var s = $("#edValue").val();
+						        //$("#lblValue").text(s);    
+						    }
+						} }
+							
+							
+							
+								
+						
+					
 						onchange={m.withAttr("value", segment.vm.skillInput)}
-						value={segment.vm.skillInput()}
+						
 						/>
+						<span
+						id = "output">
+						</span>
 						<div className="ui right primary button" onclick={addSkill}>
 						Add
 						</div>
@@ -91,8 +150,10 @@ var SkillsSegment = function (skills, canEdit, userID) {
 	};
 
 	_.extend(segment, new EditableSegment(segment, 'skills', skills, canEdit, userID));
+	_.mixin(segment, Typeahead);
 
 	segment.vm.skillInput = m.prop('');
+	segment.vm.skillSuggestions = m.prop('');
 	return segment;
 };
 

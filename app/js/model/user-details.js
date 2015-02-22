@@ -36,7 +36,7 @@ var Details = function(API) {
 		this.projects = data.projects.map(function(project) {
 			return new details.ProjectModel(project);
 		});
-
+		
 		return this;
 	};
 
