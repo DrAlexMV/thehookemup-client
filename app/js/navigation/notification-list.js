@@ -64,7 +64,7 @@ var NotificationList = function (edges) { // edges is an m.prop
 
 		if (edges().pendingConnections()) {
 			list = edges().pendingConnections().map(function (user, idx) {
-
+				
 				var messageView = null;
 
 				//Did this user send a message?

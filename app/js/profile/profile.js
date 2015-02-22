@@ -22,7 +22,7 @@ var UserDetails = require('model/user-details');
 var UserEdges = require('model/user-edges');
 
 var profile = {};
-
+ 
 profile.vm = {
 	init: function () {
 		this.userid =
@@ -51,7 +51,7 @@ profile.vm = {
 
 			profile.vm.endorsementButton = EndorsementButton(userid, 'user');
 
-			profile.stream = Bacon.mergeAll(profile.vm.contactCard.vm.profilePicture.stream);
+			profile.stream = Bacon.mergeAll(profile.vm.contactCard.vm.profilePicture.stream, profile.vm.connectWithModal.vm.body.stream);
 			StreamCommon.on(profile.stream,
 				'EditableImage::ReplaceImageURL',
 				function (message) {
@@ -133,7 +133,7 @@ profile.deleteConnection = function() {
 profile.connectDialog = function(otherUserID) {
 	profile.vm.connectWithModal.vm.open();
 	StreamCommon.on(profile.stream, 'ConnectWithModal::Connect', function(message) {
-	profile.connectMe(false, message.parameters.message)();
+		profile.connectMe(false, message.parameters.message)();
 	})
   };
 
