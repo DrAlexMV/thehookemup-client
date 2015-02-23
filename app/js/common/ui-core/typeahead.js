@@ -29,13 +29,13 @@ var Typeahead = function (entity, state, placeholderText, numberResults) {
 	typeahead.keyAction = function () {
 		var inputValue = document.getElementById("inputValue");
 		var s = inputValue.value;
+		typeahead.dropdown([]);
 		if (s != '') {
 			typeahead.getSuggestions({
 				text: s,
 				results: numberResults
 			}).then(function (results) {
 				//TODO: a way to do this without using get element by id?
-				typeahead.dropdown();
 				if (results.length != 0) {
 					typeahead.dropdown(
 						m("ul", [
@@ -49,7 +49,7 @@ var Typeahead = function (entity, state, placeholderText, numberResults) {
 										}
 									}, [
 										m("span.suggest-name", result['text']),
-										m("span.suggest-description", "Popularity" + result['score'])
+										m("span.suggest-description", "Popularity: " + result['score'])
 									])
 								];
 							})

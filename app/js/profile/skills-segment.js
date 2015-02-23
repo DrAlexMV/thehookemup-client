@@ -22,6 +22,7 @@ var SkillsSegment = function (skills, canEdit, userID) {
 	function addSkill() {
 		//TODO: How to not rely on clearing the value this way?
 		document.getElementById("inputValue").value = '';
+		segment.vm.typeahead.dropdown([]);
 		var s = m.prop(segment.vm.skillInput());
 		if (!s() || _.find(skills, function (entry) {
 			return entry() === s();
