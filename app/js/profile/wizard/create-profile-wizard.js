@@ -29,6 +29,7 @@ var vm =
 
 			vm.pictureDescriptionSegment = ProfileWizardPictureDescription();
 			vm.skillsSegment = TagInputSegment({
+				entity: 'skills',
 				tagState: vm.profile.skills,
 				ribbonLabel: 'Skills',
 				maxCount: 10,

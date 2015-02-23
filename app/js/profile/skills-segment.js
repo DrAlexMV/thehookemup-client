@@ -4,9 +4,14 @@
 
 var EditableSegment = require('profile/editable-segment');
 var UserDetail = require('model/user-details');
-var Typeahead = require('common/ui-core/typeahead');
+var TypeaheadTagger = require('common/ui-core/typeahead-tagger');
 
 var SkillsSegment = function (skills, canEdit, userID) {
+
+	var skillsStrings = m.prop(skills.map(function(skillProp) {
+		return skillProp();
+	}));
+
 	var segment = {};
 
 	segment.controller = function () {
@@ -19,67 +24,13 @@ var SkillsSegment = function (skills, canEdit, userID) {
 		});
 	};
 
-	function addSkill() {
-		//TODO: How to not rely on clearing the value this way?
-		document.getElementById("inputValue").value = '';
-		segment.vm.typeahead.dropdown([]);
-		var s = m.prop(segment.vm.skillInput());
-		if (!s() || _.find(skills, function (entry) {
-			return entry() === s();
-		})) {
-			return;
-		}
-		skills.push(s);
-		segment.vm.skillInput('');
-
-	}
-
-	function deleteSkill(index) {
-		return function () {
-			skills.splice(index, 1);
-			m.redraw();
-		}
-	}
 
 	segment.viewContent = function () {
 		if (canEdit && segment.vm.editing()) {
-			var skillList = null;
-			if (skills.length) {
-				skillsList = (
-					<div className="ui segment skill-tags"> {
-						skills.map(function (skill, index) {
-							return (
-								<div className="ui label">
-									{skill()}
-									<i className="delete icon" onclick={deleteSkill(index)}></i>
-								</div>
-								);
-						})
-						}
-					</div>
-					);
-			}
+
 			return (
-				<div className="ui content">
-					<div className="fluid ui action input small focus">
-						<div className = "ui grid">
-							<div className = "fourteen wide column" style="padding-right: 0px">
-							{segment.vm.typeahead.view()}
-							</div>
-							<div className = "two wide column" style="padding-left: 0px">
-
-								<div className="ui right primary button" onclick={addSkill}>
-
-
-								Add
-								</div>
-
-							</div>
-						</div>
-					</div>
-					{ skillsList }
-				</div>
-				);
+				segment.vm.skillsTypeaheadTagger.view({ selectedTags: skillsStrings, placeholder: "Add a skill"})
+				)
 		} else {
 			var skillsList = null;
 			if (skills.length) {
@@ -102,8 +53,8 @@ var SkillsSegment = function (skills, canEdit, userID) {
 
 	_.extend(segment, new EditableSegment(segment, 'skills', skills, canEdit, userID));
 
-	segment.vm.skillInput = m.prop('');
-	segment.vm.typeahead = Typeahead('skills', segment.vm.skillInput, 'Add a skill', 5);
+	//TODO: do we want to limit the number of skills a user can have?
+	segment.vm.skillsTypeaheadTagger = TypeaheadTagger({ maxCount: 1000 }, 'skills');
 
 	return segment;
 };

@@ -1,11 +1,11 @@
+var TypeaheadTagger = require('common/ui-core/typeahead-tagger');
 var Tagger = require('common/ui-core/tagger');
 
 var TagInputSegment = function (props) {
 	var tagInputSegment = {};
 
-	var vm = {
-		tagger: Tagger({ maxCount: props.maxCount })
-	};
+	var vm = {};
+	vm.tagger = props.entity ? TypeaheadTagger({ maxCount: props.maxCount }, props.entity) : Tagger({ maxCount: props.maxCount });
 
 	tagInputSegment.view = function () {
 		return [
