@@ -16,7 +16,7 @@ var TypeaheadTagger = function (settings, entity) {
 			if (_.all(conditions)) {
 				vm.tagName() && vm.selectedTags().push(vm.tagName());
 				vm.tagName('');
-				document.getElementById("inputValue").value = ''
+				vm.dropdown([]);
 			}
 		},
 		deleteTag: function (index) {
@@ -32,27 +32,26 @@ var TypeaheadTagger = function (settings, entity) {
 	};
 
 	function keyAction(e) {
-		console.log("in key action");
 		var action = keyHandlers[e.keyCode];
-		action ? action(e) : m.redraw.strategy('none');
-		var s = document.getElementById("inputValue").value;
-		vm.dropdown([]);
+		action ? action(e) : null;
+		return true;
+	}
 
-		if (s != '') {
+	function autocomplete(value) {
+		if (value) {
 			autocompleteResults.getSuggestions(entity, {
-				text: s,
+				text: value,
 				results: 5
 			}).then(function (results) {
-				if (results.length != 0) {
+				console.log("We got results");
+				if (results.length) {
 					vm.dropdown(
 						m("ul", [
 							results.map(function (result) {
 								return [
 									m("li", {
 										onclick: function () {
-											document.getElementById("inputValue").value = result['text'];
 											vm.tagName(result['text']);
-											vm.dropdown([]);
 											vm.addTag();
 										}
 									}, [
@@ -68,6 +67,11 @@ var TypeaheadTagger = function (settings, entity) {
 		}
 	}
 
+	function onchange(e) {
+		vm.tagName(e.target.value);
+		autocomplete(vm.tagName());
+	}
+
 	typeaheadTagger.view = function (ctrl) {
 		vm.selectedTags = ctrl.selectedTags ? ctrl.selectedTags : vm.selectedTags;
 		return [
@@ -77,10 +81,8 @@ var TypeaheadTagger = function (settings, entity) {
 						m('div.suggest-holder', [
 							m('input.suggest-prompt', {
 								placeholder: ctrl.placeholder ? ctrl.placeholder : 'Add a category',
-								onchange: m.withAttr('value', vm.tagName),
-								onkeyup: keyAction,
-								onkeypress: keyAction,
-								id: "inputValue"
+								oninput: onchange,
+								onkeyup: keyAction
 							}),
 							vm.dropdown()
 						])
