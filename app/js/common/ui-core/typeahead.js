@@ -8,6 +8,10 @@ var Typeahead = function (entity, state, placeholderText, numberResults) {
 
 	var typeahead = {};
 
+
+	typeahead.dropdown = m.prop();
+
+
 	typeahead.getSuggestions = function (params) {
 		var deferred = m.deferred();
 		var stringified = jQuery.param(params);
@@ -30,24 +34,27 @@ var Typeahead = function (entity, state, placeholderText, numberResults) {
 				text: s,
 				results: numberResults
 			}).then(function (results) {
-				//TODO: a way to do this without jquery?
-				suggestHolder = $('.suggest-holder ul');
-				suggestHolder.empty();
-				if (results.length == 0) {
-					suggestHolder.hide();
-				} else {
-					for (var i in results) {
-						suggestHolder.append($("<li><span class='suggest-name'>" + results[i]['text'] +
-							"</span><span class='suggest-description'>" + "Popularity: " +
-							results[i]['score'] + "</span></li>"));
-					}
-					$('.suggest-holder li').on('click', function(){
-						var selectedValue = $(this).find('.suggest-name').html();
-						document.getElementById("inputValue").value=selectedValue;
-						state(selectedValue);
-						suggestHolder.hide();
-					});
-					suggestHolder.show();
+				//TODO: a way to do this without using getelement by id?
+				typeahead.dropdown();
+				if (results.length != 0) {
+					typeahead.dropdown(
+						m("ul", [
+							results.map(function (result) {
+								return [
+									m("li", {
+										onclick: function () {
+											document.getElementById("inputValue").value = result['text'];
+											state(result['text']);
+											typeahead.dropdown([]);
+										}
+									}, [
+										m("span.suggest-name", result['text']),
+										m("span.suggest-description", "Popularity" + result['score'])
+									])
+								];
+							})
+						])
+					);
 				}
 			})
 		}
@@ -55,7 +62,7 @@ var Typeahead = function (entity, state, placeholderText, numberResults) {
 
 	typeahead.view = function () {
 		return (
-			<div class = "suggest-holder">
+			<div class="suggest-holder">
 				<input
 				id="inputValue"
 				class="suggest-prompt"
@@ -65,7 +72,7 @@ var Typeahead = function (entity, state, placeholderText, numberResults) {
 				onkeyup={typeahead.keyAction}
 				onchange={m.withAttr("value", state)}
 				/>
-				<ul></ul>
+			{typeahead.dropdown()}
 			</div>
 			)
 	};
