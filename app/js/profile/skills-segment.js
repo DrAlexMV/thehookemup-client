@@ -65,7 +65,7 @@ var SkillsSegment = function (skills, canEdit, userID) {
 							<div className = "fourteen wide column" style="padding-right: 0px">
 							{segment.vm.typeahead.view()}
 							</div>
-							<div className = "two wide column" style="padding-left: 0p">
+							<div className = "two wide column" style="padding-left: 0px">
 
 								<div className="ui right primary button" onclick={addSkill}>
 
