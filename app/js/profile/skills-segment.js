@@ -20,6 +20,8 @@ var SkillsSegment = function (skills, canEdit, userID) {
 	};
 
 	function addSkill() {
+		//TODO: How to not rely on clearing the value this way?
+		document.getElementById("inputValue").value = '';
 		var s = m.prop(segment.vm.skillInput());
 		if (!s() || _.find(skills, function (entry) {
 			return entry() === s();
@@ -28,6 +30,7 @@ var SkillsSegment = function (skills, canEdit, userID) {
 		}
 		skills.push(s);
 		segment.vm.skillInput('');
+
 	}
 
 	function deleteSkill(index) {
@@ -58,72 +61,19 @@ var SkillsSegment = function (skills, canEdit, userID) {
 			return (
 				<div className="ui content">
 					<div className="fluid ui action input small focus">
-						<input
-						id="edValue"
-						type="text"
-						placeholder="Add a skill"
-						onkeypress={function() 
-    						{
-    							console.log("In on keydown")
-						        var edValue = document.getElementById("edValue");
-						        var s = edValue.value;
-						    
-						        console.log(s);
-						        if(s!='') {
-						    	var skills = segment.getSuggestions(
-								{text:s,
-								results:10}, 'skills',
-								segment.vm.skillSuggestions).then(function (skills) {
-									var output = document.getElementById("output");
-						    		console.log("Skills are " + segment.vm.skillSuggestions());
+						<div className = "ui grid">
+							<div className = "fourteen wide column" style="padding-right: 0px">
+							{segment.vm.typeahead.view()}
+							</div>
+							<div className = "two wide column" style="padding-left: 0p">
 
-						    		output.innerText = "The text box contains: "+segment.vm.skillSuggestions(); })
-
-								}
-						    	
-						        //var s = $("#edValue").val();
-						        //$("#lblValue").text(s);    
-						    }
-						}
-						    onkeyup={function() 
-    						{
-    							console.log("in on keyup")
-						        var edValue = document.getElementById("edValue");
-						        var s = edValue.value;
-						    
-						        console.log(s);
-						        if(s!='') {
-						    	var skills = segment.getSuggestions(
-								{text:s,
-								results:10}, 'skills',
-								segment.vm.skillSuggestions).then(function(skills) {
-								var output = document.getElementById("output");
-						    	console.log("Skills are " + segment.vm.skillSuggestions());
-
-						    	output.innerText = "The text box contains: "+segment.vm.skillSuggestions(); }
-						    	)
+								<div className="ui right primary button" onclick={addSkill}>
 
 
-						    	
+								Add
+								</div>
 
-						        //var s = $("#edValue").val();
-						        //$("#lblValue").text(s);    
-						    }
-						} }
-							
-							
-							
-								
-						
-					
-						onchange={m.withAttr("value", segment.vm.skillInput)}
-						
-						/>
-						<span
-						id = "output">
-						</span>
-						<div className="ui right primary button" onclick={addSkill}>
-						Add
+							</div>
 						</div>
 					</div>
 					{ skillsList }
@@ -150,10 +100,10 @@ var SkillsSegment = function (skills, canEdit, userID) {
 	};
 
 	_.extend(segment, new EditableSegment(segment, 'skills', skills, canEdit, userID));
-	_.mixin(segment, Typeahead);
 
 	segment.vm.skillInput = m.prop('');
-	segment.vm.skillSuggestions = m.prop('');
+	segment.vm.typeahead = Typeahead('skills', segment.vm.skillInput, 'Add a skill', 5);
+
 	return segment;
 };
 
