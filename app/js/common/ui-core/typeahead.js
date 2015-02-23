@@ -34,7 +34,7 @@ var Typeahead = function (entity, state, placeholderText, numberResults) {
 				text: s,
 				results: numberResults
 			}).then(function (results) {
-				//TODO: a way to do this without using getelement by id?
+				//TODO: a way to do this without using get element by id?
 				typeahead.dropdown();
 				if (results.length != 0) {
 					typeahead.dropdown(
