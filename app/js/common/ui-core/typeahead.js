@@ -12,7 +12,6 @@ var Typeahead = function (entity, stateProp, onClickCB) {
 				text: text,
 				results: 5
 			}).then(function (results) {
-				console.log(text);
 				if (results.length) {
 
 					typeahead.dropdown(
