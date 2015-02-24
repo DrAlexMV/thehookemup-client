@@ -12,7 +12,9 @@ var Typeahead = function (entity, stateProp, onClickCB) {
 				text: text,
 				results: 5
 			}).then(function (results) {
+				console.log(text);
 				if (results.length) {
+
 					typeahead.dropdown(
 						m("ul", [
 							results.map(function (result) {
@@ -30,6 +32,8 @@ var Typeahead = function (entity, stateProp, onClickCB) {
 							})
 						])
 					);
+				} else {
+					typeahead.clearDropdown();
 				}
 			})
 		} else {
