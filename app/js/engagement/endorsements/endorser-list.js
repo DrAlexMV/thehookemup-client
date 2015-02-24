@@ -13,6 +13,10 @@ var EndorserList = function (entityId) {
 		}
 	};
 
+	endorserList.getCount = function() {
+		return vm.endorsers().length;
+	};
+
 	endorserList.view = function() {
 		return HorizontalEntityListSegment(
 			'',

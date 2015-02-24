@@ -5,6 +5,7 @@
 
 var Context = require('common/context');
 var DropdownMixin = require('common/dropdown-mixin');
+var EndorserList = require('engagement/endorsements/endorser-list');
 var EntityList = require('profile/entity-list');
 var Error = require('common/error');
 var HorizontalEntityListSegment = require('dashboard/horizontal-entity-list-segment');
@@ -41,6 +42,8 @@ dashboard.vm = {
 		Invites.getInvites().then(function(response) {
 			dashboard.vm.invites = response;
 		});
+
+		dashboard.vm.endorserList = EndorserList('me');
 
 		Context.getCurrentUser().then(function(response) {
 			dashboard.vm.basicInfo = response;
@@ -86,13 +89,20 @@ dashboard.view = function () {
 	var numPendingRequests = [];
 	var numConnections = 0;
 	var suggestedConnections = [];
-	var numFollows = 5;
 
 	if (vm.edges) {
 		numPendingRequests = vm.edges().pendingConnections().length;
 		numConnections = vm.edges().connections().length;
 		suggestedConnections = vm.edges().suggestedConnections();
 	}
+
+	var endorserListSegment = (
+		<div className="ui segment">
+			<div className="ui header">Endorsements</div>
+			<div className="ui divider"></div>
+				{ vm.endorserList.view({}) }
+		</div>
+	);
 
 	var suggestedConnectionsSegment = new EntityList('Suggested Connections', suggestedConnections, { inSegment: true });
 
@@ -158,11 +168,11 @@ dashboard.view = function () {
 										</div>
 									</div>
 									<div className="ui statistic">
-										<div className="value">{numFollows}</div>
+										<div className="value">{vm.endorserList.getCount()}</div>
 										<div className="label">
 											<div className="ui list">
 												<a className="item">
-													{handlePlural('Follow', numFollows)}
+													{handlePlural('Endorsement', vm.endorserList.getCount() )}
 												</a>
 											</div>
 										</div>
@@ -200,7 +210,7 @@ dashboard.view = function () {
 								{ dashboard.vm.connectionsSegment ?
 									dashboard.vm.connectionsSegment.view({}) : null }
 								{ dashboard.vm.inviteSegment.view({ invites: dashboard.vm.invites.invites }) }
-
+								{ endorserListSegment }
 							</div>
 							<div className="six wide tablet computer only column" config={twitterIntegration}>
 								<a className="twitter-timeline" href="https://twitter.com/search?q=austin%20startup" data-widget-id="555318512722272256">Tweets about austin startup</a>
