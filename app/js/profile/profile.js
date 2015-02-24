@@ -290,7 +290,7 @@ profile.view = function () {
 						<div className="two column row">
 							<div className="left floated column">
 								<h2 className="ui header">{isConnectedIcon} {basicInfo.getName()}</h2>
-								{ vm.endorsementButton.view() }
+								{ profile.vm.userid != 'me' ? vm.endorsementButton.view() : null }
 							</div>
 							<div className="right floated right aligned column">
 								{ connectionButtons }
