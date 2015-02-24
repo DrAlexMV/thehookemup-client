@@ -18,7 +18,6 @@ var Tagger = function (settings) {
 			}
 			vm.tagName('');
 			settings.autocomplete ? vm.typeahead.clearDropdown() : null;
-			m.redraw.strategy("all");
 		},
 		deleteTag: function (index) {
 			vm.selectedTags().splice(index, 1);
@@ -54,7 +53,8 @@ var Tagger = function (settings) {
 							m('input.suggest-prompt', {
 								placeholder: ctrl.placeholder ? ctrl.placeholder : 'Add a category',
 								oninput: onchange,
-								onkeyup: keyAction
+								onkeyup: keyAction,
+								value: vm.tagName()
 							}),
 							settings.autocomplete ? vm.typeahead.view() : null
 						])
