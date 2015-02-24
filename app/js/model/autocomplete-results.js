@@ -14,7 +14,6 @@ var AutocompleteResults = function(API) {
 	};
 
 	autocompleteResults.getSuggestions = function (entity, params) {
-		console.log("getting suggestions");
 		var stringified = jQuery.param(params);
 		return this.get('/search/autocomplete/' + entity + '?' + stringified, autocompleteResults.resultsModel);
 	};
