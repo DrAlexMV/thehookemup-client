@@ -8,66 +8,72 @@ var TagInputSegment = require('common/wizards/tag-input-segment');
 var createStartupWizard = {};
 
 var vm =
-createStartupWizard.vm = {
-	init: function () {
-		var vm = this;
+	createStartupWizard.vm = {
+		init: function () {
+			var vm = this;
 
-		vm.desiredHandles = ['facebook', 'twitter', 'angel-list', 'website'];
-		vm.awaitingResponse = m.prop(false);
+			vm.desiredHandles = ['facebook', 'twitter', 'angel-list', 'blog'];
+			vm.awaitingResponse = m.prop(false);
 
-		vm.startup = {
-			name: m.prop(''),
-			description: m.prop(''),
-			markets: m.prop([]),
-			handles: m.prop(vm.desiredHandles.map(HandleModel))
-		};
-
-    vm.descriptionSegment = StartupWizardNameDescription();
-    vm.marketsSegment = TagInputSegment({
-      tagState: vm.startup.markets,
-      ribbonLabel: 'Markets',
-      maxCount: 4,
-      placeholder: 'Enter up to four markets.'
-  });
-    vm.handlesSegment = StartupWizardHandles();
-
-		vm.rules = _.reduce(_.filter(vm, 'rules'), function (ruleSet, form) {
-			ruleSet = _.extend(ruleSet, form.rules);
-			return ruleSet;
-		}, {});
-
-		vm.errorMessages = m.prop([]);
-
-		vm.validationSuccess = function () {
-			vm.errorMessages([]);
-			vm.awaitingResponse(true);
-
-			var newStartup = {
-				name: vm.startup.name(),
-				description: vm.startup.description(),
-				markets: vm.startup.markets(),
-				handles: vm.startup.handles().map(function (handle) { return { type: handle.type(), url: handle.url() }; })
+			vm.startup = {
+				name: m.prop(''),
+				description: m.prop(''),
+				markets: m.prop([]),
+				handles: m.prop(vm.desiredHandles.map(HandleModel)),
+				website: m.prop('')
 			};
 
-			var success = function (startup) {
-				m.route('/startups/' + startup._id());
+			vm.descriptionSegment = StartupWizardNameDescription();
+			vm.marketsSegment = TagInputSegment({
+				autocomplete: true,
+				entity: 'markets',
+				tagState: vm.startup.markets,
+				ribbonLabel: 'Markets',
+				maxCount: 4,
+				placeholder: 'Enter up to four markets.'
+			});
+			vm.handlesSegment = StartupWizardHandles();
+
+			vm.rules = _.reduce(_.filter(vm, 'rules'), function (ruleSet, form) {
+				ruleSet = _.extend(ruleSet, form.rules);
+				return ruleSet;
+			}, {});
+
+			vm.errorMessages = m.prop([]);
+
+			vm.validationSuccess = function () {
+				vm.errorMessages([]);
+				vm.awaitingResponse(true);
+
+				var newStartup = {
+					name: vm.startup.name(),
+					website: vm.startup.website(),
+					description: vm.startup.description(),
+					markets: vm.startup.markets(),
+					handles: vm.startup.handles().map(function (handle) {
+						return { type: handle.type(), url: handle.url() };
+					})
+				};
+
+				var success = function (startup) {
+					m.route('/startups/' + startup._id());
+				};
+
+				var failure = function (res) {
+					vm.errorMessages([res.error])
+				};
+
+				Startup.create(newStartup)
+					.then(success, failure)
+					.then(vm.awaitingResponse.bind(this, false));
 			};
 
-			var failure = function (res) {
-				vm.errorMessages([res.error])
+			vm.validationFailure = function (errors) {
+				console.log(errors);
+				vm.errorMessages(errors);
 			};
-
-			Startup.create(newStartup)
-				.then(success, failure)
-				.then(vm.awaitingResponse.bind(this, false));
-		};
-		
-		vm.validationFailure = function (errors) {
-			console.log(errors);
-			vm.errorMessages(errors);
-		};
-	}
-};
+		}
+	};
 
 createStartupWizard.controller = function () {
 	vm.init();
@@ -100,7 +106,7 @@ createStartupWizard.view = function () {
 						m('div.ui.grid', [
 							m('div.row', [
 								m('div.column', [
-									vm.descriptionSegment.view({ name: vm.startup.name, product: vm.startup.description }),
+									vm.descriptionSegment.view({ name: vm.startup.name, product: vm.startup.description, website: vm.startup.website }),
 									vm.marketsSegment.view(),
 									vm.handlesSegment.view({ handles: vm.startup.handles, desiredHandles: vm.desiredHandles })
 								])

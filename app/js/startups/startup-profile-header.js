@@ -11,7 +11,6 @@ var StartupProfileHeader = function (startupId) {
 		'twitter': { name: 'Twitter', icon: 'twitter' },
         'angel-list':{name: 'Angel List', icon: 'angellist'},
         'facebook':{name: 'Facebook', icon: 'facebook'}
-
 	};
 
 	startupProfileHeader.stream = new Bacon.Bus();
@@ -60,7 +59,7 @@ var StartupProfileHeader = function (startupId) {
 		vm.headerForm.description(startupBasic.description());
 		vm.headerForm.website(startupBasic.website());
 		startupBasic.handles().forEach(function(handle) {
-			vm.headerForm.handles[handle.type].url(handle.url)
+			vm.headerForm.handles[handle.type]={type: handle.type, url: m.prop(handle.url)};
 		});
 		vm.headerForm.markets = startupBasic.markets().slice();
 	};
@@ -190,7 +189,7 @@ var StartupProfileHeader = function (startupId) {
 							]),
 							vm.headerForm.markets.length ?
 								m('div.ui.segment', [
-									m('div.header', ['Categories']),
+									m('div.header', ['Markets']),
 									m('div.ui.two.column.stackable.grid', [
 										m('div.column', [
 											m('div', [

@@ -74,10 +74,11 @@ startups.vm = {
 				vm.startupBasic.name(vals.name);
 				vm.startupBasic.website(vals.website);
 				vm.startupBasic.description(vals.description);
-				vm.startupBasic.categories(vals.categories);
+				vm.startupBasic.markets(vals.markets);
 				vm.startupBasic.handles(vals.handles.map(function(handle) {
 					return {type: handle.type, url: handle.url};
 				}));
+
 			}
 		);
 

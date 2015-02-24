@@ -8,24 +8,35 @@ var FormBuilder = (function () {
 			formField: function (parameters, name, width, type) {
 				var defaultName = name ? name.toLowerCase() : null;
 				parameters.name = parameters.name ? parameters.name : defaultName;
-
-				return [
-					m('div.required.field', { class: width ? width + ' wide' : '' }, [
-						name ? m('label', name) : null,
-						m(type ? type : 'input', parameters)
-					])
-				];
+				var required = typeof parameters.required != 'undefined' ? parameters.required : true;
+				if (required) {
+					return [
+						m('div.required.field', { class: width ? width + ' wide' : '' }, [
+							name ? m('label', name) : null,
+							m(type ? type : 'input', parameters)
+						])
+					];
+				} else {
+					return  [
+						m('div.field', { class: width ? width + ' wide' : '' }, [
+							name ? m('label', name) : null,
+							m(type ? type : 'input', parameters)
+						])
+					];
+				}
 			},
 			checkbox: function (label, parameters) {
 				var checkboxConfig = function (element, isInitialized) {
-					if (!isInitialized) { $(element).checkbox(); }
+					if (!isInitialized) {
+						$(element).checkbox();
+					}
 				};
 
 				parameters.name = parameters.name ?
 					parameters.name : label.toLowerCase() + '-checkbox';
 
 				return [
-					m('div.ui.checkbox' , { config: checkboxConfig }, [
+					m('div.ui.checkbox', { config: checkboxConfig }, [
 						m('input[type="checkbox"]', parameters),
 						m('label', label)
 					])
@@ -39,10 +50,10 @@ var FormBuilder = (function () {
 				};
 
 				Dropzone.options[id] = {
-					init: function() {
+					init: function () {
 						this.options.withCredentials = true;
 						if (stream) {
-							this.on('success', function(file) {
+							this.on('success', function (file) {
 								stream.push(
 									new StreamCommon.Message(
 										'Dropzone::Success',
@@ -60,7 +71,7 @@ var FormBuilder = (function () {
 			editable: function (textProp, settings) {
 				var config = function (element, isInitialized) {
 					if (!isInitialized) {
-						settings.success = function(response, newValue) {
+						settings.success = function (response, newValue) {
 							textProp(newValue);
 						}
 						settings.mode = 'inline';
@@ -69,8 +80,8 @@ var FormBuilder = (function () {
 				};
 				return config;
 			},
-			localSearch: function(settings) {
-				return function(element, isInitialized) {
+			localSearch: function (settings) {
+				return function (element, isInitialized) {
 					if (!isInitialized) {
 						$(element).search(settings);
 					}

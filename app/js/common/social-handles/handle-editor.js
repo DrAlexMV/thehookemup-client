@@ -9,6 +9,7 @@ var HandleEditor = function (handleName) {
 		github: { icon: 'github', tag: 'Github', tagClass: 'github'},
 		'google-plus': {icon: 'google plus', tag: 'Google Plus', tagClass: 'google-plus'},
 		'angel-list': { tag: 'Angel List', tagClass: 'angel-list' },
+		'blog' : { tag: 'Blog', tagClass: 'feed' },
 		default: { tag: handleName }
 	};
 

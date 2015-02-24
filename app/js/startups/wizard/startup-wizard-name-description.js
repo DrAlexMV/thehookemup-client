@@ -37,6 +37,17 @@ var StartupWizardNameDescription = function () {
 				hint: "What is the company's name? Don't worry about the LLC, Inc, etc"
 			},
 			{
+				label: 'Company Website',
+				parameters: {
+					name: 'website',
+					type: 'text',
+					onchange: m.withAttr('value', ctrl.website),
+					required: false
+				},
+				type: 'input',
+				hint: "What is the company's website? If you have one, enter it here."
+			},
+			{
 				label: 'Product',
 				parameters: {
 					name: 'product',
@@ -56,7 +67,7 @@ var StartupWizardNameDescription = function () {
 					m('div.eight.wide.column', [
 						fields.map(function (field, index) {
 							var parameters = _.extend(field.parameters, { onfocus: vm.selectedField.bind(this, index) });
-							return formField(parameters, field.label, null, field.type);
+							return formField(parameters, field.label, null, field.type, field.required);
 						})
 					]),
 					m('div.six.wide.column', [
