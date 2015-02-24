@@ -99,21 +99,17 @@ dashboard.view = function () {
 	return (
 		<div className="ui stackable padded grid">
 			<div className="row">
-				<div className="four wide column">
+				<div className="five wide column">
 					<div className="ui stackable grid">
 						<div class="row">
 							<div class="sixteen wide column">
 								{ vm.trendingStartupsList.view() }
-							</div>
-						</div>
-						<div class="row">
-							<div class="sixteen wide column">
 								{ suggestedConnectionsSegment.view() }
 							</div>
 						</div>
 					</div>
 				</div>
-				<div className="twelve wide column">
+				<div className="eleven wide column">
 					<div className="ui stackable grid">
 						<div className="row">
 							<div className="sixteen wide column">
@@ -203,16 +199,11 @@ dashboard.view = function () {
 								<div id="connections"></div>
 								{ dashboard.vm.connectionsSegment ?
 									dashboard.vm.connectionsSegment.view({}) : null }
-							</div>
-							<div className="six wide column">
 								{ dashboard.vm.inviteSegment.view({ invites: dashboard.vm.invites.invites }) }
-								<div class="ui grid">
-									<div class="row">
-										<div className="sixteen wide tablet computer only column" config={twitterIntegration}>
-											<a className="twitter-timeline" href="https://twitter.com/search?q=austin%20startup" data-widget-id="555318512722272256">Tweets about austin startup</a>
-										</div>
-									</div>
-								</div>
+
+							</div>
+							<div className="six wide tablet computer only column" config={twitterIntegration}>
+								<a className="twitter-timeline" href="https://twitter.com/search?q=austin%20startup" data-widget-id="555318512722272256">Tweets about austin startup</a>
 							</div>
 						</div>
 					</div>
