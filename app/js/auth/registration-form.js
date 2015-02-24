@@ -18,7 +18,8 @@ var RegistrationForm = function (urlInvite) {
 		availableRoles: m.prop(['Founder', 'Investor', 'Startupper']),
 		rolesCheckbox: MultiCheckbox(),
 		showForm: m.prop(false),
-		invite: m.prop(urlInvite ? urlInvite : '')
+		invite: m.prop(urlInvite ? urlInvite : ''),
+		invalidInvite: m.prop(false)
 	};
 
 	registrationForm.stream = new Bacon.Bus();
@@ -50,6 +51,8 @@ var RegistrationForm = function (urlInvite) {
 			if (response.status) {
 				vm.showForm(true);
 			}
+		}, function(response) {
+			vm.invalidInvite(true);
 		});
 	}
 
@@ -131,7 +134,12 @@ var RegistrationForm = function (urlInvite) {
 		];
 
 		var inviteEntry = [
-			m('div.ui.action.input', [
+			vm.invalidInvite() ?
+				m('div.ui.warning.message', [
+					m('div.header', 'Oops!'),
+					m('ul', [m('li', 'Invalid invite code.') ])
+				]) : null,
+			m('div.ui.action.input' + (vm.invalidInvite() ? '.error' : ''), [
 				m('input', {
 					placeholder: 'Enter Invite Code',
 					onchange: m.withAttr('value', vm.invite),
