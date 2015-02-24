@@ -31,7 +31,7 @@ var User = function(API) {
 		};
 
 		this.getPath = function () {
-			return '/users'
+			return '/profile'
 		};
 
 		return this;
