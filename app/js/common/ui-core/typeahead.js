@@ -1,51 +1,26 @@
-/**
- * @jsx m
- */
+var autocompleteResults = require('model/autocomplete-results');
 
-var API = require('common/api');
-
-var Typeahead = function (entity, state, placeholderText, numberResults) {
+var Typeahead = function (entity, stateProp, onClickCB) {
 
 	var typeahead = {};
 
-
 	typeahead.dropdown = m.prop();
 
-
-	typeahead.getSuggestions = function (params) {
-		var deferred = m.deferred();
-		var stringified = jQuery.param(params);
-		this.get('/search/autocomplete/' + entity + '?' + stringified).then(
-			function (response) {
-				if (response['results'].length == 0) {
-					deferred.resolve([]);
-				} else {
-					deferred.resolve(response['results']);
-				}
-			});
-		return deferred.promise;
-	};
-
-	typeahead.keyAction = function () {
-		var inputValue = document.getElementById("inputValue");
-		var s = inputValue.value;
-		typeahead.dropdown([]);
-		if (s != '') {
-			typeahead.getSuggestions({
-				text: s,
-				results: numberResults
+	typeahead.updateDropdown = function (text) {
+		if (text) {
+			autocompleteResults.getSuggestions(entity, {
+				text: text,
+				results: 5
 			}).then(function (results) {
-				//TODO: a way to do this without using get element by id?
-				if (results.length != 0) {
+				if (results.length) {
 					typeahead.dropdown(
 						m("ul", [
 							results.map(function (result) {
 								return [
 									m("li", {
 										onclick: function () {
-											document.getElementById("inputValue").value = result['text'];
-											state(result['text']);
-											typeahead.dropdown([]);
+											stateProp(result['text']);
+											onClickCB();
 										}
 									}, [
 										m("span.suggest-name", result['text']),
@@ -57,27 +32,21 @@ var Typeahead = function (entity, state, placeholderText, numberResults) {
 					);
 				}
 			})
+		} else {
+			typeahead.clearDropdown();
 		}
 	};
 
-	typeahead.view = function () {
-		return (
-			<div class="suggest-holder">
-				<input
-				id="inputValue"
-				class="suggest-prompt"
-				type="text"
-				placeholder={placeholderText}
-				onkeypress={typeahead.keyAction}
-				onkeyup={typeahead.keyAction}
-				onchange={m.withAttr("value", state)}
-				/>
-			{typeahead.dropdown()}
-			</div>
-			)
+	typeahead.clearDropdown = function () {
+		typeahead.dropdown([]);
+		m.redraw();
 	};
 
-	_.mixin(typeahead, API);
+	typeahead.view = function () {
+		return typeahead.dropdown();
+	};
+
+
 	return typeahead
 };
 

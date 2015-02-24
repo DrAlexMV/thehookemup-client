@@ -29,6 +29,7 @@ var vm =
 
 			vm.pictureDescriptionSegment = ProfileWizardPictureDescription();
 			vm.skillsSegment = TagInputSegment({
+				autocomplete: true,
 				entity: 'skills',
 				tagState: vm.profile.skills,
 				ribbonLabel: 'Skills',
@@ -64,7 +65,7 @@ var vm =
 						function () {
 							User.putByID('me', {'description': vm.profile.description(), 'handles': convertHandles()}).then(
 								function () {
-									m.route('/profile/me')
+									m.route('/profile/me');
 								},
 								failure)
 						},

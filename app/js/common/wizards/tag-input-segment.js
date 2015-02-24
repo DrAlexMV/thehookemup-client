@@ -1,18 +1,21 @@
-var TypeaheadTagger = require('common/ui-core/typeahead-tagger');
 var Tagger = require('common/ui-core/tagger');
 
-var TagInputSegment = function (props) {
+var TagInputSegment = function (settings) {
 	var tagInputSegment = {};
 
 	var vm = {};
-	vm.tagger = props.entity ? TypeaheadTagger({ maxCount: props.maxCount }, props.entity) : Tagger({ maxCount: props.maxCount });
+	vm.tagger = Tagger({
+		maxCount: settings.maxCount,
+		autocomplete: settings.autocomplete,
+		entity: settings.entity
+	});
 
 	tagInputSegment.view = function () {
 		return [
 			m('div.ui.segment', [
-				m('a.ui.ribbon.label', props.ribbonLabel),
+				m('a.ui.ribbon.label', settings.ribbonLabel),
 				m('div.ui.hidden.divider'),
-				vm.tagger.view({ selectedTags: props.tagState, placeholder: props.placeholder})
+				vm.tagger.view({ selectedTags: settings.tagState, placeholder: settings.placeholder})
 			])
 		];
 	};

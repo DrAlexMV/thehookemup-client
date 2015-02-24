@@ -4,7 +4,7 @@
 
 var EditableSegment = require('profile/editable-segment');
 var UserDetail = require('model/user-details');
-var TypeaheadTagger = require('common/ui-core/typeahead-tagger');
+var Tagger = require('common/ui-core/tagger');
 
 var SkillsSegment = function (skills, canEdit, userID) {
 
@@ -19,6 +19,9 @@ var SkillsSegment = function (skills, canEdit, userID) {
 	};
 
 	segment.save = function () {
+		skills=skillsStrings().map(function(skillString){
+			return m.prop(skillString)
+		});
 		UserDetail.putSkillsByID(userID, skills).then(function () {
 			segment.vm.editing(false);
 		});
@@ -54,7 +57,7 @@ var SkillsSegment = function (skills, canEdit, userID) {
 	_.extend(segment, new EditableSegment(segment, 'skills', skills, canEdit, userID));
 
 	//TODO: do we want to limit the number of skills a user can have?
-	segment.vm.skillsTypeaheadTagger = TypeaheadTagger({ maxCount: 1000 }, 'skills');
+	segment.vm.skillsTypeaheadTagger = Tagger({ maxCount: 1000, entity:'skills', autocomplete: true});
 
 	return segment;
 };
