@@ -298,7 +298,7 @@ profile.view = function () {
 						</div>
 					</div>
 					{editButton}
-
+					<div className="ui hidden divider"></div>
 					{university_info}
 					{description}
 
