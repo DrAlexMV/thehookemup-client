@@ -94,7 +94,8 @@ var InviteSegment = function () {
 
 		return (
 			<div className="ui segment">
-				<h4 className="ui header">Invite Others</h4>
+				<div className="ui ribbon label theme-color-main">Invite Others</div>
+				<div className="ui hidden divider"></div>
 				<div className="ui relaxed divided items">
 					{ listUnused }
 				</div>

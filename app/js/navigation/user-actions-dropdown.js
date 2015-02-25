@@ -17,18 +17,18 @@ var UserActions = function (user) {
 	var body = [
 		m('div.ui.card', [
 			m('div.content', [
-				m('div.ui.grid', [
-					m('div.eight.wide.center.aligned.column', [
-						m('div.ui.vertical.buttons', [
+				m('div.ui.two.column.divided.padded.center.aligned.grid', [
+					m('div.column', [
+						m('div.ui.vertical.small.basic.buttons', [
 							//For some unknown reason, using bind with m.route messes up the url.
 							//Putting m.route in a callback function works, however.
-							m('div.ui.small.button', { onclick: function () {
+							m('div.ui.button', { onclick: function () {
 								m.route('/profile/me')
 							}}, "Profile"),
-							m('div.ui.small.button', { onclick: function () {
+							m('div.ui.button', { onclick: function () {
 								m.route('/startup-wizard')
 							}}, "Create a Startup"),
-							m('div.ui.small.button', { onclick: function () {
+							m('div.ui.button', { onclick: function () {
 								User.logout();
 								m.route('/login');
 							}
@@ -36,10 +36,9 @@ var UserActions = function (user) {
 						])
 					]),
 
-					m('div.eight.wide.center.aligned.column', [
-						m('div.description', truncate(user.getName(), 20)),
-						m('br'),
-						m("img.ui.centered.tiny.rounded.image[style='height:60px;width:60px']", { src: user.getPicture() }),
+					m('div.column#user-card', [
+						m('img.ui.centered.rounded', { src: user.getPicture() }),
+						m('div.description', truncate(user.firstName(), 20))
 					])
 				])
 			])
@@ -48,7 +47,7 @@ var UserActions = function (user) {
 
 	userActions.view = function () {
 		return [
-			m('img.ui.small.rounded.image[style="height:20px;width:20px"]', { src: user.getPicture() }),
+			m('img.ui.rounded.image', { src: user.getPicture() }),
 			m('div#user-actions.menu', [
 				body,
 				m('div.ui.right.aligned.item', [

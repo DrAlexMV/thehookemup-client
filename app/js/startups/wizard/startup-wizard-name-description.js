@@ -61,7 +61,7 @@ var StartupWizardNameDescription = function () {
 
 		return [
 			m('div.ui.segment', [
-				m('a.ui.ribbon.label', 'Company Info'),
+				m('a.ui.ribbon.label.theme-color-main', 'Company Info'),
 				m('div.ui.hidden.divider'),
 				m('div.ui.stackable.grid', [
 					m('div.eight.wide.column', [

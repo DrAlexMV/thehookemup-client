@@ -96,127 +96,138 @@ dashboard.view = function () {
 		suggestedConnections = vm.edges().suggestedConnections();
 	}
 
-	var endorserListSegment = (
+	var endorserListSegment = null;
+	if (vm.endorserList.getCount() > 0) {
+		endorserListSegment = (
+			<div className="ui segment">
+				<div className="ui ribbon label theme-color-main">Your Endorsements</div>
+				<div className="ui hidden divider"></div>
+				<div className="ui divider"></div>
+					{ vm.endorserList.view({}) }
+			</div>
+		);
+	}
+
+	var todaySegment = (
 		<div className="ui segment">
-			<div className="ui header">Endorsements</div>
-			<div className="ui divider"></div>
-				{ vm.endorserList.view({}) }
-		</div>
-	);
-
-	var suggestedConnectionsSegment = new EntityList('Suggested Connections', suggestedConnections, { inSegment: true });
-
-	return (
-		<div className="ui stackable padded grid">
-			<div className="row">
-				<div className="five wide column">
-					<div className="ui stackable grid">
-						<div class="row">
-							<div class="sixteen wide column">
-								{ vm.trendingStartupsList.view() }
-								{ suggestedConnectionsSegment.view() }
-							</div>
+			<div className="ui ribbon label theme-color-main">Today</div>
+			<div className="statistics-box">
+				<div className="ui statistic">
+					<div className="value">{numPendingRequests}</div>
+					<div className="label">
+						<div className="ui list">
+							<a href="#pending-requests" className="item">
+								{handlePlural('Pending Request', numPendingRequests)}
+							</a>
 						</div>
 					</div>
 				</div>
-				<div className="eleven wide column">
-					<div className="ui stackable grid">
-						<div className="row">
-							<div className="sixteen wide column">
-								<div className="ui segment dashboard-header">
-									<div className="ui grid">
-										<div className="row">
-											<div className="six wide column">
-												<div className="ui header">
-													Howdy, {basicInfo.firstName()}!
-												</div>
-												Looks like you're new to the site!
-												You're going to want to fill out your profile with your
-												avid interests, proudest moments, and best skills.
-												<div className="ui bulleted list">
-													<a href="/profile/me" config={m.route} className="item">Update my profile</a>
-												</div>
-											</div>
-											<div className="twelve wide computer tablet only column"></div>
-										</div>
-									</div>
-								</div>
-							</div>
+				<div className="ui statistic">
+					<div className="value">{numConnections}</div>
+					<div className="label">
+						<div className="ui list">
+							<a href="#connections" className="item">
+								{handlePlural('Connection', numConnections)}
+							</a>
 						</div>
-						<div className="row">
-							<div className="ten wide column">
-								<div className="ui segment">
-									<h4 className="ui left floated header">Today</h4>
-									<div className="ui statistic">
-										<div className="value">{numPendingRequests}</div>
-										<div className="label">
-											<div className="ui list">
-												<a href="#pending-requests" className="item">
-													{handlePlural('Pending Request', numPendingRequests)}
-												</a>
-											</div>
-										</div>
+					</div>
+				</div>
+				<div className="ui statistic">
+					<div className="value">{vm.endorserList.getCount()}</div>
+					<div className="label">
+						<div className="ui list">
+							<a className="item">
+								{handlePlural('Endorsement', vm.endorserList.getCount() )}
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+	
+	var suggestedConnectionsSegment = new EntityList('Suggested Connections', suggestedConnections, { inSegment: true });
+
+	return (
+		<div className="ui stackable page grid">
+			<div className="row">
+				<div className="five wide column">
+					{ vm.trendingStartupsList.view() }
+					{ suggestedConnectionsSegment.view() }
+					<div id="twitter-segment" config={twitterIntegration}>
+						<a className="twitter-timeline" href="https://twitter.com/search?q=austin%20startup" data-widget-id="555318512722272256">Tweets about austin startup</a>
+					</div>
+				</div>
+				<div className="eleven wide column">
+					<div className="ui segment dashboard-header">
+						<div className="ui grid">
+							<div className="row">
+								<div className="six wide column">
+									<div className="ui header">
+										Howdy, {basicInfo.firstName()}!
 									</div>
-									<div className="ui statistic">
-										<div className="value">{numConnections}</div>
-										<div className="label">
-											<div className="ui list">
-												<a href="#connections" className="item">
-													{handlePlural('Connection', numConnections)}
-												</a>
-											</div>
-										</div>
-									</div>
-									<div className="ui statistic">
-										<div className="value">{vm.endorserList.getCount()}</div>
-										<div className="label">
-											<div className="ui list">
-												<a className="item">
-													{handlePlural('Endorsement', vm.endorserList.getCount() )}
-												</a>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div className="ui segment">
-									<h4 className="ui header">Browse</h4>
-									<div className="ui content">
-										<div className="3 fluid ui orange buttons">
-											<a href="/search?query_string=Startupper" config={m.route} className="ui button">
-												Startuppers
-											</a>
-											<a href="/search?query_string=Founder" config={m.route} className="ui button">
-												Founders
-											</a>
-											<a href="/search?query_string=Investor" config={m.route} className="ui button">
-												Investors
-											</a>
-										</div>
+									Looks like you're new to the site!
+									You're going to want to fill out your profile with your
+									avid interests, proudest moments, and best skills.
+									<div className="ui bulleted list">
+										<a href="/profile/me" config={m.route} className="item">Update my profile</a>
 									</div>
 								</div>
-								<div className="ui segment">
-									<h4 className="ui header">Actions</h4>
-									<div className="ui content">
-										<div className="ui bulleted list">
-											<a className="item">Find someone</a>
-											<a href="/profile/me" config={m.route} className="item">Update my profile</a>
-										</div>
-									</div>
-								</div>
-								<div id="pending-requests"></div>
-								{ dashboard.vm.pendingRequestsSegment && dashboard.vm.edges().pendingConnections().length ?
-									dashboard.vm.pendingRequestsSegment.view({}) : null }
-								<div id="connections"></div>
-								{ dashboard.vm.connectionsSegment ?
-									dashboard.vm.connectionsSegment.view({}) : null }
-								{ dashboard.vm.inviteSegment.view({ invites: dashboard.vm.invites.invites }) }
-								{ endorserListSegment }
-							</div>
-							<div className="six wide tablet computer only column" config={twitterIntegration}>
-								<a className="twitter-timeline" href="https://twitter.com/search?q=austin%20startup" data-widget-id="555318512722272256">Tweets about austin startup</a>
+								<div className="twelve wide computer tablet only column"></div>
 							</div>
 						</div>
 					</div>
+					{ todaySegment }
+					<div className="ui segment">
+						<div className="ui ribbon label theme-color-main">Browse</div>
+						<div className="ui hidden divider"></div>
+						<div className="ui content">
+							<div className="ui three column divided center aligned grid">
+								<div className="column">
+									<a href="/search?query_string=Startupper" config={m.route}>
+										<div className="ui statistic">
+											<div className="value"><i className="ui users icon"></i></div>
+											<div className="label">Builders</div>
+										</div>
+									</a>
+								</div>
+								<div className="column">
+									<a href="/search?query_string=Founder" config={m.route}>
+										<div className="ui statistic">
+											<div className="value"><i className="ui suitcase icon"></i></div>
+											<div className="label">Founders</div>
+										</div>
+									</a>
+								</div>
+								<div className="column">
+									<a href="/search?query_string=Investor" config={m.route}>
+										<div className="ui statistic">
+											<div className="value"><i className="ui money icon"></i></div>
+											<div className="label">Investors</div>
+										</div>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div className="ui segment">
+						<div className="ui ribbon label theme-color-main">Actions</div>
+						<div className="ui hidden divider"></div>
+						<div className="ui content">
+							<div className="ui bulleted list">
+								<a className="item">Find someone</a>
+								<a href="/profile/me" config={m.route} className="item">Update my profile</a>
+							</div>
+						</div>
+					</div>
+					<div id="pending-requests"></div>
+					{ dashboard.vm.pendingRequestsSegment && dashboard.vm.edges().pendingConnections().length ?
+						dashboard.vm.pendingRequestsSegment.view({}) : null }
+					<div id="connections"></div>
+					{ dashboard.vm.connectionsSegment ?
+						dashboard.vm.connectionsSegment.view({}) : null }
+					{ dashboard.vm.inviteSegment.view({ invites: dashboard.vm.invites.invites }) }
+					{ endorserListSegment }
 				</div>
 			</div>
 		</div>

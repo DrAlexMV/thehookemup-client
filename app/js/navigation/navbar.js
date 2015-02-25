@@ -56,8 +56,8 @@ var Navbar = function () {
             m('div.ui.borderless.fixed.menu', [
                 m('div.ui.grid', [
                     m('div.two.wide.center.aligned.column', [
-                        m('a[href="?/"].item', { config: m.route }, [
-                            m('i.lemon.icon')
+                        m('a[href="?/"].item#nav-home', { config: m.route }, [
+                            m('i.home.icon')
                         ])
                     ]),
                     m('div.eight.wide.column', [
@@ -66,11 +66,11 @@ var Navbar = function () {
                         ])
                     ]),
                     m('div.six.wide.column', [
-                        m('div.right.item', [
+                        m('div.right.item#user-box', [
                             vm.userActionsDropdown() ? vm.userActionsDropdown().view() : null
                         ]),
 
-                        m('div.right.item', [
+                        m('div.right.item#notifs-button', [
                             vm.notificationDropdown() ? vm.notificationDropdown().view() : null
                         ])
                     ])

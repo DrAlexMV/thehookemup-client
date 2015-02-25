@@ -13,7 +13,7 @@ var TagInputSegment = function (settings) {
 	tagInputSegment.view = function () {
 		return [
 			m('div.ui.segment', [
-				m('a.ui.ribbon.label', settings.ribbonLabel),
+				m('a.ui.ribbon.label.theme-color-main', settings.ribbonLabel),
 				m('div.ui.hidden.divider'),
 				vm.tagger.view({ selectedTags: settings.tagState, placeholder: settings.placeholder})
 			])

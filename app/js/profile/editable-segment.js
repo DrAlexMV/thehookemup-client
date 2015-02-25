@@ -56,8 +56,8 @@ var EditableSegment = function (child, segmentName, contentData, canEdit, userID
 
 		return (
 			<div className="ui segment user-details">
-				<div className="ui ribbon label">
-					<h4 className="ui header">{segmentName.toUpperCase()}</h4>
+				<div className="ui ribbon label theme-color-main">
+					{segmentName.toUpperCase()}
 				</div>
 				{editButton}
 				<div className="ui content base-content">
