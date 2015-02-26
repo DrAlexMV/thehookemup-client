@@ -107,7 +107,7 @@ auth.view = function () {
 						vm.awaitingResponse() ? m('div.ui.active.inverted.dimmer', [m('div.ui.text.loader', 'Loading')]) : null,
 					]),
 					m('h1.ui.center.aligned.header', [
-						m('img', { src: 'img/logo.png' } )
+						m('img#login-header', { src: 'img/logo.png' } )
 					]),
 					m('div.ui.clearing.divider'),
 					vm.userRegistering() ? vm.registrationForm.view() : signInForms()

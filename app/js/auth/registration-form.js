@@ -15,7 +15,19 @@ var RegistrationForm = function (urlInvite) {
 		roles: m.prop([]),
 		confirmPassword: m.prop(''),
 		errorMessages: m.prop([]),
-		availableRoles: m.prop(['Founder', 'Investor', 'Startupper']),
+		availableRoles: m.prop([
+			{
+				name: 'Founder',
+				description: 'Already started a company or planning to?'
+			},
+			{
+				name: 'Investor',
+				description: 'Interested in investing in ventures?'
+			}, {
+				name: 'Builder',
+				description: 'Are you a programmer, designer, researcher, etc.?'
+			}
+		]),
 		rolesCheckbox: MultiCheckbox(),
 		showForm: m.prop(false),
 		invite: m.prop(urlInvite ? urlInvite : ''),

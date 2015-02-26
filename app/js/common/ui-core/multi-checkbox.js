@@ -1,5 +1,6 @@
 var checkbox = require('common/form-builder').inputs.checkbox;
 var Message = require('common/stream-common').Message;
+var PopupLabel = require('common/ui-core/popup-label');
 
 var MultiCheckbox = function () {
 	var multiCheckbox = {};
@@ -26,9 +27,14 @@ var MultiCheckbox = function () {
 		return [
 			m('div', [
 				vm.choices().map(function (choice) {
-					return m('div.field', [
-						checkbox(choice, { onchange: vm.selectChoice.bind(this, choice) })
-					])
+					return m('div.field', {
+							'data-variation': 'inverted',
+							'data-content': choice.description,
+							'data-position': 'top center',
+							config: PopupLabel
+						}, [
+							checkbox(choice.name, { onchange: vm.selectChoice.bind(this, choice.name) })
+					]);
 				})
 			])
 		];
