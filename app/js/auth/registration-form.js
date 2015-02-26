@@ -130,7 +130,9 @@ var RegistrationForm = function (urlInvite) {
 					m('ul', [vm.errorMessages().map(function (message) { return m('li', message); })])
 				]),
 
-				m('div.one.field', m('div.ui.input', m('input', { value: vm.invite(), disabled: true }))),
+				m('div.one.field', [
+					m('div.ui.icon.input', [m('input', { value: vm.invite(), disabled: true }), m('i.checkmark.green.icon')])
+				]),
 				m('div.two.fields', [
 					nameFields.map(function (field) { return FormBuilder.inputs.formField(field.parameters, '', field.width); })
 				]),
