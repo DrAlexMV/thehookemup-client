@@ -53,7 +53,6 @@ var EditableImage = function () {
                 <div className="content">
                     <a className="ui right corner label" onclick={function() {
                         vm.step('display');
-                        console.log('display');
                     }}>
                         <i className="close icon"></i>
                     </a>

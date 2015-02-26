@@ -28,11 +28,12 @@ var ProfileWizardPictureDescription = function () {
 				m('div.ui.stackable.grid', [
 					m('div.four.wide.column', [
 						m('h5', 'Upload a profile picture.'),
-						vm.profilePicture.view({
-							userImageURL: ctrl.userImageURL(),
-							editable: true,
-							imageClasses: 'tiny'
-						})
+						m('div#profile-wizard-photo-uploader',
+							vm.profilePicture.view({
+								userImageURL: ctrl.userImageURL(),
+								editable: true
+							})
+						)
 					]),
 					m('div.twelve.wide.column', [
 						m('br'),
