@@ -9,6 +9,10 @@ var AttachSocialSegment = function () {
 
 	var attachSocialSegment = {};
 
+	var vm = {
+		fbAttachedTo: m.prop('')
+	};
+
 	function attachFacebook() {
 		// TODO: Avoid code duplication here
 		FB.init({
@@ -18,16 +22,18 @@ var AttachSocialSegment = function () {
 		});
 
 		FB.login(function (response) {
-			if (response.authResponse) {
-				User.attachSocialSignIn('facebook', response.authResponse.userID)
-					.then(function (response) {
-						if (response.error === null) {
-							console.log('Facebook Attached');
-						} else {
-							console.log('Error in Attaching Facebook');
-						}
-					});
-			}
+			FB.api('/me', function(fbUser) {
+				if (response.authResponse) {
+					User.attachSocialSignIn('facebook', response.authResponse.userID)
+						.then(function (response) {
+							if (response.error === null) {
+								vm.fbAttachedTo(fbUser.name);
+							} else {
+								console.log('Error in Attaching Facebook');
+							}
+						});
+				}
+			});
 		});
 	}
 
@@ -37,10 +43,16 @@ var AttachSocialSegment = function () {
 				<div className="ui ribbon label theme-color-main">Social Signins</div>
 				<h5>Enable Logging In Using These Services</h5>
 				<div className="ui hidden divider"></div>
-				<div className="ui facebook button" onclick={ attachFacebook }>
-					<i className="facebook icon"></i>
-				Link To Facebook
-				</div>
+				{ vm.fbAttachedTo().length ?
+					<div className="ui facebook disabled button">
+						<i className="facebook icon"></i>
+						Linked to<br/>{ vm.fbAttachedTo() }
+					</div> :
+					<div className="ui facebook button" onclick={ attachFacebook }>
+						<i className="facebook icon"></i>
+						Link To Facebook
+					</div>
+				}
 			</div>
 			);
 	}

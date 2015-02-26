@@ -45,6 +45,7 @@ var vm =
 
 			vm.errorMessages = m.prop([]);
 
+			vm.attachSocialSegment = AttachSocialSegment();
 			vm.validationSuccess = function () {
 				vm.errorMessages([]);
 				vm.awaitingResponse(true);
@@ -100,8 +101,6 @@ createProfileWizard.controller = function () {
 };
 
 createProfileWizard.view = function () {
-
-
 	return [
 		m('div.ui.page.grid', [
 			m('div.row', [
@@ -119,7 +118,7 @@ createProfileWizard.view = function () {
 						//TODO: is it possible to highlight the skills input box like we do for other required fields?
 						onsubmit: function () {
 							if (vm.profile.skills().length == 0) {
-								vm.errorMessages().push("Please enter some skills.");
+								vm.errorMessages().push('Please enter some skills.');
 							}
 						},
 						class: vm.errorMessages().length ? 'warning' : null,
@@ -137,7 +136,7 @@ createProfileWizard.view = function () {
 								m('div.column', [
 									vm.pictureDescriptionSegment.view({ description: vm.profile.description, userImageURL: vm.profile.userImageURL}),
 									vm.skillsSegment.view(),
-									AttachSocialSegment().view(),
+									vm.attachSocialSegment.view(),
 									vm.handlesSegment.view({ handles: vm.profile.handles, desiredHandles: vm.desiredHandles })
 								])
 							]),
