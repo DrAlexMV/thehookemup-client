@@ -7,33 +7,33 @@ var StartupProfileHeader = function (startupId) {
 	var startupProfileHeader = {};
 
 	var availableHandles = {
-		'blog' : { name: 'Blog', icon: 'feed' },
+		'blog': { name: 'Blog', icon: 'feed' },
 		'twitter': { name: 'Twitter', icon: 'twitter' },
-        'angel-list':{name: 'Angel List', icon: 'angellist'},
-        'facebook':{name: 'Facebook', icon: 'facebook'}
+		'angel-list': {name: 'Angel List', icon: 'angellist'},
+		'facebook': {name: 'Facebook', icon: 'facebook'}
 	};
 
 	startupProfileHeader.stream = new Bacon.Bus();
 
 	var vm =
-	startupProfileHeader.vm = {
-		profilePicture: new EditableImage(),
-		isEditing: m.prop(false),
-		marketName: m.prop(''),
-		currentPage: m.prop(''),
-		endorsementButton: EndorsementButton(startupId, 'startup'),
-		headerForm: {
-			name: m.prop(''),
-			website: m.prop(''),
-			description: m.prop(''),
-			markets: [],
-			handles: _.mapValues(availableHandles, function(value, key) { // Key by type
-				return {type: key, url: m.prop('')};
-			})
-		}
-	};
+		startupProfileHeader.vm = {
+			profilePicture: new EditableImage(),
+			isEditing: m.prop(false),
+			marketName: m.prop(''),
+			currentPage: m.prop(''),
+			endorsementButton: EndorsementButton(startupId, 'startup'),
+			headerForm: {
+				name: m.prop(''),
+				website: m.prop(''),
+				description: m.prop(''),
+				markets: [],
+				handles: _.mapValues(availableHandles, function (value, key) { // Key by type
+					return {type: key, url: m.prop('')};
+				})
+			}
+		};
 
-	var changePage = function(pageName) {
+	var changePage = function (pageName) {
 		vm.currentPage(pageName);
 		startupProfileHeader.stream.push(new StreamCommon.Message(
 			'StartupProfileHeader::ChangePage',
@@ -43,7 +43,9 @@ var StartupProfileHeader = function (startupId) {
 
 	var addCategory = function () {
 		var s = vm.marketName();
-		if (!s || _.find(vm.headerForm.markets, function(entry) { return entry === s; })) {
+		if (!s || _.find(vm.headerForm.markets, function (entry) {
+			return entry === s;
+		})) {
 			return;
 		}
 		vm.headerForm.markets.push(s);
@@ -58,8 +60,8 @@ var StartupProfileHeader = function (startupId) {
 		vm.headerForm.name(startupBasic.name());
 		vm.headerForm.description(startupBasic.description());
 		vm.headerForm.website(startupBasic.website());
-		startupBasic.handles().forEach(function(handle) {
-			vm.headerForm.handles[handle.type]={type: handle.type, url: m.prop(handle.url)};
+		startupBasic.handles().forEach(function (handle) {
+			vm.headerForm.handles[handle.type] = {type: handle.type, url: m.prop(handle.url)};
 		});
 		vm.headerForm.markets = startupBasic.markets().slice();
 	};
@@ -74,7 +76,7 @@ var StartupProfileHeader = function (startupId) {
 					website: vals.website(),
 					description: vals.description(),
 					markets: vals.markets.slice(),
-					handles: _.values(vals.handles).map(function(handle) {
+					handles: _.values(vals.handles).map(function (handle) {
 						return {type: handle.type, url: handle.url()};
 					})
 				})
@@ -104,9 +106,9 @@ var StartupProfileHeader = function (startupId) {
 						availableTabs.map(function (tab) {
 							return m(tab.key === vm.currentPage() ? 'a.active.item' : 'a.item',
 								{ onclick: changePage.bind(this, tab.key) }, [
-								m('i.icon', { class: tab.icon }),
-								tab.name
-							]);
+									m('i.icon', { class: tab.icon }),
+									tab.name
+								]);
 						})
 					])
 				])
@@ -141,96 +143,96 @@ var StartupProfileHeader = function (startupId) {
 				];
 			};
 
-		var middleSectionEditing = function() {
-			var fields = {
-				name: {
-					name: 'name',
-					placeholder: 'Startup Name',
-					value: vm.headerForm.name(),
-					onchange: m.withAttr('value', vm.headerForm.name)
-				},
-				description: {
-					name: 'description',
-					placeholder: 'Enter a description',
-					value: vm.headerForm.description(),
-					class: 'stacked-text-input',
-					onchange: m.withAttr('value', vm.headerForm.description),
-					rows: 4
-				},
-				website: {
-					name: 'website',
-					placeholder: 'Enter a URL',
-					value: vm.headerForm.website(),
-					class: 'stacked-text-input',
-					onchange: m.withAttr('value', vm.headerForm.website)
-				}
-			};
+			var middleSectionEditing = function () {
+				var fields = {
+					name: {
+						name: 'name',
+						placeholder: 'Startup Name',
+						value: vm.headerForm.name(),
+						onchange: m.withAttr('value', vm.headerForm.name)
+					},
+					description: {
+						name: 'description',
+						placeholder: 'Enter a description',
+						value: vm.headerForm.description(),
+						class: 'stacked-text-input',
+						onchange: m.withAttr('value', vm.headerForm.description),
+						rows: 4
+					},
+					website: {
+						name: 'website',
+						placeholder: 'Enter a URL',
+						value: vm.headerForm.website(),
+						class: 'stacked-text-input',
+						onchange: m.withAttr('value', vm.headerForm.website)
+					}
+				};
 
-			return [
-				m('div.ui.header', [
-					FormBuilder.inputs.formField(fields.name)
-				]),
-				m('div.ui.content', [
-					m('div.ui.two.column.stackable.grid', [
-						m('div.column', [
-							m('div.fluid.ui.input', [
-								FormBuilder.inputs.formField(fields.website, 'Website')
-							]),
-							m('div.fluid.ui.input', [
-								FormBuilder.inputs.formField(fields.description, 'Description', '', 'textarea')
-							]),
-							m('div.fluid.ui.action.small.input.focus', [
-								m('input', {
-									placeholder: 'Add a market',
-									value: vm.marketName(),
-									onchange: m.withAttr('value', vm.marketName)
-								}),
-								m('div.ui.right.primary.button', { onclick: addCategory }, ['Add'])
-							]),
-							vm.headerForm.markets.length ?
-								m('div.ui.segment', [
-									m('div.header', ['Markets']),
-									m('div.ui.two.column.stackable.grid', [
-										m('div.column', [
-											m('div', [
-												vm.headerForm.markets.map(function(market, index) {
-													return m('div.ui.label', [
-														market,
-														m('i.delete.icon', { onclick: deleteCategory.bind(this, index) })
-													]);
-												})
-											])
-										]),
-										m('div.right.aligned.column', [
-											m('div.ui', [
+				return [
+					m('div.ui.header', [
+						FormBuilder.inputs.formField(fields.name)
+					]),
+					m('div.ui.content', [
+						m('div.ui.two.column.stackable.grid', [
+							m('div.column', [
+								m('div.fluid.ui.input', [
+									FormBuilder.inputs.formField(fields.website, 'Website')
+								]),
+								m('div.fluid.ui.input', [
+									FormBuilder.inputs.formField(fields.description, 'Description', '', 'textarea')
+								]),
+								m('div.fluid.ui.action.small.input.focus', [
+									m('input', {
+										placeholder: 'Add a market',
+										value: vm.marketName(),
+										onchange: m.withAttr('value', vm.marketName)
+									}),
+									m('div.ui.right.primary.button', { onclick: addCategory }, ['Add'])
+								]),
+								vm.headerForm.markets.length ?
+									m('div.ui.segment', [
+										m('div.header', ['Markets']),
+										m('div.ui.two.column.stackable.grid', [
+											m('div.column', [
+												m('div', [
+													vm.headerForm.markets.map(function (market, index) {
+														return m('div.ui.label', [
+															market,
+															m('i.delete.icon', { onclick: deleteCategory.bind(this, index) })
+														]);
+													})
+												])
+											]),
+											m('div.right.aligned.column', [
+												m('div.ui', [
+												])
 											])
 										])
-									])
-								]) : null
-						]),
-						m('div.column', [
-							handlesEdit()
+									]) : null
+							]),
+							m('div.column', [
+								handlesEdit()
+							])
 						])
+					]),
+					m('div.ui.hidden.divider'),
+					m('div.ui.small.buttons', [
+						m('div.ui.positive.button', {onclick: saveForm}, 'Save'),
+						m('div.ui.button', { onclick: vm.isEditing.bind(this, false) }, 'Cancel')
 					])
-				]),
-				m('div.ui.hidden.divider'),
-				m('div.ui.small.buttons', [
-					m('div.ui.positive.button', {onclick: saveForm}, 'Save'),
-					m('div.ui.button', { onclick:  vm.isEditing.bind(this, false) }, 'Cancel')
-				])
-			];
-		};
+				];
+			};
 
-		var middleSection = function() {
+			var middleSection = function () {
 				return [
 					m('div.ui.header', [
 						startupBasic.name(),
 						props.editable ?
 							m('a.startup-header-edit', {
-								onclick: function() {
-									fillForm(startupBasic);
-									vm.isEditing(true);
-								}}, [
+									onclick: function () {
+										fillForm(startupBasic);
+										vm.isEditing(true);
+									}}, [
 									m('i.write.icon')
 								]
 							) : null
@@ -242,7 +244,7 @@ var StartupProfileHeader = function (startupId) {
 					m('div.ui.two.column.stackable.grid', [
 						m('div.column', [
 							m('div', [
-								startupBasic.markets().map(function(market) {
+								startupBasic.markets().map(function (market) {
 									return m('div.ui.label', market);
 								})
 							])
@@ -260,14 +262,16 @@ var StartupProfileHeader = function (startupId) {
 						m('div.ui.content', [
 							m('div.ui.stackable.grid', [
 								m('div.three.wide.center.aligned.column', [
-									startupProfileHeader.vm.profilePicture.view({
-										editable: props.editable,
-										userImageURL: startupBasic.picture(),
-										imageClasses: 'startup-logo'
-									})
+									m('div#profile-wizard-photo-uploader', [
+										startupProfileHeader.vm.profilePicture.view({
+											editable: props.editable,
+											userImageURL: startupBasic.picture(),
+											imageClasses: 'startup-logo'
+										})
+									])
 								]),
 								m('div.thirteen.wide.column', [
-									vm.isEditing()  ? middleSectionEditing() : middleSection()
+									vm.isEditing() ? middleSectionEditing() : middleSection()
 								])
 							])
 						])
@@ -278,7 +282,7 @@ var StartupProfileHeader = function (startupId) {
 								tabs()
 							]),
 							m('div.three.wide.right.aligned.column', [
-								vm.isEditing()  ? null : handles()
+								vm.isEditing() ? null : handles()
 							])
 						])
 					])
