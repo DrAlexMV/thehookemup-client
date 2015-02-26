@@ -9,11 +9,6 @@ var auth = {};
 
 auth.vm = {
 	init: function () {
-		// Disallow logged in users from seeing this page
-		if (Context.loaded()) {
-			m.route('/');
-		}
-
 		var urlInvite = m.route.param('invite');
 
 		/* Child Components */
@@ -39,7 +34,7 @@ auth.vm = {
 				.then(function (res) {
 					//TODO: find a better way to determine if we should route the user to
 					//the profile wizard. Maybe want to also check for skills. 
-					if (res.description()=='' && res.picture()==null && res.handles().length==0) {
+					if (!res.description()) {
 						m.route('/profile-wizard')
 					} else {
 						m.route('/');

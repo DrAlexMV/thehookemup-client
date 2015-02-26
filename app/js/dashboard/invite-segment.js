@@ -60,9 +60,8 @@ var InviteSegment = function () {
 		listUnused = listUnused.map(function (invite, idx) {
 				var mailButton = invite.scratchedOut ? null :
 					<a href={ buildMailto(invite.code) }
-						onclick={scratch.bind(this, invite, true)}
 						data-variation="inverted"
-						data-content="Mail to a friend (Marks as used)"
+						data-content="Mail to a friend"
 						data-position="bottom center"
 						config={PopupLabel}>
 						<i className="envelope icon"></i>
@@ -77,7 +76,7 @@ var InviteSegment = function () {
 					</a>;
 
 				return (
-					<div className="item">
+					<div className="item invite">
 						<div className={'content' + (invite.scratchedOut ? ' scratched-out' : '')}>
 							<span data-variation="inverted"
 								data-content={invite.scratchedOut ? 'This invite is marked as having been sent to someone, but nobody has used it yet.' : 'Click the mail icon to email a friend this invite.'}
