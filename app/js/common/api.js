@@ -7,7 +7,10 @@ var API = (function () {
 	api.API_BASE = Config['API_BASE'];
 	
 	api[401] = function () {
-		m.route('/login');
+		// Massive hack
+		var params = m.route.param('invite') ? { invite: m.route.param('invite') } : {};
+
+		m.route('/login', params);
 	};
 
 	api.calcAddress = function(resourceLocation) { return api.URL + api.API_BASE + resourceLocation; };
