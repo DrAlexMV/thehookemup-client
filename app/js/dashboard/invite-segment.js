@@ -23,7 +23,7 @@ var InviteSegment = function () {
 	};
 
 	var buildMailto = function(inviteCode) {
-		var body = 'mailto:?Subject=Founderati.io%20Invite&Body=Hi%2C%0AI%27d%20like%20to%20invite%20you%20to%20Founderati%2C%20a%20website%20for%20entrepreneurs.%20Go%20here%20to%20claim%20your%20account%3A%0A%0Ahttp%3A//beta.founderati.io/login%3Finvite%3D{inviteCode}%0A%0ASee%20you%20there%21%0A';
+		var body = 'mailto:?Subject=Founderati.io%20Invite&Body=Hi%2C%0AI%27d%20like%20to%20invite%20you%20to%20Founderati%2C%20a%20website%20for%20entrepreneurs.%20Go%20here%20to%20claim%20your%20account%3A%0A%0Ahttp%3A//beta.founderati.io/?/login%3Finvite%3D{inviteCode}%0A%0ASee%20you%20there%21%0A';
 		return body.replace('{inviteCode}', inviteCode);
 	};
 
