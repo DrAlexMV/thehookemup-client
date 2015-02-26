@@ -57,7 +57,7 @@ var Navbar = function () {
                 m('div.ui.grid', [
                     m('div.two.wide.center.aligned.column', [
                         m('a[href="?/"].item#nav-home', { config: m.route }, [
-                            m('i.home.icon')
+                            m('img', {src: '/img/founderati-icon-tiny.png'}, [])
                         ])
                     ]),
                     m('div.eight.wide.column', [
