@@ -77,13 +77,12 @@ var HorizontalEntityListSegment = function (title, linkBase, entitiesFunction, m
 					</a>
 				</div>;
 		}
-
 		return (
 			<div className="ui segment">
-				<div className="ui ribbon label theme-color-main">
-					{title}
-				</div>
-
+				{title.length ?
+					<div className="ui ribbon label theme-color-main">
+						{ title }
+					</div> : null }
 				{search}
 				<div className="ui hidden divider"></div>
 				<div className="ui list horizontal-list">

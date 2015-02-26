@@ -96,9 +96,15 @@ var InviteSegment = function () {
 			<div className="ui segment">
 				<div className="ui ribbon label theme-color-main">Invite Others</div>
 				<div className="ui hidden divider"></div>
-				<div className="ui relaxed divided items">
-					{ listUnused }
-				</div>
+				{ listUnused.length ?
+					<div className="ui relaxed divided items">
+						{ listUnused }
+					</div> :
+					<div>
+						You have no invites left at the moment.
+						To get more invites send us an email and convince us
+						to give you more.
+					</div> }
 				{ showToggle }
 			</div>
 		);
