@@ -2,7 +2,6 @@ var API = require('common/api');
 
 var ImageModel = require('model/image');
 
-
 var User = function(API) {
 	var user = {};
 
@@ -20,7 +19,7 @@ var User = function(API) {
 		this.picture = m.prop(data.picture);
 		this.connectionType = m.prop(data.connectionType);
 		this.endorsementCount = m.prop(data.endorsementCount);
-        this.handles = m.prop(data.handles);
+		this.handles = m.prop(data.handles);
 
 		this.getName = function () {
 			return this.firstName() + ' ' + this.lastName();
@@ -53,9 +52,9 @@ var User = function(API) {
 		return this.post('/login', credentials, user.UserModel);
 	};
 
-    user.logout = function() {
-        return this.get('/logout', null);
-    };
+	user.logout = function() {
+		return this.get('/logout', null);
+	};
 
 	user.socialSignIn = function(credentials) {
 		return this.post('/login-social', credentials, user.UserModel);

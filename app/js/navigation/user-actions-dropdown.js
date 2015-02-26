@@ -3,8 +3,8 @@
  */
 
 var API = require('common/api');
+var Context = require('common/context');
 var User = require('model/user');
-
 
 var UserActions = function (user) {
 	var userActions = {};
@@ -29,10 +29,9 @@ var UserActions = function (user) {
 								m.route('/startup-wizard')
 							}}, "Create a Startup"),
 							m('div.ui.button', { onclick: function () {
-								User.logout();
-								m.route('/login');
-							}
-							}, "Logout")
+								Context.purge();
+								User.logout().then(m.route.bind(this, '/login'));
+							}}, "Logout")
 						])
 					]),
 

@@ -9,6 +9,11 @@ var auth = {};
 
 auth.vm = {
 	init: function () {
+		// Disallow logged in users from seeing this page
+		if (Context.loaded()) {
+			m.route('/');
+		}
+
 		var urlInvite = m.route.param('invite');
 
 		/* Child Components */

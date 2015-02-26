@@ -21,40 +21,38 @@ var ConnectMessage = function (basicUserInfo, message) {
 
 	connectMessage.view = function () {
 		return [
-			m("i.close.icon"),
-			m("div.header","Message from " + basicUserInfo().firstName() + " " + basicUserInfo().lastName() + ":"),
-			m("div.ui.padded.grid",[
-				m("div.six.wide.column",[
-					m("div.content",[
-						m("div.ui.medium.bordered.image",[
+			m('i.close.icon'),
+			m('div.header','Message from ' + basicUserInfo().firstName() + ' ' + basicUserInfo().lastName() + ':'),
+			m('div.ui.padded.grid',[
+				m('div.six.wide.column',[
+					m('div.content',[
+						m('div.ui.medium.bordered.image',[
 							connectMessage.vm.profilePicture.view({userImageURL: basicUserInfo().picture()})
 						])
 					])
 				]),
-				m("div.ten.wide.column",[
-					m("div.content",[
-						m("div.field",[
-							m("br"),
-							m("div.ui.segment",[
-								m("i.quote.left.icon"),
-								m("content",vm.message),
-								m("i.quote.right.icon")
+				m('div.ten.wide.column',[
+					m('div.content',[
+						m('div.field',[
+							m('br'),
+							m('div.ui.segment',[
+								m('i.quote.left.icon'),
+								m('content',vm.message),
+								m('i.quote.right.icon')
 							])
 						])
 					]),
 					m('br'),
-					m("div.description",[
-						m("div.ui.header","Expand your network!"),
-						m("p","Choosing to connect will give "+ basicUserInfo().firstName() +
-							" access to your email address and phone number. You will also have full access to " +
-							basicUserInfo().firstName() + "'s contact information, including email and phone number.")
+					m('div.description',[
+						m('div.ui.header','Expand your network!'),
+						m('p','Choosing to connect will give '+ basicUserInfo().firstName() +
+							' access to your email address and phone number. You will also have full access to ' +
+							basicUserInfo().firstName() + '\'s contact information, including email and phone number.')
 					])
 				]),
-				m("div.actions",[
-					m("div.ui.black.button",{onclick: connect.bind(connect,"NoConnect")}, "Not Now"),
-					m("div.ui.positive.right.labeled.icon.button",{onclick: connect.bind(connect,"Connect")},"Connect",[
-						m("i.checkmark.icon")
-					])
+				m('div.actions',[
+					m('div.ui.negative.button',{onclick: connect.bind(connect, 'NoConnect')}, 'Not Now'),
+					m('div.ui.positive.right.button',{onclick: connect.bind(connect, 'Connect')}, 'Connect')
 				])
 			])
 		];

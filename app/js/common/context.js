@@ -69,6 +69,16 @@ var Context = (function () {
 		return deferred.promise;
 	};
 
+	// Remove current context (e.g. logout)
+	context.purge = function () {
+		currentUser(null);
+		currentUserEdges(null);
+	};
+
+	context.loaded = function () {
+		return currentUser() !== null;
+	};
+
 	(function initContext() {
 		// Make eager singleton
 		context.getCurrentUser();

@@ -92,11 +92,9 @@ var NotificationList = function (edges) { // edges is an m.prop
 								m('div.ui.negative.small.button', {
 									onclick: respond.bind(respond, 'NoConnect', user._id(), idx)
 								}, 'Not Now'),
-								m('div.ui.positive.right.labeled.icon.small.button', {
+								m('div.ui.positive.right.small.button', {
 									onclick: respond.bind(respond, 'Connect', user._id(), idx)
-								}, 'Connect', [
-									m('i.checkmark.icon')
-								])
+								}, 'Connect')
 							])
 						])
 					])
