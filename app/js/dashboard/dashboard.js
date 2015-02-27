@@ -184,7 +184,7 @@ dashboard.view = function () {
 						<div className="ui content">
 							<div className="ui three column divided center aligned grid">
 								<div className="column">
-									<a href="/search?query_string=Startupper" config={m.route}>
+									<a href="/search?query_string=Builder" config={m.route}>
 										<div className="ui statistic">
 											<div className="value"><i className="ui users icon"></i></div>
 											<div className="label">Builders</div>
