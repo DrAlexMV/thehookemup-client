@@ -8,7 +8,7 @@ var StreamCommon = require('common/stream-common');
 var TagInputSegment = require('common/wizards/tag-input-segment');
 var User = require('model/user');
 var UserDetails = require('model/user-details');
-
+var Context = require('common/context');
 
 var createProfileWizard = {};
 
@@ -66,6 +66,7 @@ var vm =
 						function () {
 							User.putByID('me', {'description': vm.profile.description(), 'handles': convertHandles()}).then(
 								function () {
+									Context.purge();
 									m.route('/profile/me');
 								},
 								failure)
