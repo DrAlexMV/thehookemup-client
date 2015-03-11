@@ -1,18 +1,12 @@
+var startupHandles = require('common/constants').startupHandles;
+var userHandles = require('common/constants').userHandles;
+
 var HandleEditor = function (handleName) {
 	var handleEditor = {};
 
-	var availableHandles = {
-		facebook: { icon: 'facebook', tag: 'Facebook', tagClass: 'facebook' },
-		twitter: { icon: 'twitter', tag: 'Twitter', tagClass: 'twitter' },
-		website: { icon: 'browser', tag: 'Website' },
-		linkedin: {icon: 'linkedin', tag: 'Linkedin', tagClass: 'linkedin'},
-		github: { icon: 'github', tag: 'Github', tagClass: 'github'},
-		'google-plus': {icon: 'google plus', tag: 'Google Plus', tagClass: 'google-plus'},
-		'angel-list': { tag: 'Angel List', tagClass: 'angel-list' },
-		'blog' : { tag: 'Blog', tagClass: 'feed' },
-		default: { tag: handleName }
-	};
-
+	var availableHandles = _.merge(userHandles, startupHandles,
+		{'website':{'name':'Website', type:'website', icon:'browser'}},
+		{'default':{'name': handleName}});
 
 	handleEditor.view = function (ctrl) {
 
@@ -24,8 +18,8 @@ var HandleEditor = function (handleName) {
 			m('div.ui.right.labeled.left.icon.input', [
 				m('i.icon', { class: handle.icon }),
 				m('input[type="text"]', { onchange: m.withAttr('value', ctrl.url) }),
-				m('div.ui.tag.label', { class: handle.tagClass }, [
-					handle.tag
+				m('div.ui.tag.label', { class: handle.type }, [
+					handle.name
 				])
 			])
 		];
