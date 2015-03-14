@@ -1,8 +1,10 @@
 var EditableImage = require('common/editable-image');
 var FormBuilder = require('common/form-builder');
-var userRoles = require('common/constants').availableRoles;
-var userHandles = require('common/constants').userHandles;
+var UserRoles = require('common/constants').availableRoles;
+var UserHandles = require('common/constants').userHandles;
 var User = require('model/user');
+var HandleEditor = require('common/social-handles/handle-editor');
+var HandleModel = require('model/handle').HandleModel;
 
 //TODO: Need website and angel list icons
 var ContactCard = function (basicUserInfo, editable) {
@@ -17,9 +19,8 @@ var ContactCard = function (basicUserInfo, editable) {
 
 	card.save = function () {
 		User.putByID('me', {roles: vm.roles(),
-			handles: _.values(userHandles).map(function (handle) {
-				return {'type': handle.type, url: handle.url() }
-			})}).then(function () {
+			handles: vm.handles()
+		}).then(function () {
 				vm.editing(false);
 			}
 		);
@@ -28,14 +29,16 @@ var ContactCard = function (basicUserInfo, editable) {
 	var vm = card.vm = {
 		profilePicture: new EditableImage(),
 		editing: m.prop(false),
-		roles: m.prop(basicUserInfo().roles())
+		roles: m.prop(basicUserInfo().roles()),
+		handles: m.prop(Object.keys(UserHandles).map(function (handle) {
+			return HandleModel(handle);
+		}))
 	};
 
-	_.forEach(userHandles, function (handle) {
-		handle.url(findWebsiteUrl(handle.type))
+	_.forEach(vm.handles(), function (handle) {
+		handle.url(findWebsiteUrl(handle.type()))
 	});
 	card.view = function () {
-
 
 		var editButton = editable ?
 			vm.editing() ? [
@@ -48,7 +51,7 @@ var ContactCard = function (basicUserInfo, editable) {
 
 				])] : [
 				m('div', [
-					m('div.mini.ui.blue.button', {onclick: vm.editing.bind(this, true)}, [
+					m('div.mini.ui.blue.button.right.floated', {onclick: vm.editing.bind(this, true)}, [
 						'Edit'
 					]),
 					m('div.ui.hidden.divider')
@@ -56,7 +59,7 @@ var ContactCard = function (basicUserInfo, editable) {
 			] : null;
 
 		var rolesEdit = function () {
-			return userRoles.map(function (role) {
+			return UserRoles.map(function (role) {
 				var checked = basicUserInfo().roles().indexOf(role) > -1 ? 'checked' : null;
 				return m('div.field', [FormBuilder.inputs.checkbox(role, {checked: checked, onchange: function () {
 					var index = vm.roles().indexOf(role);
@@ -64,28 +67,22 @@ var ContactCard = function (basicUserInfo, editable) {
 				}})])
 			})
 		};
+		var handleEditor = HandleEditor();
 
 		var handlesEdit = function () {
-			return [
-				_.values(userHandles).map(function (handle) {
-					(handle);
-					var parameters = {
-						name: handle.name,
-						placeholder: '',
-						value: handle.url(),
-						class: 'stacked-text-input',
-						onchange: m.withAttr('value', handle.url)
-					};
-					return m('div.fluid.ui.input', [FormBuilder.inputs.formField(parameters, handle.name)]);
-				})
-			];
+			return vm.handles().map(function (handle) {
+				return [ m('br'), m('br'), handleEditor.view(handle, false) ];
+			});
 		};
 
-		var handlesView = _.map(userHandles, function (handle) {
-			return handle.url() ? [
-				m("a.[href=" + handle.url() + "]", [
-					m('div.ui.circular.' + handle.icon + '.icon.button', [
-						m('i.' + handle.icon + '.icon')
+		var handlesView = _.map(vm.handles(), function (handleModel) {
+
+			var userHandle = UserHandles[handleModel.type()];
+
+			return handleModel.url() ? [
+				m("a.[href=" + handleModel.url() + "]", [
+					m('div.ui.circular.' + userHandle.icon + '.icon.button', [
+						m('i.' + userHandle.icon + '.icon')
 					])
 				])
 			] : null;
@@ -98,13 +95,13 @@ var ContactCard = function (basicUserInfo, editable) {
 					userImageURL: basicUserInfo().picture()
 				}),
 				m('div.content', [
+					editButton,
 					m('div.ui.header', basicUserInfo().roles().join(', ')),
 					m('div.ui.divider'),
 					handlesView
 				]),
 
 				m('div.content', [
-					editButton,
 					vm.editing() ? [rolesEdit(), handlesEdit()] : null
 				])
 			])

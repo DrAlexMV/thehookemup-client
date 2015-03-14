@@ -9,6 +9,7 @@ var TagInputSegment = require('common/wizards/tag-input-segment');
 var User = require('model/user');
 var UserDetails = require('model/user-details');
 var Context = require('common/context');
+var UserHandles = require('common/constants').userHandles;
 
 
 var createProfileWizard = {};
@@ -18,14 +19,15 @@ var vm =
 		init: function () {
 			var vm = this;
 
-			vm.desiredHandles = ['linkedin', 'github', 'facebook', 'twitter', 'google-plus', 'angel-list', 'website'];
 			vm.awaitingResponse = m.prop(false);
 
 			vm.profile = {
 				userImageURL: m.prop(),
 				description: m.prop(''),
 				skills: m.prop([]),
-				handles: m.prop(vm.desiredHandles.map(HandleModel))
+				handles: m.prop(Object.keys(UserHandles).map(function(handle) {
+					return HandleModel(handle);
+				}))
 			};
 
 			vm.pictureDescriptionSegment = ProfileWizardPictureDescription();
@@ -140,7 +142,7 @@ createProfileWizard.view = function () {
 									vm.pictureDescriptionSegment.view({ description: vm.profile.description, userImageURL: vm.profile.userImageURL}),
 									vm.skillsSegment.view(),
 									vm.attachSocialSegment.view(),
-									vm.handlesSegment.view({ handles: vm.profile.handles, desiredHandles: vm.desiredHandles })
+									vm.handlesSegment.view(vm.profile.handles)
 								])
 							]),
 							m('div.row', [

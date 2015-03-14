@@ -5,11 +5,11 @@
 var Handle = function () {
 	var handle = {};
 
-	handle.HandleModel = function () {
+	handle.HandleModel = function (handle) {
 		var newHandle = {};
 
 		newHandle.url = m.prop('');
-		newHandle.type = m.prop('');
+		newHandle.type = m.prop(handle);
 
 		return newHandle;
 	};

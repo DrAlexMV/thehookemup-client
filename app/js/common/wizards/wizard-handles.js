@@ -3,15 +3,15 @@ var HandleEditor = require('common/social-handles/handle-editor');
 var WizardHandles = function () {
 	var handles = {};
 
-	handles.view = function (ctrl) {
+	handles.view = function (handles) {
 
-		var handleEditorWrap = function (handle, index) {
+		var handleEditorWrap = function (handle) {
 			return m('div.eight.wide.field', [
-				HandleEditor(handle).view(ctrl.handles()[index])
+				HandleEditor().view(handle)
 			]);
 		};
 
-		var handleFields = _.chain(ctrl.desiredHandles)
+		var handleFields = _.chain(handles())
 			.map(handleEditorWrap)
 			.groupBy(function (element, index) { return Math.floor(index / 2); })
 			.map(function (handleGroup) { return m('div.fields', handleGroup); })

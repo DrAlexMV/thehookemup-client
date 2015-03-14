@@ -4,7 +4,7 @@ var FormBuilder = require('common/form-builder');
 var Startup = require('model/startup');
 var HandleModel = require('model/handle').HandleModel;
 var TagInputSegment = require('common/wizards/tag-input-segment');
-
+var StartupHandles = require('common/constants').startupHandles;
 var createStartupWizard = {};
 
 var vm =
@@ -12,14 +12,15 @@ var vm =
 		init: function () {
 			var vm = this;
 
-			vm.desiredHandles = ['facebook', 'twitter', 'angel-list', 'blog'];
 			vm.awaitingResponse = m.prop(false);
 
 			vm.startup = {
 				name: m.prop(''),
 				description: m.prop(''),
 				markets: m.prop([]),
-				handles: m.prop(vm.desiredHandles.map(HandleModel)),
+				handles: m.prop(Object.keys(StartupHandles).map(function(handle) {
+						return HandleModel(handle);
+					})),
 				website: m.prop('')
 			};
 
@@ -32,6 +33,7 @@ var vm =
 				maxCount: 4,
 				placeholder: 'Enter up to four markets.'
 			});
+
 			vm.handlesSegment = StartupWizardHandles();
 
 			vm.rules = _.reduce(_.filter(vm, 'rules'), function (ruleSet, form) {
@@ -50,9 +52,7 @@ var vm =
 					website: vm.startup.website(),
 					description: vm.startup.description(),
 					markets: vm.startup.markets(),
-					handles: vm.startup.handles().map(function (handle) {
-						return { type: handle.type(), url: handle.url() };
-					})
+					handles: vm.startup.handles()
 				};
 
 				var success = function (startup) {
@@ -108,7 +108,7 @@ createStartupWizard.view = function () {
 								m('div.column', [
 									vm.descriptionSegment.view({ name: vm.startup.name, product: vm.startup.description, website: vm.startup.website }),
 									vm.marketsSegment.view(),
-									vm.handlesSegment.view({ handles: vm.startup.handles, desiredHandles: vm.desiredHandles })
+									vm.handlesSegment.view(vm.startup.handles)
 								])
 							]),
 							m('div.row', [
