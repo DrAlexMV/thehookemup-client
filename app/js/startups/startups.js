@@ -10,6 +10,7 @@ var StartupModel = require('model/startup');
 var StartupOverview = require('startups/startup-overview');
 var StartupProfileHeader = require('startups/startup-profile-header');
 var StreamCommon = require('common/stream-common');
+var HandleModel = require('model/handle').HandleModel;
 
 var startups = {};
 
@@ -76,7 +77,7 @@ startups.vm = {
 				vm.startupBasic.description(vals.description);
 				vm.startupBasic.markets(vals.markets);
 				vm.startupBasic.handles(vals.handles.map(function(handle) {
-					return {type: handle.type, url: handle.url};
+					return HandleModel(handle);
 				}));
 
 			}

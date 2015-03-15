@@ -9,6 +9,7 @@ var auth = {};
 
 auth.vm = {
 	init: function () {
+
 		var urlInvite = m.route.param('invite');
 
 		/* Child Components */

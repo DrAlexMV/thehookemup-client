@@ -2,6 +2,9 @@ var EditableImage = require('common/editable-image');
 var EndorsementButton = require('engagement/endorsements/endorsement-button');
 var FormBuilder = require('common/form-builder');
 var StreamCommon = require('common/stream-common');
+var StartupHandles = require('common/constants').startupHandles;
+var HandleModel = require('model/handle').HandleModel;
+var HandleEditor = require('common/social-handles/handle-editor');
 
 var StartupProfileHeader = function (startupId) {
 	var startupProfileHeader = {};
@@ -27,9 +30,9 @@ var StartupProfileHeader = function (startupId) {
 				website: m.prop(''),
 				description: m.prop(''),
 				markets: [],
-				handles: _.mapValues(availableHandles, function (value, key) { // Key by type
-					return {type: key, url: m.prop('')};
-				})
+				handles: m.prop(Object.keys(StartupHandles).map(function (handleType) {
+					return HandleModel({type: handleType, url: ''});
+				}))
 			}
 		};
 
@@ -60,9 +63,12 @@ var StartupProfileHeader = function (startupId) {
 		vm.headerForm.name(startupBasic.name());
 		vm.headerForm.description(startupBasic.description());
 		vm.headerForm.website(startupBasic.website());
-		startupBasic.handles().forEach(function (handle) {
-			vm.headerForm.handles[handle.type] = {type: handle.type, url: m.prop(handle.url)};
-		});
+		startupBasic.handles().forEach(function (databaseHandle) {
+				var emptyHandle = _.find(vm.headerForm.handles(), function (emptyHandle) {
+					return (databaseHandle.type() == emptyHandle.type());
+				});
+				if (emptyHandle) { emptyHandle.url(databaseHandle.url()) }
+			});
 		vm.headerForm.markets = startupBasic.markets().slice();
 	};
 
@@ -76,9 +82,7 @@ var StartupProfileHeader = function (startupId) {
 					website: vals.website(),
 					description: vals.description(),
 					markets: vals.markets.slice(),
-					handles: _.values(vals.handles).map(function (handle) {
-						return {type: handle.type, url: handle.url()};
-					})
+					handles: vals.handles()
 				})
 		);
 		vm.isEditing(false);
@@ -128,19 +132,10 @@ var StartupProfileHeader = function (startupId) {
 			};
 
 			var handlesEdit = function () {
-				return [
-					_.values(vm.headerForm.handles).map(function (handle) {
-						var info = availableHandles[handle.type];
-						var parameters = {
-							name: handle.type,
-							placeholder: '',
-							value: handle.url(),
-							class: 'stacked-text-input',
-							onchange: m.withAttr('value', handle.url)
-						};
-						return m('div.fluid.ui.input', [FormBuilder.inputs.formField(parameters, info.name)]);
-					})
-				];
+				var handleEditor = HandleEditor();
+				return vm.headerForm.handles().map(function (handle) {
+					return [ m('br'), m('br'), handleEditor.view(handle, false) ];
+				});
 			};
 
 			var middleSectionEditing = function () {
