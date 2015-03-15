@@ -18,8 +18,8 @@ var vm =
 				name: m.prop(''),
 				description: m.prop(''),
 				markets: m.prop([]),
-				handles: m.prop(Object.keys(StartupHandles).map(function(handle) {
-						return HandleModel(handle);
+				handles: m.prop(Object.keys(StartupHandles).map(function(handleType) {
+						return HandleModel({type: handleType, url: ''});
 					})),
 				website: m.prop('')
 			};

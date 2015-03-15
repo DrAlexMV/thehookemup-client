@@ -1,6 +1,7 @@
 var API = require('common/api');
 
 var ImageModel = require('model/image');
+var HandleModel = require('model/handle').HandleModel;
 
 var User = function(API) {
 	var user = {};
@@ -37,7 +38,12 @@ var User = function(API) {
 	};
 
 	user.getByID = function (userID) {
-		return this.get('/users/' + userID, user.UserModel);
+		return this.get('/users/' + userID, user.UserModel).then(function (response) {
+			response.handles(_.map(response.handles(), function(handle) {
+				return HandleModel(handle);
+			}));
+			return response;
+		})
 	};
 
 	user.getMe = function () {

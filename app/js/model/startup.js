@@ -1,5 +1,6 @@
 var API = require('common/api');
 var ImageModel = require('model/image');
+var HandleModel = require('model/handle').HandleModel;
 
 var Startup = function(API) {
 	var startup = {};
@@ -39,7 +40,12 @@ var Startup = function(API) {
 	};
 
 	startup.getByID = function(startupID) {
-		return this.get('/startups/' + startupID, startup.StartupModel);
+		return this.get('/startups/' + startupID, startup.StartupModel).then(function (response) {
+			response.handles(_.map(response.handles(), function(handle) {
+				return HandleModel(handle);
+			}));
+			return response;
+		})
 	};
 
 	startup.putByID = function(startupID, startup) {

@@ -25,11 +25,10 @@ var vm =
 				userImageURL: m.prop(),
 				description: m.prop(''),
 				skills: m.prop([]),
-				handles: m.prop(Object.keys(UserHandles).map(function(handle) {
-					return HandleModel(handle);
+				handles: m.prop(Object.keys(UserHandles).map(function(handleType) {
+					return HandleModel({type:handleType, url: ''});
 				}))
 			};
-
 			vm.pictureDescriptionSegment = ProfileWizardPictureDescription();
 			vm.skillsSegment = TagInputSegment({
 				autocomplete: true,

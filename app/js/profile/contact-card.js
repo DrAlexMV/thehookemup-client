@@ -6,16 +6,10 @@ var User = require('model/user');
 var HandleEditor = require('common/social-handles/handle-editor');
 var HandleModel = require('model/handle').HandleModel;
 
+
 //TODO: Need website and angel list icons
 var ContactCard = function (basicUserInfo, editable) {
 	var card = {};
-
-	var findWebsiteUrl = function (websiteName) {
-		var handle = _.find(basicUserInfo().handles(), function (entry) {
-			return (entry.type == websiteName);
-		});
-		return handle ? handle.url : '';
-	};
 
 	card.save = function () {
 		User.putByID('me', {roles: vm.roles(),
@@ -30,9 +24,16 @@ var ContactCard = function (basicUserInfo, editable) {
 		profilePicture: new EditableImage(),
 		editing: m.prop(false),
 		roles: m.prop(basicUserInfo().roles()),
-		handles: m.prop(Object.keys(UserHandles).map(function (handle) {
-			return HandleModel(handle);
+		handles: m.prop(Object.keys(UserHandles).map(function (handleType) {
+			return HandleModel({type: handleType, url: ''});
 		}))
+	};
+
+	var findWebsiteUrl = function (handleType) {
+		var handle = _.find(basicUserInfo().handles(), function (basicUserInfoHandle) {
+			return (basicUserInfoHandle.type() == handleType);
+		});
+		return handle ? handle.url() : '';
 	};
 
 	_.forEach(vm.handles(), function (handle) {

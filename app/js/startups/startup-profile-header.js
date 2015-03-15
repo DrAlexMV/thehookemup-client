@@ -30,8 +30,8 @@ var StartupProfileHeader = function (startupId) {
 				website: m.prop(''),
 				description: m.prop(''),
 				markets: [],
-				handles: m.prop(Object.keys(StartupHandles).map(function (handle) {
-					return HandleModel(handle);
+				handles: m.prop(Object.keys(StartupHandles).map(function (handleType) {
+					return HandleModel({type: handleType, url: ''});
 				}))
 			}
 		};
@@ -63,9 +63,12 @@ var StartupProfileHeader = function (startupId) {
 		vm.headerForm.name(startupBasic.name());
 		vm.headerForm.description(startupBasic.description());
 		vm.headerForm.website(startupBasic.website());
-		startupBasic.handles().forEach(function (handle) {
-			vm.headerForm.handles[handle.type] = {type: handle.type, url: m.prop(handle.url)};
-		});
+		startupBasic.handles().forEach(function (databaseHandle) {
+				var emptyHandle = _.find(vm.headerForm.handles(), function (emptyHandle) {
+					return (databaseHandle.type() == emptyHandle.type());
+				});
+				if (emptyHandle) { emptyHandle.url(databaseHandle.url()) }
+			});
 		vm.headerForm.markets = startupBasic.markets().slice();
 	};
 
