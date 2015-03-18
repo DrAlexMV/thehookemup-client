@@ -7,10 +7,10 @@
 
 	function onCloseEdit(config) {
 		return function() {
+			config.prop(config.intermediate());
 			if (config.saveCallback) {
 				config.saveCallback(config.intermediate());
 			}
-			config.prop(config.intermediate());
 			config.isEditing = false;
 		};
 	}
@@ -58,7 +58,7 @@
 	};
 
 	editableText.buildConfig = function(prop, placeholder, saveCallback) {
-		return {prop: prop, intermediate: m.prop(), isEditing: false, placeholder: placeholder, saveCallback: saveCallback};
+		return {prop: prop, intermediate: m.prop(''), isEditing: false, placeholder: placeholder, saveCallback: saveCallback};
 	};
 
 	return editableText;
