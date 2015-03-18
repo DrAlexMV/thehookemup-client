@@ -1,7 +1,3 @@
-/**
- * Created by alexanderventura on 2/9/15.
- */
-
 var Handle = function () {
 	var handle = {};
 
