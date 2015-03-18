@@ -23,7 +23,10 @@ var HandleEditor = function (handleName) {
 		return [
 			m('div.ui.right.labeled.left.icon.input', [
 				m('i.icon', { class: handle.icon }),
-				m('input[type="text"]', { onchange: m.withAttr('value', ctrl.url) }),
+				m('input[type="text"]', {
+					onchange: m.withAttr('value', ctrl.url),
+					value: ctrl.url()
+				}),
 				m('div.ui.tag.label', { class: handle.tagClass }, [
 					handle.tag
 				])

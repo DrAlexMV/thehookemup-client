@@ -17,7 +17,7 @@ var ProjectsSegment = function (projects, canEdit, userID) {
 		editingIndex: m.prop(-1),
 		errorMessages: m.prop([]),
 		formState: {
-			startDate: m.prop('foo'),
+			startDate: m.prop('-'),
 			title: m.prop(''),
 			organization: m.prop(''),
 			description: m.prop(''),

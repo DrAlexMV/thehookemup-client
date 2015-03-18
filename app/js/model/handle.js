@@ -1,15 +1,11 @@
-/**
- * Created by alexanderventura on 2/9/15.
- */
-
 var Handle = function () {
 	var handle = {};
 
-	handle.HandleModel = function () {
+	handle.HandleModel = function (handleType) {
 		var newHandle = {};
 
 		newHandle.url = m.prop('');
-		newHandle.type = m.prop('');
+		newHandle.type = m.prop(handleType ? handleType : '');
 
 		return newHandle;
 	};

@@ -42,6 +42,7 @@ var ProfileWizardPictureDescription = function () {
 							name: 'description',
 							type: 'text',
 							onchange: m.withAttr('value', ctrl.description),
+							value: ctrl.description(),
 							placeholder: 'Enter a one sentence description of yourself.'
 						}, 'Description', null, 'input')
 					])
