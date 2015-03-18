@@ -1,12 +1,10 @@
 var Config = require('config');
 var StreamCommon = require('common/stream-common');
-	
+
 var SocialSignInForm = function () {
 	var socialSignInForm = {};
 
-	socialSignInForm.vm = {
-
-	};
+	var vm = {};
 
 	socialSignInForm.stream = new Bacon.Bus();
 
@@ -32,6 +30,21 @@ var SocialSignInForm = function () {
 		});
 	};
 
+	var linkedinLogin = function() {
+		IN.User.authorize(function() {
+			if (IN.User.isAuthorized()) {
+				IN.API.Profile('me').result(function(res) {
+					var userProfile = res.values[0];
+					//userProfile.id
+					console.log(userProfile, 'FOO');
+					console.log(document.cookie);
+				});
+			}
+		}, this);
+
+		//IN.API.Profile("me").fields(["positions"]).result(f)
+	};
+
 	socialSignInForm.view = function () {
 		return [
 			m('form.socialSignInForm.ui.form', [
@@ -43,6 +56,13 @@ var SocialSignInForm = function () {
 								},[
 									m('i.facebook.icon'),
 									'Sign In with Facebook'
+								]
+							),
+							m('div.ui.linkedin.button', {
+									onclick: linkedinLogin
+								},[
+									m('i.linkedin.icon'),
+									'Sign In with LinkedIn'
 								]
 							)
 						])

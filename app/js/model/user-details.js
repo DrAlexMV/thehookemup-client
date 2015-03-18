@@ -6,15 +6,10 @@ var Details = function(API) {
 
 	details.ProjectModel = function(data) {
 		return {
-			date: m.prop(data.date),
+			startDate: m.prop(data.startDate),
 			title: m.prop(data.title),
 			description: m.prop(data.description),
-			details: data.details.map(function(detail) {
-				return {
-					title: m.prop(detail.title),
-					description: m.prop(detail.description)
-				};
-			}),
+			organization: m.prop(data.organization),
 			people: data.people.map(function(person) {
 				return new User.UserModel(person);
 			})

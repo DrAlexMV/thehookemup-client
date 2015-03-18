@@ -117,6 +117,18 @@ createProfileWizard.view = function () {
 			]),
 			m('div.row', [
 				m('div.column', [
+					m('div.ui.segment',
+						m('div.ui.linkedin.button', {
+							},[
+								m('i.linkedin.icon'),
+								'Import from LinkedIn'
+							]
+						)
+					)
+				])
+			]),
+			m('div.row', [
+				m('div.column', [
 					m('div.ui.form', {
 						//TODO: is it possible to highlight the skills input box like we do for other required fields?
 						onsubmit: function () {

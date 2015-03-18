@@ -8,6 +8,8 @@ var calculateAPIURL = function(currentLocation, port) {
 config['API_PORT'] = 5000;
 config['API_URL'] = calculateAPIURL(window.location.href, config['API_PORT']);
 config['API_BASE'] = '/api/v1';
-config['FACEBOOK_APP_ID'] = '744792018972866'
+config['FACEBOOK_APP_ID'] = '744792018972866';
+config['LINKEDIN_APP_ID'] = '787w2nq70p2uaj';
+config['LINKEDIN_STATE'] = 'FdGa28s3fSv';
 
 module.exports = config;

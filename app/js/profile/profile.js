@@ -42,7 +42,8 @@ profile.vm = {
 			profile.vm.basicInfo = response;
 			profile.vm.editables.description = EditableText.buildConfig(
 				profile.vm.basicInfo().description,
-				'Add a description of yourself.'
+				'Add a description of yourself.',
+				profile.saveDescription
 			);
 
 			profile.vm.contactCard = new ContactCard(profile.vm.basicInfo, userid === 'me');
@@ -142,10 +143,10 @@ profile.connectDialog = function(otherUserID) {
 	//StreamCommon.on(profile.stream, 'ConnectWithModal::NoConnect', function() {});
 
 
-profile.saveDetail = function() {
+profile.saveDescription = function(description) {
 	User.putByID(
 		profile.vm.userid,
-		{ description: profile.vm.basicInfo().description() }
+		{ description: description }
 	)
 	.then(function() {
 		profile.vm.editing(false);
@@ -158,6 +159,7 @@ profile.controller = function () {
 
 profile.view = function () {
 	var vm = profile.vm;
+	var isMe = profile.vm.userid == 'me';
 	var basicInfo = profile.vm.basicInfo();
 	var university_insignia = (basicInfo.university() === 'University of Texas') ? 
 		<img src="/img/bevo_icon.jpg" id="bevo_icon" />
@@ -240,44 +242,13 @@ profile.view = function () {
 		);
 	}
 
-	var description = profile.vm.editing() ?
+	var description = isMe ?
 		EditableText.view(profile.vm.editables.description) :
 		<div className="description">
 			{basicInfo.description()}
 		</div>;
 
 	var connections = EntityList('Connections', profile.vm.edges.connections());
-
-	var editButton = null;
-	if (profile.vm.userid == 'me') {
-		if (profile.vm.editing()) {
-			editButton = (
-				<div>
-					<div className="mini ui buttons">
-						<div className="ui blue button" onclick={profile.saveDetail}>
-							Save
-						</div>
-						<div className="ui red button"
-							onclick={function() {profile.vm.editing(false)} }>
-							Discard
-						</div>
-					</div>
-					<div className="ui hidden divider"></div>
-				</div>
-
-			);
-		} else {
-			editButton = (
-				<div>
-					<div className="mini ui blue button"
-						onclick={function() {profile.vm.editing(true)} }>
-						Edit
-					</div>
-					<div className="ui hidden divider"></div>
-				</div>
-			);
-		}
-	}
 
 	return (
 		<div className="ui padded stackable grid">
@@ -290,14 +261,13 @@ profile.view = function () {
 						<div className="two column row">
 							<div className="left floated column">
 								<h2 className="ui header">{isConnectedIcon} {basicInfo.getName()}</h2>
-								{ profile.vm.userid != 'me' ? vm.endorsementButton.view() : null }
+								{ isMe ? null : vm.endorsementButton.view() }
 							</div>
 							<div className="right floated right aligned column">
 								{ connectionButtons }
 							</div>
 						</div>
 					</div>
-					{editButton}
 					<div className="ui hidden divider"></div>
 					{university_info}
 					{description}
