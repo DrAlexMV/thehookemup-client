@@ -7,6 +7,10 @@ var Image = function(API) {
 		return API.calcAddress('/images');
 	};
 
+	image.uploadFromURI = function (uri) {
+		return this.post('/images/upload-from-uri', {uri: uri});
+	};
+
 	image.getURL = function(imageName) {
 		return API.calcAddress('/images/' + imageName);
 	};
