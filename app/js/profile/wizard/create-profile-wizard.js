@@ -108,19 +108,45 @@ var vm =
 			};
 
 			vm.importFromLinkedIn = function () {
+				function increment(number) {
+					state.itemsImported(state.itemsImported() + number);
+				}
+
+				var state = vm.linkedInImportState;
+				state.status('importing');
 				LinkedInImport.pull().then(function (linkedInInfo) {
 					var info = LinkedInImport.extract(linkedInInfo);
+
 					vm.profile.description(info.description);
+					increment(1);
 
 					// Evil hack to keep reference alive
 					vm.profile.projects().push.apply(vm.profile.projects(), info.projects);
+					increment(info.projects.length);
+
 					vm.profile.skills(info.skills);
+					increment(info.skills.length);
+
 					_.find(vm.profile.handles(), function(handle) {
 						return handle.type() === 'linkedin';
 					}).url(info.linkedInHandle);
-					_.forEach(vm.profile.handles(), function(r) {console.log(r.url())});
-					m.redraw();
+					increment(1);
+
+					if (info.pictureUrl) {
+						ImageModel.uploadFromURI(info.pictureUrl).then(function(newImage) {
+							vm.profile.userImageURL(newImage.imageID);
+							increment(1);
+
+							User.updatePicture('me', newImage.imageID);
+							state.status('imported');
+						});
+					}
 				});
+			};
+
+			vm.linkedInImportState = {
+				status: m.prop('unimported'),
+				itemsImported: m.prop(0)
 			};
 
 			createProfileWizard.stream = Bacon.mergeAll(vm.pictureDescriptionSegment.vm.profilePicture.stream);
@@ -143,14 +169,33 @@ createProfileWizard.controller = function () {
 };
 
 createProfileWizard.view = function () {
-	var importFromLinkedInButton =
-		m('div.ui.linkedin.button', {
-				onclick: vm.importFromLinkedIn
-			},[
-				m('i.linkedin.icon'),
-				'Import from LinkedIn'
-			]
-		);
+	function linkedInSegment() {
+		var linkedInButton;
+		if (vm.linkedInImportState.status() === 'unimported') {
+			linkedInButton = m('div.ui.linkedin.button', {
+					onclick: vm.importFromLinkedIn
+				},[
+					m('i.linkedin.icon'),
+					'Import from LinkedIn'
+				]
+			);
+		} else if (vm.linkedInImportState.status() === 'importing') {
+			linkedInButton =  m('div.ui.loading.linkedin.button',
+				[m('i.linkedin.icon'), 'Import from LinkedIn']);
+		} else if (vm.linkedInImportState.status() === 'imported') {
+			linkedInButton =  m('div.ui.disabled.linkedin.button',
+				[m('i.linkedin.icon'), 'Import from LinkedIn']);
+		}
+		return m('div.ui.segment', [
+			linkedInButton,
+			vm.linkedInImportState.status() === 'imported' ? [
+				m('i.checkmark.green.icon'),
+				m('b', 'Successfully imported ' +
+					vm.linkedInImportState.itemsImported() +
+					' items.')
+			] : null
+		]);
+	}
 
 	return [
 		m('div.ui.page.grid', [
@@ -165,9 +210,7 @@ createProfileWizard.view = function () {
 			]),
 			m('div.row', [
 				m('div.column', [
-					m('div.ui.segment',
-						importFromLinkedInButton
-					)
+					linkedInSegment()
 				])
 			]),
 			m('div.row', [

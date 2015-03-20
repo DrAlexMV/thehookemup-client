@@ -8,6 +8,11 @@ var LinkedInImport = {};
 LinkedInImport.pull = function () {
 	var deferred = m.deferred();
 
+	/* Might need to use IN.User.refresh() in the case of errors.
+	  e.g. User is already authorized by more than 30 minutes ago.
+	  Shouldn't happen in the normal case of the wizard because everything
+	  here happens in a single shot (auth, pull) and shouldn't happen again.
+	 */
 	IN.User.authorize(function() {
 		if (IN.User.isAuthorized()) {
 			IN.API.Profile('me').fields(
@@ -15,7 +20,8 @@ LinkedInImport.pull = function () {
 				'positions',
 				'industry',
 				'skills',
-				'public-profile-url'
+				'public-profile-url',
+				'picture-urls::(original)'
 			).result(function(res) {
 				deferred.resolve(res.values[0]);
 			});
@@ -31,6 +37,9 @@ LinkedInImport.extract = function (linkedInUserInfo) {
 	var information = {};
 
 	information.description = linkedInUserInfo.headline;
+
+	// 283x283px watermarked image
+	information.pictureUrl = linkedInUserInfo.pictureUrls.values[0];
 
 	information.skills = _.map(linkedInUserInfo.skills.values, function(skill) {
 		return skill.skill.name;
