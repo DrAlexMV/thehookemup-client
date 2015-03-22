@@ -19,15 +19,13 @@ var StartupProfileHeader = function (startupId) {
 			marketName: m.prop(''),
 			currentPage: m.prop(''),
 			endorsementButton: EndorsementButton(startupId, 'startup'),
-			marketsTypeaheadTagger: Tagger({ maxCount: 1000, entity:'markets', autocomplete: true}),
+			marketsTypeaheadTagger: Tagger({ maxCount: 1000, entity: 'markets', autocomplete: true}),
 			headerForm: {
 				name: m.prop(''),
 				website: m.prop(''),
 				description: m.prop(''),
 				markets: [],
-				handles: m.prop(Object.keys(StartupHandles).map(function (handleType) {
-					return HandleModel({type: handleType, url: ''});
-				}))
+				handles: m.prop()
 			}
 		};
 
@@ -43,12 +41,7 @@ var StartupProfileHeader = function (startupId) {
 		vm.headerForm.name(startupBasic.name());
 		vm.headerForm.description(startupBasic.description());
 		vm.headerForm.website(startupBasic.website());
-		startupBasic.handles().forEach(function (databaseHandle) {
-				var emptyHandle = _.find(vm.headerForm.handles(), function (emptyHandle) {
-					return (databaseHandle.type() == emptyHandle.type());
-				});
-				if (emptyHandle) { emptyHandle.url(databaseHandle.url()) }
-			});
+		vm.headerForm.handles(startupBasic.handles());
 		vm.headerForm.markets = startupBasic.markets().slice();
 	};
 
@@ -106,9 +99,13 @@ var StartupProfileHeader = function (startupId) {
 			var handles = function () {
 				return [
 					startupBasic.handles().map(function (handle) {
-						var handleInfo = StartupHandles[handle.type];
-						handleInfo = handleInfo ? handleInfo : {};
-						return m('a', {href: handle.url}, m('i.icon', { class: handleInfo.icon }));
+						console.log("About to log type");
+						console.log(handle.type());
+						if (handle.url()) {
+							var handleInfo = StartupHandles[handle.type()];
+							handleInfo = handleInfo ? handleInfo : {};
+							return m('a', {href: handle.url}, m('i.icon', { class: handleInfo.icon }));
+						}
 					})
 				];
 			};
@@ -116,10 +113,11 @@ var StartupProfileHeader = function (startupId) {
 			var handlesEdit = function () {
 				var handleEditor = HandleEditor();
 				return vm.headerForm.handles().map(function (handle) {
+					console.log("about to log handle in handlesEdit");
+					console.log(handle);
 					return [ m('br'), m('br'), handleEditor.view(handle, false) ];
 				});
 			};
-
 
 
 			var middleSectionEditing = function () {
