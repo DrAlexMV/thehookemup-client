@@ -98,8 +98,6 @@ var StartupProfileHeader = function (startupId) {
 			var handles = function () {
 				return [
 					startupBasic.handles().map(function (handle) {
-						console.log("About to log type");
-						console.log(handle.type());
 						if (handle.url()) {
 							var handleInfo = StartupHandles[handle.type()];
 							handleInfo = handleInfo ? handleInfo : {};
@@ -112,8 +110,6 @@ var StartupProfileHeader = function (startupId) {
 			var handlesEdit = function () {
 				var handleEditor = HandleEditor();
 				return vm.headerForm.handles().map(function (handle) {
-					console.log("about to log handle in handlesEdit");
-					console.log(handle);
 					return [ m('br'), m('br'), handleEditor.view(handle, false) ];
 				});
 			};
