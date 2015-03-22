@@ -5,6 +5,7 @@ var StreamCommon = require('common/stream-common');
 var StartupHandles = require('common/constants').startupHandles;
 var HandleModel = require('model/handle').HandleModel;
 var HandleEditor = require('common/social-handles/handle-editor');
+var Tagger = require('common/ui-core/tagger');
 
 var StartupProfileHeader = function (startupId) {
 	var startupProfileHeader = {};
@@ -25,6 +26,7 @@ var StartupProfileHeader = function (startupId) {
 			marketName: m.prop(''),
 			currentPage: m.prop(''),
 			endorsementButton: EndorsementButton(startupId, 'startup'),
+			marketsTypeaheadTagger: Tagger({ maxCount: 1000, entity:'markets', autocomplete: true}),
 			headerForm: {
 				name: m.prop(''),
 				website: m.prop(''),
@@ -42,21 +44,6 @@ var StartupProfileHeader = function (startupId) {
 			'StartupProfileHeader::ChangePage',
 			{currentPage: vm.currentPage()}
 		));
-	};
-
-	var addCategory = function () {
-		var s = vm.marketName();
-		if (!s || _.find(vm.headerForm.markets, function (entry) {
-			return entry === s;
-		})) {
-			return;
-		}
-		vm.headerForm.markets.push(s);
-		vm.marketName('');
-	};
-
-	var deleteCategory = function (index) {
-		vm.headerForm.markets.splice(index, 1);
 	};
 
 	var fillForm = function (startupBasic) {
@@ -88,7 +75,9 @@ var StartupProfileHeader = function (startupId) {
 		vm.isEditing(false);
 	};
 
+
 	startupProfileHeader.view = function (props) {
+
 		var startupBasic = props.startupBasic;
 
 		var tabs = function () {
@@ -138,6 +127,8 @@ var StartupProfileHeader = function (startupId) {
 				});
 			};
 
+
+
 			var middleSectionEditing = function () {
 				var fields = {
 					name: {
@@ -176,34 +167,9 @@ var StartupProfileHeader = function (startupId) {
 								m('div.fluid.ui.input', [
 									FormBuilder.inputs.formField(fields.description, 'Description', '', 'textarea')
 								]),
-								m('div.fluid.ui.action.small.input.focus', [
-									m('input', {
-										placeholder: 'Add a market',
-										value: vm.marketName(),
-										onchange: m.withAttr('value', vm.marketName)
-									}),
-									m('div.ui.right.primary.button', { onclick: addCategory }, ['Add'])
-								]),
-								vm.headerForm.markets.length ?
-									m('div.ui.segment', [
-										m('div.header', ['Markets']),
-										m('div.ui.two.column.stackable.grid', [
-											m('div.column', [
-												m('div', [
-													vm.headerForm.markets.map(function (market, index) {
-														return m('div.ui.label', [
-															market,
-															m('i.delete.icon', { onclick: deleteCategory.bind(this, index) })
-														]);
-													})
-												])
-											]),
-											m('div.right.aligned.column', [
-												m('div.ui', [
-												])
-											])
-										])
-									]) : null
+
+								vm.marketsTypeaheadTagger.view({selectedTags: m.prop(vm.headerForm.markets), placeholder: "Add a skill"})
+
 							]),
 							m('div.column', [
 								handlesEdit()

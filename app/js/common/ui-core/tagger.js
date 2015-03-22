@@ -1,5 +1,7 @@
 var Typeahead = require('common/ui-core/typeahead');
 var ENTER_KEY = require('common/constants').ENTER_KEY;
+
+//settings has an autocomplete boolean attribute and a maxCount integer, an entity string,
 var Tagger = function (settings) {
 	var tagger = {};
 
