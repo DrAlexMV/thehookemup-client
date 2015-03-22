@@ -71,11 +71,8 @@ var Context = (function () {
 
 	// Remove current context (e.g. logout)
 	context.purge = function () {
-		console.log("1");
 		currentUser(null);
-		console.log("2");
 		currentUserEdges(null);
-		console.log(this);
 	};
 
 	context.loaded = function () {

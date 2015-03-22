@@ -25,8 +25,7 @@ var HandleEditor = function () {
 				m('i.icon', { class: handle.icon }),
 				m('input[type="text"]', { value: handleModel.url(), onchange: m.withAttr('value', handleModel.url) }),
 				useLabel == false ? [] : m('div.ui.tag.label', { class: handleModel.type() }, [
-					handle.name,
-					[console.log(handle.name), console.log(handle.type), console.log(handle.icon)]
+					handle.name
 				])
 			])
 		];

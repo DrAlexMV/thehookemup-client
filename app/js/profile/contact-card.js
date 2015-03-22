@@ -4,10 +4,8 @@ var UserRoles = require('common/constants').availableRoles;
 var UserHandles = require('common/constants').userHandles;
 var User = require('model/user');
 var HandleEditor = require('common/social-handles/handle-editor');
-var HandleModel = require('model/handle').HandleModel;
 
 
-//TODO: Need website and angel list icons
 var ContactCard = function (basicUserInfo, editable) {
 	var card = {};
 
@@ -24,21 +22,10 @@ var ContactCard = function (basicUserInfo, editable) {
 		profilePicture: new EditableImage(),
 		editing: m.prop(false),
 		roles: m.prop(basicUserInfo().roles()),
-		handles: m.prop(Object.keys(UserHandles).map(function (handleType) {
-			return HandleModel({type: handleType, url: ''});
-		}))
+		handles: m.prop(basicUserInfo().handles())
 	};
 
-	var findWebsiteUrl = function (handleType) {
-		var handle = _.find(basicUserInfo().handles(), function (basicUserInfoHandle) {
-			return (basicUserInfoHandle.type() == handleType);
-		});
-		return handle ? handle.url() : '';
-	};
 
-	_.forEach(vm.handles(), function (handle) {
-		handle.url(findWebsiteUrl(handle.type()))
-	});
 	card.view = function () {
 
 		var editButton = editable ?
