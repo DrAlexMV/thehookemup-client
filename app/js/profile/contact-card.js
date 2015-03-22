@@ -13,9 +13,8 @@ var ContactCard = function (basicUserInfo, editable) {
 		User.putByID('me', {roles: vm.roles(),
 			handles: vm.handles()
 		}).then(function () {
-				vm.editing(false);
-			}
-		);
+			vm.editing(false);
+		});
 	};
 
 	var vm = card.vm = {
@@ -25,6 +24,51 @@ var ContactCard = function (basicUserInfo, editable) {
 		handles: m.prop(basicUserInfo().handles())
 	};
 
+	card.contentEditor = function () {
+		var rolesEdit = function () {
+			return UserRoles.map(function (role) {
+				var checked = basicUserInfo().roles().indexOf(role) > -1 ? 'checked' : null;
+				return m('div.field', [FormBuilder.inputs.checkbox(role, {checked: checked, onchange: function () {
+					var index = vm.roles().indexOf(role);
+					(index > -1) ? vm.roles().splice(index, index + 1) : vm.roles().push(role)
+				}})])
+			})
+		};
+		var handleEditor = HandleEditor();
+
+		var handlesEdit = function () {
+			return vm.handles().map(function (handle) {
+				return m('div.stacked-text-input',
+					handleEditor.view(handle, false));
+			});
+		};
+
+		return [
+			rolesEdit(),
+			m('div.ui.divider'),
+			'Profile Links',
+			handlesEdit()
+		];
+	},
+
+	card.contentViewer = function () {
+		var handlesView = _.map(vm.handles(), function (handleModel) {
+			var userHandle = UserHandles[handleModel.type()];
+
+			return handleModel.url() ? [
+				m("a.[href=" + handleModel.url() + "]", [
+					m('div.ui.circular.' + userHandle.icon + '.icon.button', [
+						m('i.' + userHandle.icon + '.icon')
+					])
+				])
+			] : null;
+		});
+		return [
+			m('div.ui.header', basicUserInfo().roles().join(', ')),
+			m('div.ui.divider'),
+			handlesView
+		];
+	},
 
 	card.view = function () {
 
@@ -39,42 +83,14 @@ var ContactCard = function (basicUserInfo, editable) {
 
 				])] : [
 				m('div', [
-					m('div.mini.ui.blue.button.right.floated', {onclick: vm.editing.bind(this, true)}, [
+					m('div.mini.ui.blue.button', {onclick: vm.editing.bind(this, true)}, [
 						'Edit'
 					]),
 					m('div.ui.hidden.divider')
 				])
 			] : null;
 
-		var rolesEdit = function () {
-			return UserRoles.map(function (role) {
-				var checked = basicUserInfo().roles().indexOf(role) > -1 ? 'checked' : null;
-				return m('div.field', [FormBuilder.inputs.checkbox(role, {checked: checked, onchange: function () {
-					var index = vm.roles().indexOf(role);
-					(index > -1) ? vm.roles().splice(index, index + 1) : vm.roles().push(role)
-				}})])
-			})
-		};
-		var handleEditor = HandleEditor();
 
-		var handlesEdit = function () {
-			return vm.handles().map(function (handle) {
-				return [ m('br'), m('br'), handleEditor.view(handle, false) ];
-			});
-		};
-
-		var handlesView = _.map(vm.handles(), function (handleModel) {
-
-			var userHandle = UserHandles[handleModel.type()];
-
-			return handleModel.url() ? [
-				m("a.[href=" + handleModel.url() + "]", [
-					m('div.ui.circular.' + userHandle.icon + '.icon.button', [
-						m('i.' + userHandle.icon + '.icon')
-					])
-				])
-			] : null;
-		});
 
 		return [
 			m('div.ui.card', [
@@ -84,13 +100,7 @@ var ContactCard = function (basicUserInfo, editable) {
 				}),
 				m('div.content', [
 					editButton,
-					m('div.ui.header', basicUserInfo().roles().join(', ')),
-					m('div.ui.divider'),
-					handlesView
-				]),
-
-				m('div.content', [
-					vm.editing() ? [rolesEdit(), handlesEdit()] : null
+					vm.editing() ? card.contentEditor() : card.contentViewer()
 				])
 			])
 		]

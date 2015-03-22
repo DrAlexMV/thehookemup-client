@@ -18,7 +18,11 @@ var StartupProfileHeader = function (startupId) {
 			marketName: m.prop(''),
 			currentPage: m.prop(''),
 			endorsementButton: EndorsementButton(startupId, 'startup'),
-			marketsTypeaheadTagger: Tagger({ maxCount: 1000, entity: 'markets', autocomplete: true}),
+			marketsTypeaheadTagger: Tagger({
+				maxCount: 1000,
+				entity: 'markets',
+				autocomplete: true
+			}),
 			headerForm: {
 				name: m.prop(''),
 				website: m.prop(''),
@@ -82,7 +86,8 @@ var StartupProfileHeader = function (startupId) {
 				m('div', [
 					m('div.ui.secondary.pointing.menu', [
 						availableTabs.map(function (tab) {
-							return m(tab.key === vm.currentPage() ? 'a.active.item' : 'a.item',
+							return m(tab.key === vm.currentPage() ?
+								'a.active.item' : 'a.item',
 								{ onclick: changePage.bind(this, tab.key) }, [
 									m('i.icon', { class: tab.icon }),
 									tab.name
@@ -101,7 +106,8 @@ var StartupProfileHeader = function (startupId) {
 						if (handle.url()) {
 							var handleInfo = StartupHandles[handle.type()];
 							handleInfo = handleInfo ? handleInfo : {};
-							return m('a', {href: handle.url}, m('i.icon', { class: handleInfo.icon }));
+							return m('a', {href: handle.url()},
+								m('i.icon', { class: handleInfo.icon }));
 						}
 					})
 				];
@@ -110,7 +116,8 @@ var StartupProfileHeader = function (startupId) {
 			var handlesEdit = function () {
 				var handleEditor = HandleEditor();
 				return vm.headerForm.handles().map(function (handle) {
-					return [ m('br'), m('br'), handleEditor.view(handle, false) ];
+					return m('div.stacked-text-input',
+						handleEditor.view(handle, false));
 				});
 			};
 
@@ -151,10 +158,15 @@ var StartupProfileHeader = function (startupId) {
 									FormBuilder.inputs.formField(fields.website, 'Website')
 								]),
 								m('div.fluid.ui.input', [
-									FormBuilder.inputs.formField(fields.description, 'Description', '', 'textarea')
+									FormBuilder.inputs.formField(
+										fields.description,
+										'Description', '', 'textarea')
 								]),
 
-								vm.marketsTypeaheadTagger.view({selectedTags: m.prop(vm.headerForm.markets), placeholder: "Add a skill"})
+								vm.marketsTypeaheadTagger.view({
+									selectedTags: m.prop(vm.headerForm.markets),
+									placeholder: 'Add a skill'
+								})
 
 							]),
 							m('div.column', [
@@ -165,7 +177,9 @@ var StartupProfileHeader = function (startupId) {
 					m('div.ui.hidden.divider'),
 					m('div.ui.small.buttons', [
 						m('div.ui.positive.button', {onclick: saveForm}, 'Save'),
-						m('div.ui.button', { onclick: vm.isEditing.bind(this, false) }, 'Cancel')
+						m('div.ui.button', {
+							onclick: vm.isEditing.bind(this, false)
+						}, 'Cancel')
 					])
 				];
 			};
@@ -185,7 +199,9 @@ var StartupProfileHeader = function (startupId) {
 							) : null
 					]),
 					m('div.meta', [
-						startupBasic.website() ? m('a', {href: startupBasic.website()}, startupBasic.website()) : null,
+						startupBasic.website() ? m('a', {
+							href: startupBasic.website()
+						}, startupBasic.website()) : null,
 						m('div', startupBasic.description())
 					]),
 					m('div.ui.two.column.stackable.grid', [
