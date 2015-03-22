@@ -84,7 +84,6 @@ var HorizontalEntityListSegment = function (title, linkBase, entitiesFunction, m
 						{ title }
 					</div> : null }
 				{search}
-				<div className="ui hidden divider"></div>
 				<div className="ui list horizontal-list">
 					{items}
 				</div>

@@ -102,7 +102,6 @@ dashboard.view = function () {
 			<div className="ui segment">
 				<div className="ui ribbon label theme-color-main">Your Endorsements</div>
 				<div className="ui hidden divider"></div>
-				<div className="ui divider"></div>
 					{ vm.endorserList.view({}) }
 			</div>
 		);
