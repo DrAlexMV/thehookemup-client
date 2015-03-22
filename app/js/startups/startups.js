@@ -10,7 +10,6 @@ var StartupModel = require('model/startup');
 var StartupOverview = require('startups/startup-overview');
 var StartupProfileHeader = require('startups/startup-profile-header');
 var StreamCommon = require('common/stream-common');
-var HandleModel = require('model/handle').HandleModel;
 
 var startups = {};
 

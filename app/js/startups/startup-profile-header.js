@@ -3,7 +3,6 @@ var EndorsementButton = require('engagement/endorsements/endorsement-button');
 var FormBuilder = require('common/form-builder');
 var StreamCommon = require('common/stream-common');
 var StartupHandles = require('common/constants').startupHandles;
-var HandleModel = require('model/handle').HandleModel;
 var HandleEditor = require('common/social-handles/handle-editor');
 var Tagger = require('common/ui-core/tagger');
 
