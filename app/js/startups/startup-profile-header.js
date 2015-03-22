@@ -10,13 +10,6 @@ var Tagger = require('common/ui-core/tagger');
 var StartupProfileHeader = function (startupId) {
 	var startupProfileHeader = {};
 
-	var availableHandles = {
-		'blog': { name: 'Blog', icon: 'feed' },
-		'twitter': { name: 'Twitter', icon: 'twitter' },
-		'angel-list': {name: 'Angel List', icon: 'angellist'},
-		'facebook': {name: 'Facebook', icon: 'facebook'}
-	};
-
 	startupProfileHeader.stream = new Bacon.Bus();
 
 	var vm =
@@ -113,7 +106,7 @@ var StartupProfileHeader = function (startupId) {
 			var handles = function () {
 				return [
 					startupBasic.handles().map(function (handle) {
-						var handleInfo = availableHandles[handle.type];
+						var handleInfo = StartupHandles[handle.type];
 						handleInfo = handleInfo ? handleInfo : {};
 						return m('a', {href: handle.url}, m('i.icon', { class: handleInfo.icon }));
 					})
