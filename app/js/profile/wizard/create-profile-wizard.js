@@ -47,7 +47,7 @@ var vm =
 				autocomplete: true,
 				entity: 'skills',
 				tagState: vm.profile.skills,
-				ribbonLabel: 'Skills',
+				ribbonLabel: 'SKILLS',
 				maxCount: 10,
 				placeholder: 'Add up to ten skills. After typing a skill, click add.'
 			});
@@ -238,7 +238,7 @@ createProfileWizard.view = function () {
 							]),
 							m('div.row', [
 								m('div.center.aligned.column', [
-									m('div.ui.big.blue.submit.button', 'Update My Profile')
+									m('div.ui.big.blue.submit.button', 'Create My Profile')
 								])
 							])
 						])

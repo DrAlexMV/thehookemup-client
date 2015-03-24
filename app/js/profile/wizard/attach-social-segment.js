@@ -40,7 +40,7 @@ var AttachSocialSegment = function () {
 	attachSocialSegment.view = function () {
 		return (
 			<div className="ui segment">
-				<div className="ui ribbon label theme-color-main">Social Signins</div>
+				<div className="ui ribbon label theme-color-main">CONNECT</div>
 				<h5>Enable Logging In Using These Services</h5>
 				<div className="ui hidden divider"></div>
 				{ vm.fbAttachedTo().length ?

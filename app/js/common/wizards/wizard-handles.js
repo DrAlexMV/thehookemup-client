@@ -19,7 +19,7 @@ var WizardHandles = function () {
 
 		return [
 			m('div.ui.segment', [
-				m('a.ui.ribbon.label.theme-color-main', 'Handles'),
+				m('div.ui.ribbon.label.theme-color-main', 'HANDLES'),
 				m('div.ui.hidden.divider'),
 				m('div.ui.form',  handleFields)
 			])
