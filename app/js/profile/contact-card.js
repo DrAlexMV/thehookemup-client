@@ -54,6 +54,7 @@ var ContactCard = function (basicUserInfo, editable) {
 		vm.handles(basicUserInfo().handles().map(function (handleModel) {
 			return HandleModel({type: handleModel.type(), url: handleModel.url()});
 		}));
+		vm.errorMessage("");
 		vm.editing(false);
 	};
 
@@ -71,7 +72,16 @@ var ContactCard = function (basicUserInfo, editable) {
 		var handleEditor = HandleEditor();
 
 		var handlesEdit = function () {
-			return vm.handles().map(function (handleModel) {
+			return Object.keys(UserHandles).map(function (HandleType) {
+				var handleModel = _.find(vm.handles(), function(handleModel) {
+					return handleModel.type() == HandleType;
+				});
+				//The user handles should all be filled in in the profile wizard, but
+				//in case the user somehow bypasses that or we add new handles, this check needs to happen.
+				if(! handleModel) {
+					handleModel = HandleModel({type:HandleType, url:''});
+					vm.handles().push(handleModel);
+				}
 				return m('div.stacked-text-input',
 					handleEditor.view(handleModel, false));
 			});
