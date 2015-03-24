@@ -167,47 +167,13 @@ communications.controller = function () {
 communications.view = function () {
 
   //TODO: replace ifs with m.prop()
-
-  if (vm.selected() === 'Requests') {
     return [
-      m('div.ui.stackable.page.grid', [
-        m('div.four.wide.column', [
-          vm.menu.view()
-        ]),
-        m('div.twelve.wide.column', [
+
+        m('div.sixteen.wide.column', [
           vm.feed.view(vm.selected(), vm.connectionRequests())
         ])
-      ])
+
     ];
-  }
-  if (vm.selected() === 'Messages') {
-    //TODO: this will be put in the vm when we have actual data
-    vm.conversationPreviews(vm.messages().map(function (message) {
-
-      return ConversationPreview();//message, vm.currentUserEdges().pendingConnections()[0])
-    }));
-
-    var messagesSideScroll = vm.feed.view(vm.selected(), vm.conversationPreviews());
-
-    return [
-      m('div.ui.stackable.page.grid', [
-        m('div.row', [
-          m('div.seven.wide.column', [
-            vm.menu.view()
-          ])
-        ]),
-        m('div.seven.wide.column', [
-          messagesSideScroll
-        ]),
-        m('div.nine.wide.column', [
-          //TODO: put this in vm init when we have data
-          vm.conversationDisplay().view()/*MessageDisplay("Some message!!!!", vm.currentUserEdges().pendingConnections()[0]),
-              MessageDisplay("Some response word word word word word nable a background sending mode that is optimized for bulk sending. In async mode, messages/send will immediately return a status of for every recipient. To handle rejections when sending in async mode, set up a webhook for the 'reject' event. Defaults to false for messages with no more than 10 recipients; messages with more than 10 recipients are always sent asynchronously, regardless of the value of async.!!!!", vm.currentUserEdges().pendingConnections()[0]),
-              MessageDisplay("Some message!!!!", vm.currentUserEdges().pendingConnections()[0])]*/
-        ])
-      ])
-    ];
-  }
 };
 
 module.exports = communications;

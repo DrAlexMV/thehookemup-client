@@ -6,7 +6,6 @@ var CommunicationsMenu = function () {
 	var vm = {
 		tabs: m.prop([
 			{ name: 'Requests', icon: 'share alternate square', color: 'teal' },
-			{ name: 'Messages', icon: 'mail', color: 'red' }
 		])
 	};
 

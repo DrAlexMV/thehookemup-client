@@ -64,7 +64,7 @@ var ConversationPreview = function (message, user) {
             m("div.thirteen.wide.column", [
               m("div.field[style=height:50px;]", [
                 m("div.center.aligned.ui", [
-                  truncate(message, 90)
+                  message
                 ])
               ])
             ])

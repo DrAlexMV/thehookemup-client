@@ -60,9 +60,9 @@ var ConnectionRequest = function (user, message) {
 							m('div.ui.meta[style=color:Gainsboro;]', user.roles().join(', '))
 						]),
 						m('div.thirteen.wide.column', [
-							m('div.field[style=height:60px;]', [
+							m('div.field', [
 								m('div.center.aligned.ui', [
-									truncate(message, 205)
+									message
 								])
 							]),
 							m('div.ui.padded.grid[style=height:35px;]', [
