@@ -5,7 +5,7 @@ var UserHandles = require('common/constants').userHandles;
 var User = require('model/user');
 var HandleEditor = require('common/social-handles/handle-editor');
 var HandleModel = require('model/handle').HandleModel;
-
+var fixUrl = require('common/url-utils').fixUrl;
 
 var ContactCard = function (basicUserInfo, editable) {
 	var card = {};
@@ -16,6 +16,9 @@ var ContactCard = function (basicUserInfo, editable) {
 			m.redraw.strategy("all");
 			return;
 		}
+		_.forEach(vm.handles(), function(handleModel){
+			if(handleModel.url()) { handleModel.url(fixUrl(handleModel.url())) }
+		});
 		User.putByID('me', {roles: vm.roles(),
 			handles: vm.handles()
 		}).then(function () {

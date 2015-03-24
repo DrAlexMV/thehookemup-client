@@ -3,10 +3,9 @@
  */
 
 var urlUtils = {};
-//TODO: whenever I get internet, I'm sure there is a canonical way to check the validity of URLs.
-//Also there may be a smart way of automatically binding this function to the m.prop of handles
-urlUtils.checkUrl = function(url) {
-	if (_.startsWith(url, 'http://')) {
+//There may be a smart way of automatically binding this function to the m.prop of handles
+urlUtils.fixUrl = function(url) {
+	if (/^(f|ht)tps?:\/\//i.test(url)) {
 		return url;
 	} else {
 		url = 'http://' + url;
