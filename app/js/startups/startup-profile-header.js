@@ -6,6 +6,7 @@ var StartupHandles = require('common/constants').startupHandles;
 var HandleEditor = require('common/social-handles/handle-editor');
 var Tagger = require('common/ui-core/tagger');
 var HandleModel = require('model/handle').HandleModel;
+var fixUrl = require('common/url-utils').fixUrl;
 
 var StartupProfileHeader = function (startupId) {
 	var startupProfileHeader = {};
@@ -65,6 +66,10 @@ var StartupProfileHeader = function (startupId) {
 
 	var saveForm = function () {
 		var vals = vm.headerForm;
+		_.forEach(vals.handles(), function(handleModel){
+			if(handleModel.url()) { handleModel.url(fixUrl(handleModel.url())) }
+		});
+		if(vals.website()) { vals.website(fixUrl(vals.website())) }
 		startupProfileHeader.stream.push(
 			new StreamCommon.Message(
 				'StartupProfileHeader::Update',

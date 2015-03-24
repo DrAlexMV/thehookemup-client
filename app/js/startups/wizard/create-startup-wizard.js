@@ -6,6 +6,7 @@ var HandleModel = require('model/handle').HandleModel;
 var TagInputSegment = require('common/wizards/tag-input-segment');
 var StartupHandles = require('common/constants').startupHandles;
 var createStartupWizard = {};
+var fixUrl = require('common/url-utils').fixUrl;
 
 var vm =
 	createStartupWizard.vm = {
@@ -46,7 +47,11 @@ var vm =
 			vm.validationSuccess = function () {
 				vm.errorMessages([]);
 				vm.awaitingResponse(true);
+				if(vm.startup.website()) { vm.startup.website(fixUrl(vm.startup.website())) }
 
+				_.forEach(vm.startup.handles(), function(handleModel){
+					if(handleModel.url()) { handleModel.url(fixUrl(handleModel.url())) }
+				});
 				var newStartup = {
 					name: vm.startup.name(),
 					website: vm.startup.website(),

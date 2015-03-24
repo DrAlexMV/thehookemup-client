@@ -12,7 +12,7 @@ var User = require('model/user');
 var UserDetails = require('model/user-details');
 var Context = require('common/context');
 var UserHandles = require('common/constants').userHandles;
-
+var fixUrl = require('common/url-utils').fixUrl;
 
 var createProfileWizard = {};
 
@@ -66,10 +66,12 @@ var vm =
 					vm.errorMessages([res.error])
 				};
 
-				//TODO:
 				var submit = function () {
 					UserDetails.putSkillsByID('me', vm.profile.skills()).then(function () {
 						UserDetails.putProjectsByID('me', vm.profile.projects()).then(function() {
+							_.forEach(vm.profile.handles(), function(handleModel){
+								if(handleModel.url()) { handleModel.url(fixUrl(handleModel.url())) }
+							});
 							User.putByID('me', {
 								description: vm.profile.description(),
 								handles: vm.profile.handles()
