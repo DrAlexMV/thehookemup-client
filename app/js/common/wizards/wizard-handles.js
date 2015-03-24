@@ -7,7 +7,7 @@ var WizardHandles = function () {
 
 		var handleEditorWrap = function (handle) {
 			return m('div.eight.wide.field', [
-				HandleEditor().view(handle)
+				HandleEditor().view(handle, true)
 			]);
 		};
 

@@ -5,6 +5,7 @@ var StreamCommon = require('common/stream-common');
 var StartupHandles = require('common/constants').startupHandles;
 var HandleEditor = require('common/social-handles/handle-editor');
 var Tagger = require('common/ui-core/tagger');
+var HandleModel = require('model/handle').HandleModel;
 
 var StartupProfileHeader = function (startupId) {
 	var startupProfileHeader = {};
@@ -44,8 +45,22 @@ var StartupProfileHeader = function (startupId) {
 		vm.headerForm.name(startupBasic.name());
 		vm.headerForm.description(startupBasic.description());
 		vm.headerForm.website(startupBasic.website());
-		vm.headerForm.handles(startupBasic.handles());
+		//We need to create a copy here. Using the same reference causes the editing to overwrite the state even if the
+		// user decides to discard the changes.
+		vm.headerForm.handles(startupBasic.handles().map(function(handleModel){
+			return HandleModel({type: handleModel.type(), url: handleModel.url()});
+		}));
 		vm.headerForm.markets = startupBasic.markets().slice();
+	};
+	Function.prototype.clone = function() {
+		var that = this;
+		var temp = function temporary() { return that.apply(this, arguments); };
+		for(var key in this) {
+			if (this.hasOwnProperty(key)) {
+				temp[key] = this[key];
+			}
+		}
+		return temp;
 	};
 
 	var saveForm = function () {
@@ -102,11 +117,11 @@ var StartupProfileHeader = function (startupId) {
 
 			var handles = function () {
 				return [
-					startupBasic.handles().map(function (handle) {
-						if (handle.url()) {
-							var handleInfo = StartupHandles[handle.type()];
+					startupBasic.handles().map(function (handleModel) {
+						if (handleModel.url()) {
+							var handleInfo = StartupHandles[handleModel.type()];
 							handleInfo = handleInfo ? handleInfo : {};
-							return m('a', {href: handle.url()},
+							return m('a', {href: handleModel.url()},
 								m('i.icon', { class: handleInfo.icon }));
 						}
 					})
@@ -115,9 +130,9 @@ var StartupProfileHeader = function (startupId) {
 
 			var handlesEdit = function () {
 				var handleEditor = HandleEditor();
-				return vm.headerForm.handles().map(function (handle) {
+				return vm.headerForm.handles().map(function (handleModel) {
 					return m('div.stacked-text-input',
-						handleEditor.view(handle, false));
+						handleEditor.view(handleModel, false));
 				});
 			};
 

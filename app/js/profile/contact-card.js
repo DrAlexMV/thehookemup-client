@@ -4,6 +4,7 @@ var UserRoles = require('common/constants').availableRoles;
 var UserHandles = require('common/constants').userHandles;
 var User = require('model/user');
 var HandleEditor = require('common/social-handles/handle-editor');
+var HandleModel = require('model/handle').HandleModel;
 
 
 var ContactCard = function (basicUserInfo, editable) {
@@ -15,19 +16,45 @@ var ContactCard = function (basicUserInfo, editable) {
 		}).then(function () {
 			vm.editing(false);
 		});
+		//update the basicUserInfo so the changes will show immediately
+		basicUserInfo().handles(vm.handles().map(function (handleModel) {
+			return HandleModel({type: handleModel.type(), url: handleModel.url()});
+		}));
+		basicUserInfo().roles(vm.roles().map(function (role) {
+			return role;
+		}));
+		m.redraw.strategy("all");
 	};
 
+	//The vm contains a copy of the basicUserInfo that is modified during editing
+	//and reverted back to the basicUserInfo if the changes are discarded.
 	var vm = card.vm = {
 		profilePicture: new EditableImage(),
 		editing: m.prop(false),
-		roles: m.prop(basicUserInfo().roles()),
-		handles: m.prop(basicUserInfo().handles())
+		//We need to create a copy here. Using the same reference causes the editing to overwrite the state even if the
+		// user decides to discard the changes.
+		roles: m.prop(basicUserInfo().roles().map(function (role) {
+			return role;
+		})),
+		handles: m.prop(basicUserInfo().handles().map(function (handleModel) {
+			return HandleModel({type: handleModel.type(), url: handleModel.url()});
+		}))
+	};
+
+	var revert = function () {
+		vm.roles(basicUserInfo().roles().map(function (role) {
+			return role;
+		}));
+		vm.handles(basicUserInfo().handles().map(function (handleModel) {
+			return HandleModel({type: handleModel.type(), url: handleModel.url()});
+		}));
+		vm.editing(false);
 	};
 
 	card.contentEditor = function () {
 		var rolesEdit = function () {
 			return UserRoles.map(function (role) {
-				var checked = basicUserInfo().roles().indexOf(role) > -1 ? 'checked' : null;
+				var checked = vm.roles().indexOf(role) > -1 ? 'checked' : null;
 				return m('div.field', [FormBuilder.inputs.checkbox(role, {checked: checked, onchange: function () {
 					var index = vm.roles().indexOf(role);
 					(index > -1) ? vm.roles().splice(index, index + 1) : vm.roles().push(role)
@@ -37,9 +64,9 @@ var ContactCard = function (basicUserInfo, editable) {
 		var handleEditor = HandleEditor();
 
 		var handlesEdit = function () {
-			return vm.handles().map(function (handle) {
+			return vm.handles().map(function (handleModel) {
 				return m('div.stacked-text-input',
-					handleEditor.view(handle, false));
+					handleEditor.view(handleModel, false));
 			});
 		};
 
@@ -49,12 +76,11 @@ var ContactCard = function (basicUserInfo, editable) {
 			'Profile Links',
 			handlesEdit()
 		];
-	},
+	};
 
 	card.contentViewer = function () {
-		var handlesView = _.map(vm.handles(), function (handleModel) {
+		var handlesView = _.map(basicUserInfo().handles(), function (handleModel) {
 			var userHandle = UserHandles[handleModel.type()];
-
 			return handleModel.url() ? [
 				m("a.[href=" + handleModel.url() + "]", [
 					m('div.ui.circular.' + userHandle.icon + '.icon.button', [
@@ -68,7 +94,7 @@ var ContactCard = function (basicUserInfo, editable) {
 			m('div.ui.divider'),
 			handlesView
 		];
-	},
+	}
 
 	card.view = function () {
 
@@ -77,7 +103,7 @@ var ContactCard = function (basicUserInfo, editable) {
 				m('div', [
 					m('div.mini.ui.buttons', [
 						m('div.ui.blue.button', {onclick: card.save.bind(this)}, 'Save'),
-						m('div.ui.red.button', {onclick: vm.editing.bind(this, false)}, 'Discard')
+						m('div.ui.red.button', {onclick: revert}, 'Discard')
 					]),
 					m('div.ui.hidden.divider')
 
@@ -89,7 +115,6 @@ var ContactCard = function (basicUserInfo, editable) {
 					m('div.ui.hidden.divider')
 				])
 			] : null;
-
 
 
 		return [

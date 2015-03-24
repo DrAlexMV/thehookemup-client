@@ -1,11 +1,11 @@
-var startupHandles = require('common/constants').startupHandles;
-var userHandles = require('common/constants').userHandles;
+var StartupHandles = require('common/constants').StartupHandles;
+var UserHandles = require('common/constants').UserHandles;
 
 var HandleEditor = function () {
 	var handleEditor = {};
 
 	var availableHandles = {};
-	_.merge(availableHandles, userHandles, startupHandles, {
+	_.merge(availableHandles, UserHandles, StartupHandles, {
 		website: {
 			name: 'Website',
 			type:'website',
@@ -22,7 +22,7 @@ var HandleEditor = function () {
 			{
 				name: handleModel.type(),
 				type: handleModel.type(),
-				icon:handleModel.type()
+				icon: handleModel.type()
 			};
 
 		//Some places there isn't space for the label.
@@ -33,7 +33,7 @@ var HandleEditor = function () {
 		return [
 			m(containerType, [
 				m('i.icon', { class: handle.icon }),
-				m('input[type="text"]', {
+				m('input', {
 					value: handleModel.url(),
 					onchange: m.withAttr('value', handleModel.url)
 				}),

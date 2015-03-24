@@ -8,7 +8,8 @@ var Constants = {
 		'twitter': { name: 'Twitter', icon: 'twitter'},
 		'angel-list': { name: 'Angel List', icon: 'angellist'},
 		'github': { name: 'Github', icon: 'github'},
-		'linkedin': { name: 'LinkedIn', icon: 'linkedin'}
+		'linkedin': { name: 'LinkedIn', icon: 'linkedin'},
+		'website': { name: 'Website', icon: 'website'}
 	},
 
 	startupHandles: {
