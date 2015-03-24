@@ -166,11 +166,12 @@ communications.controller = function () {
 
 communications.view = function () {
 
-  //TODO: replace ifs with m.prop()
-    return [
 
-        m('div.sixteen.wide.column', [
-          vm.feed.view(vm.selected(), vm.connectionRequests())
+    return [
+        m('div.ui.one.column.centered.grid', [
+		m('div.ten.wide.column',[
+			vm.feed.view(vm.selected(), vm.connectionRequests())
+		])
         ])
 
     ];
