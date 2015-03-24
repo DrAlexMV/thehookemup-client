@@ -23,17 +23,13 @@ var vm =
 
 			vm.awaitingResponse = m.prop(false);
 
-			Context.getCurrentUser().then(function(basicUserInfo) {
-				vm.basicInfo = basicUserInfo();
-				vm.basicInfo.handles(vm.desiredHandles.map(HandleModel));
-			});
-
 			vm.profile = {
 				userImageURL: m.prop(),
 				description: m.prop(''),
 				skills: m.prop([]),
+				projects: m.prop([]),
 				handles: m.prop(Object.keys(UserHandles).map(function(handleType) {
-					return HandleModel({type:handleType, url: ''});
+					return HandleModel({type: handleType, url: ''});
 				}))
 			};
 			vm.pictureDescriptionSegment = ProfileWizardPictureDescription();
@@ -70,19 +66,13 @@ var vm =
 					vm.errorMessages([res.error])
 				};
 
-				var convertHandles = function () {
-					return vm.basicInfo.handles().map(function (handle) {
-						return { type: handle.type(), url: handle.url() };
-					})
-				};
-
 				//TODO:
 				var submit = function () {
 					UserDetails.putSkillsByID('me', vm.profile.skills()).then(function () {
 						UserDetails.putProjectsByID('me', vm.profile.projects()).then(function() {
 							User.putByID('me', {
 								description: vm.profile.description(),
-								handles: convertHandles()
+								handles: vm.profile.handles()
 							}).then(function () {
 								Context.purge();
 								m.route('/profile/me');
@@ -233,7 +223,7 @@ createProfileWizard.view = function () {
 									vm.skillsSegment.view(),
 									vm.attachSocialSegment.view(),
 									vm.projectsSegment.view({connections: []}),
-									vm.handlesSegment.view({ handles: vm.profile.handles, desiredHandles: vm.desiredHandles })
+									vm.handlesSegment.view(vm.profile.handles)
 								])
 							]),
 							m('div.row', [
