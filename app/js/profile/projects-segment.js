@@ -92,8 +92,10 @@ var ProjectsSegment = function (projects, canEdit, userID) {
 		vm.personInput('');
 	}
 
-	function removeProject(projectIndex) {
-		projects.splice(projectIndex, 1);
+	function removeProject() {
+		projects.splice(vm.editingIndex(), 1);
+		vm.editingIndex(-1);
+		UserDetails.putProjectsByID(userID, projects);
 	}
 
 	function removeCollaborator(collaboratorIndex) {
@@ -147,7 +149,7 @@ var ProjectsSegment = function (projects, canEdit, userID) {
 
 		function collaboratorsSection() {
 			var findCollaborator = (
-				<div className="ui search dropdown" config={
+				<div className="fluid ui search dropdown" config={
 					LocalSearch({
 						source: config.connections.filter(function(user) { // O(N*M) to exclude already added but M is small
 							return !_.find(project.people, function(person) {
@@ -230,7 +232,7 @@ var ProjectsSegment = function (projects, canEdit, userID) {
 						placeholder="Where was this? (e.g. Facebook or UT Austin)"/>
 				</div>
 				<div className="fluid ui input stacked-text-input">
-					<textarea value={project.description()}
+					<textarea className="fluid" value={project.description()}
 						onchange={m.withAttr('value', project.description)}
 						rows="4"
 						placeholder="Some interesting details (e.g. Refactored the professor's code)"/>
@@ -244,7 +246,8 @@ var ProjectsSegment = function (projects, canEdit, userID) {
 						<div className="ui button"
 							onclick={vm.editingIndex.bind(vm, -1)}>Cancel</div>
 					</div>
-					<div className="ui red right floated small button">
+					<div className="ui red right floated small button"
+						onclick={removeProject}>
 						Remove
 					</div>
 				</div>
