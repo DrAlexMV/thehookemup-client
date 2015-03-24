@@ -11,14 +11,11 @@ var ContactCard = function (basicUserInfo, editable) {
 	var card = {};
 
 	card.save = function () {
-
 		if (vm.roles().length == 0) {
 			vm.errorMessage("You must select at least one role.");
 			m.redraw.strategy("all");
 			return;
 		}
-
-
 		User.putByID('me', {roles: vm.roles(),
 			handles: vm.handles()
 		}).then(function () {
@@ -34,7 +31,6 @@ var ContactCard = function (basicUserInfo, editable) {
 		vm.errorMessage("");
 		m.redraw.strategy("all");
 	};
-
 	//The vm contains a copy of the basicUserInfo that is modified during editing
 	//and reverted back to the basicUserInfo if the changes are discarded.
 	var vm = card.vm = {
@@ -71,6 +67,7 @@ var ContactCard = function (basicUserInfo, editable) {
 				}})])
 			})
 		};
+
 		var handleEditor = HandleEditor();
 
 		var handlesEdit = function () {
@@ -104,14 +101,14 @@ var ContactCard = function (basicUserInfo, editable) {
 			m('div.ui.divider'),
 			handlesView
 		];
-	}
+	};
 
 	card.view = function () {
 
 		var editButton = editable ?
 			vm.editing() ? [
 				m('div', [
-					m("div[style='color:red']",vm.errorMessage()),
+					m("div[style='color:red']", vm.errorMessage()),
 					m('div.mini.ui.buttons', [
 						m('div.ui.blue.button', {onclick: card.save.bind(this)}, 'Save'),
 						m('div.ui.red.button', {onclick: revert}, 'Discard')
@@ -126,8 +123,6 @@ var ContactCard = function (basicUserInfo, editable) {
 					m('div.ui.hidden.divider')
 				])
 			] : null;
-
-
 		return [
 			m('div.ui.card', [
 				card.vm.profilePicture.view({
